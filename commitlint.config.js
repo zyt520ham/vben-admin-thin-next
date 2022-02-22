@@ -32,3 +32,5 @@ module.exports = {
   },
 };
 //要临时关闭验证，可以在.husky/commit-msg 内注释以下代码即可（npx --no-install commitlint --edit "$1"）
+//示例：
+// git commit -m 'feat(home): add home page'
