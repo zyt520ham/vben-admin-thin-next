@@ -1,3 +1,10 @@
+/**
+ * @Description  : 路由 权限守卫
+ * @Author       : Zhang Yantao
+ * @Date         : 2022/2/21
+ * @FilePath     : /Users/zhangyantao/wsp_web/openStudy/github-root/vben-admin-thin-next/src/router/guard/permissionGuard.ts
+ */
+
 import type { Router, RouteRecordRaw } from 'vue-router';
 
 import { usePermissionStoreWithOut } from '/@/store/modules/permission';

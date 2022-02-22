@@ -45,10 +45,10 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
           find: /\/@\//,
           replacement: pathResolve('src') + '/',
         },
-        // /#/xxxx => types/xxxx
+        // /#/xxxx => @types/xxxx
         {
           find: /\/#\//,
-          replacement: pathResolve('types') + '/',
+          replacement: pathResolve('@types') + '/',
         },
       ],
     },

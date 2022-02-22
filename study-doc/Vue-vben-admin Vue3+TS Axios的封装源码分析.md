@@ -251,7 +251,7 @@ tansform 这个是一个对象，里面实际上包含了多个钩子函数，�
 
 ```ts
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { CreateAxiosOptions, UploadFileParams, RequestOptions, Result } from './types';
+import { CreateAxiosOptions, UploadFileParams, RequestOptions, Result } from './@types';
 import { isFunction } from '@/utils/is';
 import { ContentTypeEnum } from '../../../enums/httpEnum';
 import { cloneDeep } from 'lodash-es';

@@ -14,7 +14,7 @@ export type WildcardHandler = (type: EventType, event?: any) => void;
 export type EventHandlerList = Array<Handler>;
 export type WildCardEventHandlerList = Array<WildcardHandler>;
 
-// A map of event types and their corresponding event handlers.
+// A map of event @types and their corresponding event handlers.
 export type EventHandlerMap = Map<EventType, EventHandlerList | WildCardEventHandlerList>;
 
 export interface Emitter {
