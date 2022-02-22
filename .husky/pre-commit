@@ -1,8 +1,11 @@
-##!/bin/sh
-#. "$(dirname "$0")/_/husky.sh"
-#. "$(dirname "$0")/common.sh"
-#
-#[ -n "$CI" ] && exit 0
-#
-## Format and submit code according to lintstagedrc.js configuration
-#npm run lint:lint-staged
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+. "$(dirname "$0")/common.sh"
+
+[ -n "$CI" ] && exit 0
+
+# Format and submit code according to lintstagedrc.js configuration
+
+# 解决mac下sourcetree中运行husky命令提示 npm: command not found
+PATH="/usr/local/bin:$PATH"
+npm run lint:lint-staged
