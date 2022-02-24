@@ -24,6 +24,7 @@ export const RootRoute: AppRouteRecordRaw = {
   redirect: PageEnum.BASE_HOME,
   meta: {
     title: 'Root',
+    hideMenu: true,
   },
 };
 

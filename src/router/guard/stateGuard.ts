@@ -12,8 +12,6 @@ import { usePermissionStore } from '/@/store/modules/permission';
 import { PageEnum } from '/@/enums/pageEnum';
 import { removeTabChangeListener } from '/@/logics/mitt/routeChange';
 
-
-
 export function createStateGuard(router: Router) {
   //判断为跳转登录的路由，清除store数据
   router.afterEach((to) => {

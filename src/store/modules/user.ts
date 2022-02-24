@@ -67,7 +67,7 @@ export const useUserStore = defineStore({
       return this.token || this.getLoginInfo?.login_token || '';
     },
     getRoleList(): RoleEnum[] {
-      return this.roleList.length > 0 ? this.roleList : getAuthCache<RoleEnum[]>(ROLES_KEY);
+      return this.roleList.length > 0 ? this.roleList : getAuthCache<RoleEnum[]>(ROLES_KEY) || [];
     },
     getSessionTimeout(): boolean {
       return !!this.sessionTimeout;
@@ -77,14 +77,24 @@ export const useUserStore = defineStore({
     },
   },
   actions: {
-    setLoginInfo(vLoginInfo: ILoginServerData) {
-      this.loginInfo = Object.assign({}, vLoginInfo);
-      setAuthCache(TOKEN_KEY, JSON.stringify(vLoginInfo));
+    setLoginInfo(vLoginInfo: ILoginServerData | null) {
+      if (!vLoginInfo) {
+        setAuthCache(TOKEN_KEY, '');
+        this.loginInfo = null;
+      } else {
+        this.loginInfo = Object.assign({}, vLoginInfo);
+        setAuthCache(TOKEN_KEY, JSON.stringify(vLoginInfo));
+      }
     },
-    setUserInfoV1(vUserInfo: IUserInfo) {
-      this.userInfo_v1 = Object.assign({}, vUserInfo);
-      this.lastUpdateTime = new Date().getTime();
-      setAuthCache(USER_INFO_KEY, vUserInfo);
+    setUserInfoV1(vUserInfo: IUserInfo | null) {
+      if (vUserInfo) {
+        this.userInfo_v1 = Object.assign({}, vUserInfo);
+        this.lastUpdateTime = new Date().getTime();
+        setAuthCache(USER_INFO_KEY, vUserInfo);
+      } else {
+        this.userInfo_v1 = null;
+        setAuthCache(USER_INFO_KEY, null);
+      }
     },
     setToken(info: string | undefined) {
       this.token = info ? info : ''; // for null or undefined value
@@ -190,8 +200,11 @@ export const useUserStore = defineStore({
         }
       }
       this.setToken(undefined);
+      this.setLoginInfo(null);
       this.setSessionTimeout(false);
       this.setUserInfo(null);
+      this.setUserInfoV1(null);
+
       goLogin && router.push(PageEnum.BASE_LOGIN);
     },
 
