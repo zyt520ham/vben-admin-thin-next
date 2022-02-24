@@ -16,6 +16,7 @@ enum Api {
   GetPermCode = '/getPermCode',
 
   rgLogin = '/site/login',
+  rgLogout = '/site/logout',
   rgUserInfo = '/user/info',
 }
 
@@ -45,5 +46,13 @@ export function getPermCode() {
 }
 
 export function doLogout() {
-  return defHttp.get({ url: Api.Logout });
+  const promise = doBaseApiRequest<ILoginServerData>(
+    Api.rgLogout,
+    {},
+    {
+      errorMessageMode: 'none',
+    },
+  );
+  return promise;
+  // return defHttp.get({ url: Api.Logout });
 }
