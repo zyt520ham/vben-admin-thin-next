@@ -75,8 +75,8 @@
       const userStore = useUserStore();
 
       const getUserInfo = computed(() => {
-        const { realName = '', avatar, desc } = userStore.getUserInfo || {};
-        return { realName, avatar: avatar || headerImg, desc };
+        const { nickname = '', avatar } = userStore.getUserInfoV1 || {};
+        return { realName: nickname, avatar: avatar || headerImg, desc: '' };
       });
 
       const [register, { openModal }] = useModal();
