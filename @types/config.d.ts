@@ -11,7 +11,7 @@ import {
 import { CacheTypeEnum } from '/@/enums/cacheEnum';
 
 export type LocaleType = 'zh_CN' | 'en' | 'ru' | 'ja' | 'ko';
-
+// 菜单配置
 export interface MenuSetting {
   bgColor: string;
   fixed: boolean;
@@ -32,51 +32,63 @@ export interface MenuSetting {
   mixSideTrigger: MixSidebarTriggerEnum;
   mixSideFixed: boolean;
 }
-
+// 多标签组件配置
 export interface MultiTabsSetting {
+  // 刷新后是否保留已经打开的标签页
   cache: boolean;
-  /** tags view show*/
+
+  // 开启多标签组件
   show: boolean;
+  // 开启快速操作
   showQuick: boolean;
+  // 是否可以拖拽
   canDrag: boolean;
+  // 是否显示刷新那妞
   showRedo: boolean;
+  // 是否显示折叠按钮
   showFold: boolean;
 }
-
+// 头部配置
 export interface HeaderSetting {
+  // 背景色
   bgColor: string;
+  // 固定头部
   fixed: boolean;
+  // 是否显示顶部
   show: boolean;
+  // 主题
   theme: ThemeEnum;
-  // Turn on full screen
+  // 显示全屏按钮
   showFullScreen: boolean;
-  // Whether to show the lock screen
+  // 开启锁屏功能
   useLockPage: boolean;
-  // Show document button
+  // 显示文档按钮
   showDoc: boolean;
-  // Show message center button
+  // 显示消息中心按钮
   showNotice: boolean;
+  // 显示菜单搜索按钮
   showSearch: boolean;
 }
-
+// 多语言配置
 export interface LocaleSetting {
+  // 是否显示语言选择器
   showPicker: boolean;
-  // Current language
+  // 当前语言
   locale: LocaleType;
-  // default language
+  // 默认语言
   fallback: LocaleType;
-  // available Locales
+  // 允许的语言
   availableLocales: LocaleType[];
 }
-
+// 动画配置
 export interface TransitionSetting {
-  //  Whether to open the page switching animation
+  //  是否开启切换动画
   enable: boolean;
-  // Route basic switching animation
+  // 动画名
   basicTransition: RouterTransitionEnum;
-  // Whether to open page switching loading
+  // 是否打开页面切换loading
   openPageLoading: boolean;
-  // Whether to open the top progress bar
+  //是否打开页面切换顶部进度条
   openNProgress: boolean;
 }
 

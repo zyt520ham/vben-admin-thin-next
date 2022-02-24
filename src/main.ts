@@ -44,7 +44,7 @@ async function bootstrap() {
   // router-guard
   setupRouterGuard(router);
 
-  // Register global directive
+  // 注册全局指令
   setupGlobDirectives(app);
 
   // Configure global error handling
