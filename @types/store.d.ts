@@ -40,6 +40,32 @@ export interface UserInfo {
   roles: RoleInfo[];
 }
 
+export interface IUserInfo {
+  user_id: number;
+  account: string;
+  nickname: string;
+  password: string;
+  phone: string;
+  status: number;
+  avatar: string;
+  last_visit_ip: string;
+  last_visit_at: number;
+  last_pass_at: number;
+  created_at: number;
+  updated_at: number;
+  user_binds: {
+    '1': string;
+    '2': string;
+    '3': string;
+  };
+  user_meta: any;
+  projects: string[];
+  default_project: string;
+  project_roles: string[];
+
+  homePath?: string; //用户进入的首页
+}
+
 export interface BeforeMiniState {
   menuCollapsed?: boolean;
   menuSplit?: boolean;

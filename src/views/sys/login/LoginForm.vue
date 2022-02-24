@@ -89,8 +89,8 @@
   const rememberMe = ref(false);
 
   const formData = reactive({
-    account: 'vben',
-    password: '123456',
+    account: 'biadmin9527',
+    password: 'rg1234567',
   });
 
   const { validForm } = useFormValid(formRef);
@@ -103,26 +103,19 @@
     message.info({
       content: '请联系BI的同学重置密码',
     });
-
-    // Modal.confirm({
-    //   title: '提示',
-    //   content: '请联系BI的同学重置密码',
-    //   okText: '确定',
-    //   okType: 'primary',
-    //   centered: true,
-    //   onOk() {},
-    // });
   }
   async function handleLogin() {
     const data = await validForm();
     if (!data) return;
+
+    loading.value = true;
+    const userInfo = await userStore.login({
+      password: data.password,
+      username: data.account,
+      mode: 'none', //不要默认的错误提示
+    });
     try {
-      loading.value = true;
-      const userInfo = await userStore.login({
-        password: data.password,
-        username: data.account,
-        mode: 'none', //不要默认的错误提示
-      });
+      console.log('login', userInfo);
       if (userInfo) {
         notification.success({
           message: t('sys.login.loginSuccessTitle'),
@@ -131,6 +124,7 @@
         });
       }
     } catch (error) {
+      debugger;
       createErrorModal({
         title: t('sys.api.errorTip'),
         content: (error as unknown as Error).message || t('sys.api.networkExceptionMsg'),

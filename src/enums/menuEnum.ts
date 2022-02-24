@@ -1,6 +1,7 @@
 /**
  * @description: menu type
  */
+
 export enum MenuTypeEnum {
   // left menu
   SIDEBAR = 'sidebar',
@@ -47,4 +48,13 @@ export enum TopMenuAlignEnum {
 export enum MixSidebarTriggerEnum {
   HOVER = 'hover',
   CLICK = 'click',
+}
+
+export enum MenuPathTypeEnum {
+  /** 根节点 */
+  kRootPath = 'rootpath',
+  /** 中间路径 */
+  kMiddlePath = 'middlepath',
+  /** 叶子节点 */
+  kEndPoint = 'endPoint',
 }

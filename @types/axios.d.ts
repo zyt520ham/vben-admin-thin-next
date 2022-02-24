@@ -26,12 +26,16 @@ export interface RequestOptions {
 }
 
 export interface Result<T = any> {
-  code: number;
-  type: 'success' | 'error' | 'warning';
-  message: string;
-  result: T;
+  data: T;
+  retCode: number;
+  retMsg: string;
 }
 
+export interface IReqErr extends Error {
+  retCode?: number;
+  retMsg?: string;
+  respData?: any;
+}
 // multipart/form-data: upload file
 export interface UploadFileParams {
   // Other parameters

@@ -8,14 +8,15 @@ import { VAxios } from './Axios';
 import { checkStatus } from './checkStatus';
 import { useGlobSetting } from '/@/hooks/setting';
 import { useMessage } from '/@/hooks/web/useMessage';
-import { RequestEnum, ResultEnum, ContentTypeEnum } from '/@/enums/httpEnum';
+import { RequestEnum, ContentTypeEnum } from '/@/enums/httpEnum';
 import { isString } from '/@/utils/is';
 import { getToken } from '/@/utils/auth';
 import { setObjToUrlParams, deepMerge } from '/@/utils';
 import { useErrorLogStoreWithOut } from '/@/store/modules/errorLog';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { joinTimestamp, formatRequestDate } from './helper';
-import { useUserStoreWithOut } from '/@/store/modules/user';
+// import { useUserStoreWithOut } from '/@/store/modules/user';
+import { IReqErr } from '/#/axios';
 
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix;
@@ -28,7 +29,10 @@ const transform: AxiosTransform = {
   /**
    * @description: 处理请求数据。如果数据不是预期格式，可直接抛出错误
    */
-  transformRequestHook: (res: AxiosResponse<Result>, options: RequestOptions) => {
+  transformRequestHook: (
+    res: AxiosResponse<Result>,
+    options: RequestOptions,
+  ): AxiosResponse<Result> | Result<any> | undefined => {
     const { t } = useI18n();
     const { isTransformResponse, isReturnNativeResponse } = options;
     // 是否返回原生响应头 比如：需要获取响应头时使用该属性
@@ -40,47 +44,40 @@ const transform: AxiosTransform = {
     if (!isTransformResponse) {
       return res.data;
     }
-    // 错误的时候返回
 
-    const { data } = res;
-    if (!data) {
-      // return '[HTTP] Request has no return value';
-      throw new Error(t('sys.api.apiRequestFailed'));
+    // const { data } = res;
+    const resp: AxiosResponse<Result> = res;
+    if (resp.status === 200) {
+      //服务器网络层返回成功
+      return res.data;
+    } else {
+      if (res.data) {
+        const sErr: IReqErr = new Error(t('sys.api.apiRequestFailed')) as any;
+        sErr.retCode = res.data.retCode;
+        sErr.retMsg = res.data.retMsg;
+        sErr.respData = res.data.data;
+        throw sErr;
+        return;
+      }
+      if (!res.data) {
+        // return '[HTTP] Request has no return value';
+
+        throw new Error(t('sys.api.apiRequestFailed'));
+      }
+
+      // errorMessageMode=‘modal’的时候会显示modal错误弹窗，而不是消息提示，用于一些比较重要的错误
+      // errorMessageMode='none' 一般是调用时明确表示不希望自动弹出错误提示
+      if (options.errorMessageMode === 'modal') {
+        // @ts-ignore
+        createErrorModal({ title: t('sys.api.errorTip'), content: res.data.retMsg });
+      } else if (options.errorMessageMode === 'message') {
+        // @ts-ignore
+        createMessage.error(res.data.retMsg);
+      }
+
+      // @ts-ignore
+      throw new Error(res.data.retMsg || t('sys.api.apiRequestFailed'));
     }
-    //  这里 code，result，message为 后台统一的字段，需要在 @types.ts内修改为项目自己的接口返回格式
-    const { code, result, message } = data;
-
-    // 这里逻辑可以根据项目进行修改
-    const hasSuccess = data && Reflect.has(data, 'code') && code === ResultEnum.SUCCESS;
-    if (hasSuccess) {
-      return result;
-    }
-
-    // 在此处根据自己项目的实际情况对不同的code执行不同的操作
-    // 如果不希望中断当前请求，请return数据，否则直接抛出异常即可
-    let timeoutMsg = '';
-    switch (code) {
-      case ResultEnum.TIMEOUT:
-        timeoutMsg = t('sys.api.timeoutMessage');
-        const userStore = useUserStoreWithOut();
-        userStore.setToken(undefined);
-        userStore.logout(true);
-        break;
-      default:
-        if (message) {
-          timeoutMsg = message;
-        }
-    }
-
-    // errorMessageMode=‘modal’的时候会显示modal错误弹窗，而不是消息提示，用于一些比较重要的错误
-    // errorMessageMode='none' 一般是调用时明确表示不希望自动弹出错误提示
-    if (options.errorMessageMode === 'modal') {
-      createErrorModal({ title: t('sys.api.errorTip'), content: timeoutMsg });
-    } else if (options.errorMessageMode === 'message') {
-      createMessage.error(timeoutMsg);
-    }
-
-    throw new Error(timeoutMsg || t('sys.api.apiRequestFailed'));
   },
 
   // 请求之前处理config
@@ -172,6 +169,7 @@ const transform: AxiosTransform = {
         errMessage = t('sys.api.apiTimeoutMessage');
       }
       if (err?.includes('Network Error')) {
+        debugger;
         errMessage = t('sys.api.networkExceptionMsg');
       }
 
@@ -200,7 +198,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
         // authentication schemes，e.g: Bearer
         // authenticationScheme: 'Bearer',
         authenticationScheme: '',
-        timeout: 10 * 1000,
+        timeout: 60 * 1000,
         // 基础接口地址
         // baseURL: globSetting.apiUrl,
 

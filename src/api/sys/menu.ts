@@ -1,8 +1,10 @@
-import { defHttp } from '/@/utils/http/axios';
-import { getMenuListResultModel } from './model/menuModel';
+import { IMenuListDataItem } from './model/menuModel';
+import { doBaseApiRequest } from '/@/utils/http/NetworkEngine';
 
 enum Api {
   GetMenuList = '/getMenuList',
+
+  rgGetMenuList = '/rbac/menu/list',
 }
 
 /**
@@ -10,5 +12,6 @@ enum Api {
  */
 
 export const getMenuList = () => {
-  return defHttp.get<getMenuListResultModel>({ url: Api.GetMenuList });
+  return doBaseApiRequest<IMenuListDataItem>(Api.rgGetMenuList, {}, {});
+  // return defHttp.get<getMenuListResultModel>({ url: Api.GetMenuList });
 };

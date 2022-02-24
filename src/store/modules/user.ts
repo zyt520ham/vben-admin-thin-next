@@ -1,4 +1,4 @@
-import type { UserInfo } from '/#/store';
+import type { IUserInfo, UserInfo } from '/#/store';
 import type { ErrorMessageMode } from '/#/axios';
 import { defineStore } from 'pinia';
 import { store } from '/@/store';
@@ -6,7 +6,7 @@ import { RoleEnum } from '/@/enums/roleEnum';
 import { PageEnum } from '/@/enums/pageEnum';
 import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
-import { GetUserInfoModel, LoginParams } from '/@/api/sys/model/userModel';
+import { ILoginParams, ILoginServerData, LoginParams } from '/@/api/sys/model/userModel';
 import { doLogout, getUserInfo, loginApi } from '/@/api/sys/user';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
@@ -14,15 +14,17 @@ import { router } from '/@/router';
 import { usePermissionStore } from '/@/store/modules/permission';
 import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
-import { isArray } from '/@/utils/is';
 import { h } from 'vue';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
+  userInfo_v1: Nullable<IUserInfo>;
   token?: string;
   roleList: RoleEnum[];
   sessionTimeout?: boolean;
   lastUpdateTime: number;
+
+  loginInfo: Nullable<ILoginServerData>;
 }
 
 export const useUserStore = defineStore({
@@ -38,8 +40,16 @@ export const useUserStore = defineStore({
     sessionTimeout: false,
     // Last fetch time
     lastUpdateTime: 0,
+    loginInfo: null,
+    userInfo_v1: null,
   }),
   getters: {
+    getLoginInfo(): ILoginServerData | null {
+      return this.loginInfo || null;
+    },
+    getUserInfoV1(): IUserInfo | null {
+      return this.userInfo_v1;
+    },
     getUserInfo(): UserInfo {
       return this.userInfo || getAuthCache<UserInfo>(USER_INFO_KEY) || {};
     },
@@ -57,6 +67,12 @@ export const useUserStore = defineStore({
     },
   },
   actions: {
+    setLoginInfo(vLoginInfo: ILoginServerData) {
+      this.loginInfo = Object.assign({}, vLoginInfo);
+    },
+    setUserInfoV1(vUserInfo: IUserInfo) {
+      this.userInfo_v1 = Object.assign({}, vUserInfo);
+    },
     setToken(info: string | undefined) {
       this.token = info ? info : ''; // for null or undefined value
       setAuthCache(TOKEN_KEY, info);
@@ -76,6 +92,7 @@ export const useUserStore = defineStore({
     resetState() {
       this.userInfo = null;
       this.token = '';
+      this.loginInfo = null;
       this.roleList = [];
       this.sessionTimeout = false;
     },
@@ -87,54 +104,64 @@ export const useUserStore = defineStore({
         goHome?: boolean;
         mode?: ErrorMessageMode;
       },
-    ): Promise<GetUserInfoModel | null> {
+    ): Promise<IUserInfo | null> {
       try {
         const { goHome = true, mode, ...loginParams } = params;
-        const data = await loginApi(loginParams, mode);
-        const { token } = data;
+        const requestParams: ILoginParams = {
+          account: loginParams.username,
+          password: loginParams.password,
+        };
+
+        const data: ILoginServerData = await loginApi(requestParams, mode);
 
         // save token
-        this.setToken(token);
+        this.setLoginInfo(data);
+        this.setToken(data.login_token);
         return this.afterLoginAction(goHome);
       } catch (error) {
         return Promise.reject(error);
       }
     },
-    async afterLoginAction(goHome?: boolean): Promise<GetUserInfoModel | null> {
+    async afterLoginAction(goHome?: boolean): Promise<IUserInfo | null> {
       if (!this.getToken) return null;
       // get user info
       const userInfo = await this.getUserInfoAction();
 
       const sessionTimeout = this.sessionTimeout;
+
       if (sessionTimeout) {
         this.setSessionTimeout(false);
       } else {
         const permissionStore = usePermissionStore();
         if (!permissionStore.isDynamicAddedRoute) {
           const routes = await permissionStore.buildRoutesAction();
+
           routes.forEach((route) => {
             router.addRoute(route as unknown as RouteRecordRaw);
           });
           router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
           permissionStore.setDynamicAddedRoute(true);
         }
+
         goHome && (await router.replace(userInfo?.homePath || PageEnum.BASE_HOME));
       }
       return userInfo;
     },
-    async getUserInfoAction(): Promise<UserInfo | null> {
+    async getUserInfoAction(): Promise<IUserInfo | null> {
       if (!this.getToken) return null;
-      const userInfo = await getUserInfo();
-      const { roles = [] } = userInfo;
-      if (isArray(roles)) {
-        const roleList = roles.map((item) => item.value) as RoleEnum[];
-        this.setRoleList(roleList);
-      } else {
-        userInfo.roles = [];
-        this.setRoleList([]);
-      }
-      this.setUserInfo(userInfo);
-      return userInfo;
+      const userInfo = await getUserInfo({ user_id: this.getLoginInfo!.user_id });
+      this.setUserInfoV1(userInfo);
+      // debugger;
+      // const { roles = [] } = userInfo;
+      // if (isArray(roles)) {
+      //   const roleList = roles.map((item) => item.value) as RoleEnum[];
+      //   this.setRoleList(roleList);
+      // } else {
+      //   userInfo.roles = [];
+      //   this.setRoleList([]);
+      // }
+      // this.setUserInfo(userInfo);
+      return userInfo as IUserInfo;
     },
     /**
      * @description: logout

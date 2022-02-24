@@ -16,5 +16,8 @@ export function formatToDateTime(
 export function formatToDate(date: moment.MomentInput = undefined, format = DATE_FORMAT): string {
   return moment(date).format(format);
 }
+export function getSecondTimestampNow(): number {
+  return Math.round(new Date().getTime() / 1000);
+}
 
 export const dateUtil = moment;

@@ -80,6 +80,7 @@ export class VAxios {
     // Request interceptor configuration processing
     this.axiosInstance.interceptors.request.use((config: AxiosRequestConfig) => {
       // If cancel repeat request is turned on, then cancel repeat request is prohibited
+      // debugger;
       const {
         // @ts-ignore
         headers: { ignoreCancelToken },
@@ -162,11 +163,17 @@ export class VAxios {
     const contentType = headers?.['Content-Type'] || headers?.['content-type'];
 
     if (
-      contentType !== ContentTypeEnum.FORM_URLENCODED ||
+      (contentType && contentType.indexOf(ContentTypeEnum.FORM_URLENCODED) < 0) ||
       !Reflect.has(config, 'data') ||
       config.method?.toUpperCase() === RequestEnum.GET
     ) {
       return config;
+    } else if (contentType && contentType.indexOf(ContentTypeEnum.FORM_URLENCODED) >= 0) {
+      config.transformRequest = [
+        () => {
+          return qs.stringify(config.data);
+        },
+      ];
     }
 
     return {
@@ -192,6 +199,7 @@ export class VAxios {
   }
 
   request<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
+    //深克隆
     let conf: CreateAxiosOptions = cloneDeep(config);
     const transform = this.getTransform();
 
@@ -206,15 +214,20 @@ export class VAxios {
     conf.requestOptions = opt;
 
     conf = this.supportFormData(conf);
-
+    // debugger;
     return new Promise((resolve, reject) => {
       this.axiosInstance
         .request<any, AxiosResponse<Result>>(conf)
         .then((res: AxiosResponse<Result>) => {
           if (transformRequestHook && isFunction(transformRequestHook)) {
             try {
-              const ret = transformRequestHook(res, opt);
-              resolve(ret);
+              if (opt.isReturnNativeResponse) {
+                const ret: AxiosResponse<Result> = transformRequestHook(res, opt);
+                resolve(ret as unknown as Promise<T>);
+              } else {
+                const ret: Result<any> = transformRequestHook(res, opt);
+                resolve(ret as unknown as Promise<T>);
+              }
             } catch (err) {
               reject(err || new Error('request error!'));
             }
@@ -223,6 +236,9 @@ export class VAxios {
           resolve(res as unknown as Promise<T>);
         })
         .catch((e: Error | AxiosError) => {
+          // console.log(e.request);
+          // console.log(e.response);
+
           if (requestCatchHook && isFunction(requestCatchHook)) {
             reject(requestCatchHook(e, opt));
             return;

@@ -81,58 +81,62 @@ export interface TransitionSetting {
 }
 
 export interface ProjectConfig {
-  // Storage location of permission related information
+  /*// 权限缓存存放位置。默认存放于localStorage*/
   permissionCacheType: CacheTypeEnum;
-  // Whether to show the configuration button
+  /*  // 是否显示SettingButton */
   showSettingButton: boolean;
-  // Whether to show the theme switch button
+  /*// 是否显示主题切换按钮*/
   showDarkModeToggle: boolean;
-  // Configure where the button is displayed
+  /*// 设置按钮位置 可选项*/
   settingButtonPosition: SettingButtonPositionEnum;
-  // Permission mode
+  /*  // 权限模式,默认前端角色权限模式
+  // ROUTE_MAPPING: 前端模式（菜单由路由生成，默认）
+  // ROLE：前端模式（菜单路由分开）*/
   permissionMode: PermissionModeEnum;
-  // Session timeout processing
+  /*  // 会话超时处理方案
+  // SessionTimeoutProcessingEnum.ROUTE_JUMP: 路由跳转到登录页
+  // SessionTimeoutProcessingEnum.PAGE_COVERAGE: 生成登录弹窗，覆盖当前页面*/
   sessionTimeoutProcessing: SessionTimeoutProcessingEnum;
-  // Website gray mode, open for possible mourning dates
+  /*// 网站灰色模式，用于可能悼念的日期开启*/
   grayMode: boolean;
-  // Whether to turn on the color weak mode
+  /*  // 色弱模式*/
   colorWeak: boolean;
-  // Theme color
+  // 项目主题色
   themeColor: string;
-
-  // The main interface is displayed in full screen, the menu is not displayed, and the top
+  // 是否取消菜单,顶部,多标签页显示, 用于可能内嵌在别的系统内
   fullContent: boolean;
-  // content width
+  // 主题内容宽度
   contentMode: ContentEnum;
-  // Whether to display the logo
+  // 是否显示logo
   showLogo: boolean;
-  // Whether to show the global footer
+  // 是否显示底部信息 copyright
   showFooter: boolean;
-  // menuType: MenuTypeEnum;
+  // 头部配置
   headerSetting: HeaderSetting;
-  // menuSetting
+  // 菜单配置
   menuSetting: MenuSetting;
-  // Multi-tab settings
+  // 多标签
   multiTabsSetting: MultiTabsSetting;
-  // Animation configuration
+  // 动画配置
   transitionSetting: TransitionSetting;
-  // pageLayout whether to enable keep-alive
+  // 是否开启KeepAlive缓存  开发时候最好关闭,不然每次都需要清除缓存
   openKeepAlive: boolean;
-  // Lock screen time
+  // 自动锁屏时间，为0不锁屏。 单位分钟 默认1个小时
   lockTime: number;
-  // Show breadcrumbs
+  // 显示面包屑
   showBreadCrumb: boolean;
-  // Show breadcrumb icon
+  // 显示面包屑图标
   showBreadCrumbIcon: boolean;
-  // Use error-handler-plugin
+  // 是否使用全局错误捕获
   useErrorHandle: boolean;
-  // Whether to open back to top
+  // 是否开启回到顶部
   useOpenBackTop: boolean;
-  // Is it possible to embed iframe pages
+  //  是否可以嵌入iframe页面
   canEmbedIFramePage: boolean;
-  // Whether to delete unclosed messages and notify when switching the interface
+  // 切换界面的时候是否删除未关闭的message及notify
   closeMessageOnSwitch: boolean;
-  // Whether to cancel the http request that has been sent but not responded when switching the interface.
+  // 切换界面的时候是否取消已经发送但是未响应的http请求。
+  // 如果开启,想对单独接口覆盖。可以在单独接口设置
   removeAllHttpPending: boolean;
 }
 
@@ -149,14 +153,14 @@ export interface GlobConfig {
   shortName: string;
 }
 export interface GlobEnvConfig {
-  // Site title
+  /*# 网站标题*/
   VITE_GLOB_APP_TITLE: string;
-  // Service interface url
+  /* 接口地址 可以由nginx做转发或者直接写实际地址 */
   VITE_GLOB_API_URL: string;
-  // Service interface url prefix
+  /* # 接口地址前缀，有些系统所有接口地址都有前缀，可以在这里统一加，方便切换 */
   VITE_GLOB_API_URL_PREFIX?: string;
-  // Project abbreviation
+  /* # 简称，用于配置文件名字 不要出现空格、数字开头等特殊字符*/
   VITE_GLOB_APP_SHORT_NAME: string;
-  // Upload url
+  /*  # 文件上传接口  可选*/
   VITE_GLOB_UPLOAD_URL?: string;
 }

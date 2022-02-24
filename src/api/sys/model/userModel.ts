@@ -6,6 +6,19 @@ export interface LoginParams {
   password: string;
 }
 
+export interface ILoginParams {
+  /** 用户名 */
+  account: string;
+  /** 密码 */
+  password: string;
+}
+/** login 返回的数据info */
+export interface ILoginServerData {
+  login_token: string;
+  account: string;
+  user_id: number;
+  project: string;
+}
 export interface RoleInfo {
   roleName: string;
   value: string;
@@ -35,4 +48,32 @@ export interface GetUserInfoModel {
   avatar: string;
   // 介绍
   desc?: string;
+}
+
+export interface IUserInfoParams {
+  user_id: number;
+}
+/** 服务端返回的userinfo */
+export interface IUserItemServerData {
+  user_id: number;
+  account: string;
+  nickname: string;
+  password: string;
+  phone: string;
+  status: number;
+  avatar: string;
+  last_visit_ip: string;
+  last_visit_at: number;
+  last_pass_at: number;
+  created_at: number;
+  updated_at: number;
+  user_binds: {
+    '1': string;
+    '2': string;
+    '3': string;
+  };
+  user_meta: any;
+  projects: string[];
+  default_project: string;
+  project_roles: string[];
 }

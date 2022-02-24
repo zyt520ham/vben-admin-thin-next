@@ -76,5 +76,6 @@ module.exports = defineConfig({
         math: 'always',
       },
     ],
+    '@typescript-eslint/no-namespace': 'off',
   },
 });

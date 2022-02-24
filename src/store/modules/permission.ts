@@ -23,6 +23,8 @@ import { getPermCode } from '/@/api/sys/user';
 
 import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
+import { IMenuListDataItem } from '/@/api/sys/model/menuModel';
+import { transformMenuDataToAppRouteRecord } from '/@/store/utils/MenuDataHelper';
 
 interface PermissionState {
   // Permission code list
@@ -184,8 +186,10 @@ export const usePermissionStore = defineStore({
           // this function may only need to be executed once, and the actual project can be put at the right time by itself
           let routeList: AppRouteRecordRaw[] = [];
           try {
-            this.changePermissionCode();
-            routeList = (await getMenuList()) as AppRouteRecordRaw[];
+            //TODO:: 还不知道此接口作用
+            // this.changePermissionCode();
+            const menuDataList: IMenuListDataItem = await getMenuList();
+            routeList = transformMenuDataToAppRouteRecord(menuDataList || { list: [] });
           } catch (error) {
             console.error(error);
           }
