@@ -45,7 +45,17 @@ export const useUserStore = defineStore({
   }),
   getters: {
     getLoginInfo(): ILoginServerData | null {
-      return this.loginInfo || null;
+      let loginInfo = null;
+      const cacheLoginInfo = getAuthCache<string>(TOKEN_KEY);
+      if (cacheLoginInfo) {
+        try {
+          loginInfo = JSON.parse(cacheLoginInfo);
+        } catch {
+          debugger;
+        }
+      }
+
+      return this.loginInfo || loginInfo;
     },
     getUserInfoV1(): IUserInfo | null {
       return this.userInfo_v1;
@@ -54,7 +64,7 @@ export const useUserStore = defineStore({
       return this.userInfo || getAuthCache<UserInfo>(USER_INFO_KEY) || {};
     },
     getToken(): string {
-      return this.token || getAuthCache<string>(TOKEN_KEY);
+      return this.token || this.getLoginInfo?.login_token || '';
     },
     getRoleList(): RoleEnum[] {
       return this.roleList.length > 0 ? this.roleList : getAuthCache<RoleEnum[]>(ROLES_KEY);
@@ -69,13 +79,16 @@ export const useUserStore = defineStore({
   actions: {
     setLoginInfo(vLoginInfo: ILoginServerData) {
       this.loginInfo = Object.assign({}, vLoginInfo);
+      setAuthCache(TOKEN_KEY, JSON.stringify(vLoginInfo));
     },
     setUserInfoV1(vUserInfo: IUserInfo) {
       this.userInfo_v1 = Object.assign({}, vUserInfo);
+      this.lastUpdateTime = new Date().getTime();
+      setAuthCache(USER_INFO_KEY, vUserInfo);
     },
     setToken(info: string | undefined) {
       this.token = info ? info : ''; // for null or undefined value
-      setAuthCache(TOKEN_KEY, info);
+      // setAuthCache(TOKEN_KEY, info);
     },
     setRoleList(roleList: RoleEnum[]) {
       this.roleList = roleList;
@@ -84,7 +97,7 @@ export const useUserStore = defineStore({
     setUserInfo(info: UserInfo | null) {
       this.userInfo = info;
       this.lastUpdateTime = new Date().getTime();
-      setAuthCache(USER_INFO_KEY, info);
+      // setAuthCache(USER_INFO_KEY, info);
     },
     setSessionTimeout(flag: boolean) {
       this.sessionTimeout = flag;
@@ -95,6 +108,8 @@ export const useUserStore = defineStore({
       this.loginInfo = null;
       this.roleList = [];
       this.sessionTimeout = false;
+      this.userInfo_v1 = null;
+      this.loginInfo = null;
     },
     /**
      * @description: login
