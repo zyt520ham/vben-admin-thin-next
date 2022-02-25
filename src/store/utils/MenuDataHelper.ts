@@ -2,6 +2,7 @@ import { IMenuListDataItem, IMenuRawData } from '/@/api/sys/model/menuModel';
 import { AppRouteRecordRaw } from '/@/router/types';
 
 import { RouteMeta } from 'vue-router';
+import { compNameEnum, compPathMap } from '/@/enums/CompPathEnum';
 
 export function transformMenuDataToAppRouteRecord(
   menuListData: IMenuListDataItem,
@@ -120,7 +121,7 @@ export function transformToAppRouteRecordItem(item: IMenuRawData): AppRouteRecor
         {
           name: item.label,
           meta: metaItem,
-          component: 'Test',
+          component: compentPathReplace(item),
           path: item.path + '.index',
         },
       ],
@@ -132,8 +133,88 @@ export function transformToAppRouteRecordItem(item: IMenuRawData): AppRouteRecor
       meta: metaItem,
       fullPath: item.id,
       path: item.path,
-      component: item.menuLevel === 0 ? 'layout' : 'Test',
+      component: compentPathReplace(item),
     };
     return returnItem;
   }
+}
+
+enum eCompsKeyEnum {
+  kLayoutIndex = 'LayoutIndex',
+  kRouteMiddleView = 'RouterMiddleView',
+  kHome = 'Home',
+  kTestVue = 'TestVue',
+  kMenu1_1 = 'menu1_1',
+  kMenu1_2_1 = 'menu1_2_1',
+  kMenu1_2_2 = 'menu1_2_2',
+  kMenu1_3 = 'menu1_3',
+  kMenu2 = 'menu2',
+  kSysUserListView = 'SysUserListView',
+  kSysMenuMgView = 'SysMenuMgView',
+  kSysRoleMgView = 'SysRoleMgView',
+  kSysAuthorityView = 'SysAuthorityView',
+  kSysUserProfile = 'SysUserProfileView',
+  kSysMyDepartment = 'SysMyDepartmentView',
+  kSysDepartmentMgView = 'SysDepartmentMgView',
+  kIFrameView = 'IFrameView',
+  kIFrameUseToken = 'IFrameUseTokenView',
+  kSysProjUserMg = 'SysProjUserMg',
+  kSysProjRoleMg = 'SysProjRolesMgView',
+  kSysProjDetailView = 'SysProjDetailView',
+  kSysProjPermissionMg = 'SysProjPermissionMg',
+  kSysProjMenusMg = 'SysProjMenusMg',
+}
+
+export function compentPathReplace(item: IMenuRawData): string {
+  let compPath = '';
+  if (item.menuLevel == 0 && item.menuType === 'rootpath') {
+    return 'layout';
+  } else if (item.menuLevel == 0 && item.menuType === 'middlepath') {
+    return (compPath = 'routeMiddle');
+  }
+  // else {
+  //   return 'Test';
+  // }
+  switch (item.compsKey) {
+    case eCompsKeyEnum.kLayoutIndex:
+      compPath = 'layout';
+      break;
+    case eCompsKeyEnum.kRouteMiddleView:
+      compPath = 'routeMiddle';
+      break;
+    case eCompsKeyEnum.kSysProjUserMg:
+      compPath = compPathMap[compNameEnum.kProjUsersMgView];
+      break;
+    case eCompsKeyEnum.kSysProjRoleMg:
+      compPath = compPathMap[compNameEnum.kProjRolesListMgView];
+      break;
+    case eCompsKeyEnum.kSysProjDetailView:
+      compPath = compPathMap[compNameEnum.kProjDetailView];
+      break;
+    case eCompsKeyEnum.kSysProjPermissionMg:
+      compPath = compPathMap[compNameEnum.kProjPermissionsMgView];
+      break;
+    case eCompsKeyEnum.kSysProjMenusMg:
+      compPath = compPathMap[compNameEnum.kProjMenusListMgView];
+      break;
+    //////////////////////////
+    case eCompsKeyEnum.kSysMyDepartment:
+      compPath = compPathMap[compNameEnum.kSysUserProjsView];
+      break;
+    case eCompsKeyEnum.kSysUserProfile:
+      compPath = compPathMap[compNameEnum.kSysUserProfilesView];
+      break;
+    //////////////////////////
+    case eCompsKeyEnum.kSysUserListView:
+      compPath = compPathMap[compNameEnum.kProjUsersMgView];
+      break;
+    case eCompsKeyEnum.kSysDepartmentMgView:
+      compPath = compPathMap[compNameEnum.kSysProjsListMgView];
+      break;
+    /////////////////////////////
+    case 'Home':
+      compPath = 'Test';
+    default:
+  }
+  return compPath;
 }

@@ -1,17 +1,40 @@
 <template>
-  <span>test</span>
-  <span></span>
+  <span>test-----------</span>
+  <span>{{ titleName }}</span>
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { computed, defineComponent, onMounted } from 'vue';
+  import { useRoute, useRouter } from 'vue-router';
 
   export default defineComponent({
     name: 'Test',
-    setup() {
-      return {};
+    props: {
+      title: String,
+    },
+    setup(prop, context) {
+      onMounted(() => {
+        console.log(prop);
+        console.log(context);
+        // const { currentRoute } = useRouter();
+        // console.log('route', currentRoute);
+      });
+      const ccRoute = useRoute();
+      console.log('router -- route', ccRoute);
+      const { currentRoute } = useRouter();
+      console.log('router -- route', currentRoute);
+      const titleName = computed(() => {
+        return currentRoute.value.name;
+      });
+      return {
+        titleName,
+      };
     },
   });
 </script>
 
-<style scoped></style>
+<style scoped>
+  span {
+    text-align: center;
+  }
+</style>

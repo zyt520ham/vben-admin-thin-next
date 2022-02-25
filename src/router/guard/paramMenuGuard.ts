@@ -16,19 +16,14 @@ export function createParamMenuGuard(router: Router) {
     }
 
     // menu has been built.
-    // debugger;
-    // if (!permissionStore.getIsDynamicAddedRoute) {
-    //   next();
-    //   return;
-    // }
+    if (!permissionStore.getIsDynamicAddedRoute) {
+      next();
+      return;
+    }
 
     let menus: Menu[] = [];
     if (isBackMode()) {
       menus = permissionStore.getBackMenuList;
-      if (menus && menus.length < 1) {
-        // 判断路由不存在时，重新拉取
-        await permissionStore.buildRoutesAction();
-      }
     } else if (isRouteMappingMode()) {
       menus = permissionStore.getFrontMenuList;
     }
