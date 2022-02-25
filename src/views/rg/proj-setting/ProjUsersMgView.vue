@@ -4,7 +4,7 @@
  * @Date         : 2022/2/25
  * @FilePath     : src/views/rg/proj-setting/ProjUsersMgView.vue
 -->
-<template> <div></div></template>
+<template> <div>ProjUsersMgView</div></template>
 
 <script lang="ts">
   import { defineComponent } from 'vue';

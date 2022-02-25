@@ -4,7 +4,7 @@
  * @Date         : 2022/2/25
  * @FilePath     : /Users/zhangyantao/wsp_web/openStudy/github-root/vben-admin-thin-next/src/views/rg/proj-setting/ProjMenusListMg.vue
 -->
-<template> <div></div></template>
+<template> <div> ProjMenusListMg </div></template>
 
 <script lang="ts">
   import { defineComponent } from 'vue';
