@@ -83,6 +83,7 @@ export const useUserStore = defineStore({
         this.loginInfo = null;
       } else {
         this.loginInfo = Object.assign({}, vLoginInfo);
+        this.setToken(this.loginInfo.login_token);
         setAuthCache(TOKEN_KEY, JSON.stringify(vLoginInfo));
       }
     },
@@ -141,7 +142,7 @@ export const useUserStore = defineStore({
 
         // save token
         this.setLoginInfo(data);
-        this.setToken(data.login_token);
+        // this.setToken(data.login_token);
         return this.afterLoginAction(goHome);
       } catch (error) {
         return Promise.reject(error);

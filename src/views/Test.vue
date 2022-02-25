@@ -1,6 +1,8 @@
 <template>
-  <span>test-----------</span>
-  <span>{{ titleName }}</span>
+  <div class="test">
+    <span>test-----------</span>
+    <span>{{ titleName }}</span>
+  </div>
 </template>
 
 <script lang="ts">
@@ -33,8 +35,12 @@
   });
 </script>
 
-<style scoped>
-  span {
-    text-align: center;
+<style lang="less" scoped>
+  .test {
+    width: 100%;
+    height: 100%;
+    span {
+      text-align: center;
+    }
   }
 </style>
