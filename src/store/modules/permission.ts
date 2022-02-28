@@ -190,6 +190,7 @@ export const usePermissionStore = defineStore({
             // this.changePermissionCode();
             const menuDataList: IMenuListDataItem = await getMenuList();
             routeList = transformMenuDataToAppRouteRecord(menuDataList || { list: [] });
+            console.log('转换后的AppRouteRecord:', routeList);
           } catch (error) {
             console.error(error);
           }

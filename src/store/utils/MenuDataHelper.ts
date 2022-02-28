@@ -89,7 +89,7 @@ export function transformToAppRouteRecordItem(item: IMenuRawData): AppRouteRecor
   if (item.redirect) {
     metaItem.redirect = item.redirect;
   }
-  metaItem.icon = item.icon || '';
+  metaItem.icon = item.icon ? `${item.icon}|svg` : '';
   metaItem.menuLevel = item.menuLevel;
   if (item.externalLinkUrl) {
     metaItem.frameSrc = item.externalLinkUrl;
@@ -109,7 +109,7 @@ export function transformToAppRouteRecordItem(item: IMenuRawData): AppRouteRecor
       name: item.label,
       meta: {
         title: item.label,
-        icon: item.icon || '',
+        icon: metaItem.icon,
         menuLevel: 0,
         hideChildrenInMenu: true,
       },
