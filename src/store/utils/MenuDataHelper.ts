@@ -86,13 +86,20 @@ export function transformMenuDataToAppRouteRecord(
 export function transformToAppRouteRecordItem(item: IMenuRawData): AppRouteRecordRaw {
   const metaItem: RouteMeta = {} as RouteMeta;
   metaItem.title = item.label;
+  metaItem.currentPath = item.path;
   if (item.redirect) {
     metaItem.redirect = item.redirect;
   }
   metaItem.icon = item.icon ? `${item.icon}|svg` : '';
   metaItem.menuLevel = item.menuLevel;
+
   if (item.externalLinkUrl) {
-    metaItem.frameSrc = item.externalLinkUrl;
+    if (item.useExternalLink) {
+      metaItem.path = item.externalLinkUrl;
+    } else {
+      metaItem.frameSrc = item.externalLinkUrl;
+      metaItem.paramPath = item.externalLinkUrl;
+    }
   }
   metaItem.hideMenu = item.hiddenInMenu;
   metaItem.parentId = item.parentId;
@@ -107,24 +114,19 @@ export function transformToAppRouteRecordItem(item: IMenuRawData): AppRouteRecor
 
     const returnItem: AppRouteRecordRaw = {
       name: item.label,
-      meta: {
-        title: item.label,
-        icon: metaItem.icon,
-        menuLevel: 0,
-        hideChildrenInMenu: true,
-      },
+      meta: metaItem,
       fullPath: '/' + item.path,
-      component: 'layout',
+      component: compentPathReplace(item),
       path: '/' + item.path,
-      redirect: item.id,
-      children: [
-        {
-          name: item.label,
-          meta: metaItem,
-          component: compentPathReplace(item),
-          path: item.path + '.index',
-        },
-      ],
+      // redirect: item.id,
+      // children: [
+      //   {
+      //     name: item.label,
+      //     meta: metaItem,
+      //     component: compentPathReplace(item),
+      //     path: item.path + '.index',
+      //   },
+      // ],
     };
     return returnItem;
   } else {
@@ -144,11 +146,12 @@ enum eCompsKeyEnum {
   kRouteMiddleView = 'RouterMiddleView',
   kHome = 'Home',
   kTestVue = 'TestVue',
-  kMenu1_1 = 'menu1_1',
-  kMenu1_2_1 = 'menu1_2_1',
-  kMenu1_2_2 = 'menu1_2_2',
-  kMenu1_3 = 'menu1_3',
+  kMenu1_1 = 'menu1-1',
+  kMenu1_2_1 = 'menu1-2-1',
+  kMenu1_2_2 = 'menu1-2-2',
+  kMenu1_3 = 'menu1-3',
   kMenu2 = 'menu2',
+  kMenu3 = 'menu3',
   kSysUserListView = 'SysUserListView',
   kSysMenuMgView = 'SysMenuMgView',
   kSysRoleMgView = 'SysRoleMgView',
@@ -169,8 +172,10 @@ export function compentPathReplace(item: IMenuRawData): string {
   let compPath = '';
   if (item.menuLevel == 0 && item.menuType === 'rootpath') {
     return 'layout';
-  } else if (item.menuLevel == 0 && item.menuType === 'middlepath') {
-    return (compPath = 'routeMiddle');
+  } else if (item.menuLevel > 0 && item.menuType === 'middlepath') {
+    return 'ParentLayout';
+  } else if (item.useExternalLink) {
+    return '';
   }
   // else {
   //   return 'Test';
@@ -180,7 +185,7 @@ export function compentPathReplace(item: IMenuRawData): string {
       compPath = 'layout';
       break;
     case eCompsKeyEnum.kRouteMiddleView:
-      compPath = 'routeMiddle';
+      compPath = 'ParentLayout';
       break;
     case eCompsKeyEnum.kSysProjUserMg:
       compPath = compPathMap[compNameEnum.kProjUsersMgView];
@@ -211,6 +216,26 @@ export function compentPathReplace(item: IMenuRawData): string {
     case eCompsKeyEnum.kSysDepartmentMgView:
       compPath = compPathMap[compNameEnum.kSysProjsListMgView];
       break;
+    /////////////////////////////
+    case eCompsKeyEnum.kMenu1_1:
+      compPath = 'rg/leve-menus/Menu1-1.vue';
+      break;
+    case eCompsKeyEnum.kMenu1_2_1:
+      compPath = 'rg/leve-menus/Menu1-1-2.vue';
+      break;
+    case eCompsKeyEnum.kMenu1_2_2:
+      compPath = 'rg/leve-menus/Menu1-1-2.vue';
+      break;
+    case eCompsKeyEnum.kMenu1_3:
+      compPath = 'rg/leve-menus/Menu1-3.vue';
+      break;
+    case eCompsKeyEnum.kMenu2:
+      compPath = 'rg/leve-menus/Menu2.vue';
+      break;
+    case eCompsKeyEnum.kMenu3:
+      compPath = 'rg/leve-menus/Menu3.vue';
+      break;
+
     /////////////////////////////
     case 'Home':
       compPath = 'Test';

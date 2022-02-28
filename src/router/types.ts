@@ -32,6 +32,7 @@ export interface Menu {
   path: string;
 
   // path contains param, auto assignment.
+  //打开外链的时间会用到
   paramPath?: string;
 
   disabled?: boolean;

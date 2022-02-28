@@ -8,7 +8,7 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 
 export type LayoutMapKey = 'LAYOUT';
 const IFRAME = () => import('/@/views/sys/iframe/FrameBlank.vue');
-
+const RouteMiddleView = () => import('/@/views/RouteMiddleView.vue');
 const LayoutMap = new Map<string, () => Promise<typeof import('*.vue')>>();
 
 LayoutMap.set('LAYOUT', LAYOUT);
@@ -27,11 +27,15 @@ function asyncImportRoute(routes: AppRouteRecordRaw[] | undefined) {
     const { component, name } = item;
     const { children } = item;
     if (component) {
-      const layoutFound = LayoutMap.get(component.toUpperCase());
-      if (layoutFound) {
-        item.component = layoutFound;
+      if (component === 'ParentLayout') {
+        item.component = RouteMiddleView;
       } else {
-        item.component = dynamicImport(dynamicViewsModules, component as string);
+        const layoutFound = LayoutMap.get(component.toUpperCase());
+        if (layoutFound) {
+          item.component = layoutFound;
+        } else {
+          item.component = dynamicImport(dynamicViewsModules, component as string);
+        }
       }
     } else if (name) {
       item.component = getParentLayout();
@@ -75,6 +79,7 @@ export function transformObjToRoute<T = AppRouteModule>(routeList: AppRouteModul
       if (component.toUpperCase() === 'LAYOUT') {
         route.component = LayoutMap.get(component.toUpperCase());
       } else {
+        // debugger;
         route.children = [cloneDeep(route)];
         route.component = LAYOUT;
         route.name = `${route.name}Parent`;

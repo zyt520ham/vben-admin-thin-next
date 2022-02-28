@@ -50,5 +50,6 @@ declare module 'vue-router' {
     serverId?: number;
     project_id?: string;
     redirect?: string; //重定向地址
+    currentPath?: string; //当前route的path，不带父级
   }
 }

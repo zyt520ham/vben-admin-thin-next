@@ -25,6 +25,7 @@ import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
 import { IMenuListDataItem } from '/@/api/sys/model/menuModel';
 import { transformMenuDataToAppRouteRecord } from '/@/store/utils/MenuDataHelper';
+import testMenus from '/@/router/routes/modules/demo/testmenus';
 
 interface PermissionState {
   // Permission code list
@@ -35,6 +36,7 @@ interface PermissionState {
   lastBuildMenuTime: number;
   // Backstage menu list
   backMenuList: Menu[];
+  backMenuMap: { [key: string]: Menu };
   frontMenuList: Menu[];
 }
 export const usePermissionStore = defineStore({
@@ -47,6 +49,7 @@ export const usePermissionStore = defineStore({
     lastBuildMenuTime: 0,
     // Backstage menu list
     backMenuList: [],
+    backMenuMap: {},
     // menu List
     frontMenuList: [],
   }),
@@ -56,6 +59,9 @@ export const usePermissionStore = defineStore({
     },
     getBackMenuList(): Menu[] {
       return this.backMenuList;
+    },
+    getBackMenuMap(): any {
+      return this.backMenuMap;
     },
     getFrontMenuList(): Menu[] {
       return this.frontMenuList;
@@ -74,6 +80,17 @@ export const usePermissionStore = defineStore({
 
     setBackMenuList(list: Menu[]) {
       this.backMenuList = list;
+      const toMapFunc = (menuItem) => {
+        this.backMenuMap[menuItem.path] = menuItem;
+        if (menuItem.children?.length > 0) {
+          menuItem.children.map((subItem) => {
+            toMapFunc(subItem);
+          });
+        }
+      };
+      list.map((menuItem) => {
+        toMapFunc(menuItem);
+      });
       list?.length > 0 && this.setLastBuildMenuTime();
     },
 
@@ -189,6 +206,9 @@ export const usePermissionStore = defineStore({
             //TODO:: 还不知道此接口作用  看文档说是按钮权限相关
             // this.changePermissionCode();
             const menuDataList: IMenuListDataItem = await getMenuList();
+
+            //添加多级测试路由
+            menuDataList.list.push(...(testMenus as any));
             routeList = transformMenuDataToAppRouteRecord(menuDataList || { list: [] });
             console.log('转换后的AppRouteRecord:', routeList);
           } catch (error) {
