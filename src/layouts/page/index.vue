@@ -58,7 +58,6 @@
       });
 
       const getCaches = computed((): string[] => {
-        debugger;
         if (!unref(getOpenKeepAlive)) {
           return [];
         }
