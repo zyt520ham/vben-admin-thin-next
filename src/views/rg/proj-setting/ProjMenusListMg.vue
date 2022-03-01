@@ -10,12 +10,12 @@
       <a-card :bordered="false" class="box-radius menu-list h-fix" :bodyStyle="cardContentStyle">
         <a-button color="success" @click="resetFields">新增根节点</a-button>
         <BasicTree
+          ref="menusTreeRef"
           selectable
-          :checkedKeys="checkedKeys"
+          :selectedKeys="menuSelectedKeys"
           search
           checkStrictly
           @check="onTreeNodeCheck"
-          ref="treeRef"
           :treeData="treeData"
           :replaceFields="replaceFields"
           @select="handleSelect"
@@ -73,10 +73,10 @@
                   <a-input v-model:value="menuFormItem.icon" />
                 </a-form-item>
                 <a-form-item label="父级菜单" name="parentId">
-                  <a-input v-model:value="menuFormItem.parentName" />
+                  <a-input disabled v-model:value="menuFormItem.parentName" />
                 </a-form-item>
                 <a-form-item label="父级路径" name="parentId">
-                  <a-input v-model:value="menuFormItem.parentId" />
+                  <a-input disabled v-model:value="menuFormItem.parentId" />
                 </a-form-item>
                 <a-form-item label="排序" name="orderNo">
                   <a-input v-model:value="menuFormItem.orderNo" />
@@ -198,7 +198,8 @@
         children: 'children',
       };
       //树形checked list
-      const checkedKeys = ref<string[]>([]);
+      const menusTreeRef = ref({});
+      const menuSelectedKeys = ref<string[]>([]);
       function actionList() {}
       //-----------tarbar---------------
       //页签列表
@@ -223,7 +224,7 @@
       }
       function handleSelect(selectedKeys: string[], e: any) {
         console.log('handleSelect', selectedKeys, e, e.selectedNodes[0].props);
-        checkedKeys.value = selectedKeys;
+        menuSelectedKeys.value = selectedKeys;
         treeSelectedItem.value = e.selectedNodes[0].props;
         updateFormData();
       }
@@ -271,7 +272,12 @@
       onMounted(() => {
         const menuList = usePermissionStoreWithOut().getBackMenuList;
         console.log('menulist:', menuList);
+        treeSelectedItem.value = menuList[0];
+        menuSelectedKeys.value.push(treeSelectedItem.value.path);
         treeData.value = menuList;
+        updateFormData();
+        console.log(menusTreeRef.value);
+        // getMenusTreeComp.
       });
       const getMenuTypeEnum = computed(() => {
         return MenuNodeTypeEnum;
@@ -290,10 +296,11 @@
         actionList,
         onTabChange,
         openEditForm,
-        checkedKeys,
+        menuSelectedKeys,
         menuFormItem,
         getMenuTypeEnum,
         treeSelectedItem,
+        menusTreeRef,
       };
     },
   });
