@@ -59,8 +59,8 @@
                     button-style="solid"
                     v-model:value="menuFormItem.menuType"
                   >
-                    <a-radio-button :value="getMenuTypeEume.catalogue">目录</a-radio-button>
-                    <a-radio-button :value="getMenuTypeEume.leaf">菜单</a-radio-button>
+                    <a-radio-button :value="getMenuTypeEnum.catalogue">目录</a-radio-button>
+                    <a-radio-button :value="getMenuTypeEnum.leaf">菜单</a-radio-button>
                   </a-radio-group>
                 </a-form-item>
                 <a-form-item label="菜单名称" name="name">
@@ -81,7 +81,7 @@
                 <a-form-item label="排序" name="orderNo">
                   <a-input v-model:value="menuFormItem.orderNo" />
                 </a-form-item>
-                <template v-if="menuFormItem.menuType === getMenuTypeEume.leaf">
+                <template v-if="menuFormItem.menuType === getMenuTypeEnum.leaf">
                   <a-form-item label="组件类型">
                     <a-radio-group
                       size="small"
@@ -142,7 +142,7 @@
   import { usePermissionStoreWithOut } from '/@/store/modules/permission';
 
   // import { BasicForm } from '/@/components/Form';
-  import { MenuTypeEnum } from '/@/enums/menuEnum';
+  import { MenuNodeTypeEnum } from '/@/enums/menuEnum';
   import { Menu } from '/@/router/types';
 
   // const menuFormSchemas: FormSchema[] = [
@@ -187,15 +187,22 @@
     components: { PageWrapper, BasicTree },
     setup() {
       const { prefixCls } = useDesign('proj-menus-mg');
-      const rootWarperStyle = {
-        margin: 0,
-        height: '100%',
-        width: '100%',
-      };
+
       const cardContentStyle = {
         padding: '5px',
       };
-      const tabListNoTitle = [
+      //-----------tree---------------
+      const replaceFields: ReplaceFields = {
+        key: 'path',
+        title: 'name',
+        children: 'children',
+      };
+      //树形checked list
+      const checkedKeys = ref<string[]>([]);
+      function actionList() {}
+      //-----------tarbar---------------
+      //页签列表
+      const tabBarTabs = [
         {
           key: 'tab1',
           tab: '菜单编辑',
@@ -205,12 +212,8 @@
           tab: '数据权限管理',
         },
       ];
-      const replaceFields: ReplaceFields = {
-        key: 'path',
-        title: 'name',
-        children: 'children',
-      };
-      const activeTableKey = ref('tab1');
+      //tab选中页
+      const activeTableKey = ref(tabBarTabs[0].key);
       const treeData = ref<any[]>([]);
       function resetFields() {
         console.log('resetFields');
@@ -224,18 +227,11 @@
         treeSelectedItem.value = e.selectedNodes[0].props;
         updateFormData();
       }
-      function actionList() {}
       function onTabChange(value: string, type?: string) {
         console.log(value, type);
         activeTableKey.value = value;
-        // if (type === 'key') {
-        //   key.value = value;
-        // } else if (type === 'noTitleKey') {
-        //   noTitleKey.value = value;
-        // }
       }
-      //树形checked list
-      const checkedKeys = ref<string[]>([]);
+
       //----- 菜单编辑-----
       const openEditForm = ref<boolean>(false);
       //form表单对象
@@ -252,9 +248,9 @@
       const treeSelectedItem = ref<Menu>();
       function updateFormData() {
         if (treeSelectedItem.value!.meta?.menuType === 'endPoint') {
-          menuFormItem.value.menuType = getMenuTypeEume.value.leaf;
+          menuFormItem.value.menuType = getMenuTypeEnum.value.leaf;
         } else {
-          menuFormItem.value.menuType = getMenuTypeEume.value.catalogue;
+          menuFormItem.value.menuType = getMenuTypeEnum.value.catalogue;
         }
         menuFormItem.value.name = treeSelectedItem.value?.name;
         menuFormItem.value.orderNo = treeSelectedItem.value?.meta?.orderNo;
@@ -277,17 +273,16 @@
         console.log('menulist:', menuList);
         treeData.value = menuList;
       });
-      const getMenuTypeEume = computed(() => {
-        return MenuTypeEnum;
+      const getMenuTypeEnum = computed(() => {
+        return MenuNodeTypeEnum;
       });
 
       return {
         prefixCls,
-        rootWarperStyle,
         replaceFields,
         cardContentStyle,
         resetFields,
-        tabListNoTitle,
+        tabListNoTitle: tabBarTabs,
         activeTableKey,
         treeData,
         onTreeNodeCheck,
@@ -297,7 +292,7 @@
         openEditForm,
         checkedKeys,
         menuFormItem,
-        getMenuTypeEume,
+        getMenuTypeEnum,
         treeSelectedItem,
       };
     },
@@ -326,17 +321,8 @@
     }
 
     .menu-list {
-      height: auto;
-      .cc {
-        background-color: #00bb00;
-      }
     }
     .menu-edit {
-      max-height: 100%;
-      overflow: auto;
-      .cc {
-        background-color: #00bb00;
-      }
     }
   }
 
