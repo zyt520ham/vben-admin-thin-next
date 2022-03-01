@@ -59,7 +59,9 @@ export enum MenuPathTypeEnum {
   kEndPoint = 'endPoint',
 }
 
-export enum MenuTypeEnum {
+export enum MenuNodeTypeEnum {
+  //目录节点
   catalogue = 'catalogue',
+  //叶子节点
   leaf = 'leaf',
 }

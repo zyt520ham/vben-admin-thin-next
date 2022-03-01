@@ -85,6 +85,9 @@ export function transformMenuDataToAppRouteRecord(
 
 export function transformToAppRouteRecordItem(item: IMenuRawData): AppRouteRecordRaw {
   const metaItem: RouteMeta = {} as RouteMeta;
+  if (item.label == 'aa') {
+    debugger;
+  }
   metaItem.title = item.label;
   metaItem.currentPath = item.path;
   if (item.redirect) {
@@ -95,29 +98,31 @@ export function transformToAppRouteRecordItem(item: IMenuRawData): AppRouteRecor
 
   if (item.externalLinkUrl) {
     if (item.useExternalLink) {
-      metaItem.path = item.externalLinkUrl;
+      metaItem.isLink = true;
+      metaItem.currentPath = item.externalLinkUrl;
+      // metaItem.paramPath = item.externalLinkUrl;
     } else {
       metaItem.frameSrc = item.externalLinkUrl;
-      metaItem.paramPath = item.externalLinkUrl;
+      // metaItem.paramPath = item.externalLinkUrl;
     }
   }
   metaItem.hideMenu = item.hiddenInMenu;
   metaItem.parentId = item.parentId;
   metaItem.menuType = item.menuType;
-  metaItem.isLink = item.openLinkUseExternal;
+  // metaItem.isLink = item.openLinkUseExternal;
   metaItem.serverId = item.serverId;
   metaItem.project_id = item.project_id;
   metaItem.orderNo = item.orderNum;
-
+  metaItem.compPath = compentPathReplace(item);
   if (item.menuLevel === 0 && item.menuType === 'endPoint') {
     //一层菜单
 
     const returnItem: AppRouteRecordRaw = {
       name: item.label,
       meta: metaItem,
-      fullPath: '/' + item.path,
-      component: compentPathReplace(item),
-      path: '/' + item.path,
+      fullPath: '/' + metaItem.currentPath,
+      component: metaItem.compPath,
+      path: '/' + metaItem.currentPath,
       // redirect: item.id,
       // children: [
       //   {
@@ -134,8 +139,8 @@ export function transformToAppRouteRecordItem(item: IMenuRawData): AppRouteRecor
       name: item.label,
       meta: metaItem,
       fullPath: item.id,
-      path: item.path,
-      component: compentPathReplace(item),
+      path: metaItem.currentPath,
+      component: metaItem.compPath,
     };
     return returnItem;
   }
@@ -169,7 +174,10 @@ enum eCompsKeyEnum {
 }
 
 export function compentPathReplace(item: IMenuRawData): string {
-  let compPath = '';
+  if (item.label === 'aa') {
+    debugger;
+  }
+  let compPath = item.compsKey;
   if (item.menuLevel == 0 && item.menuType === 'rootpath') {
     return 'layout';
   } else if (item.menuLevel > 0 && item.menuType === 'middlepath') {

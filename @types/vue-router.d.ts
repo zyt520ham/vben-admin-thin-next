@@ -29,7 +29,7 @@ declare module 'vue-router' {
     hideChildrenInMenu?: boolean;
     // 如果该路由会携带参数，且需要在tab页上面显示。则需要设置为true
     carryParam?: boolean;
-    // Used internally to mark single-level menus
+    // 根级叶子菜单标记
     single?: boolean;
     // 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
     currentActiveMenu?: string;
@@ -51,5 +51,6 @@ declare module 'vue-router' {
     project_id?: string;
     redirect?: string; //重定向地址
     currentPath?: string; //当前route的path，不带父级
+    compPath?: string; //使用组件路劲
   }
 }

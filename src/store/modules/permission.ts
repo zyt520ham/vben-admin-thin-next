@@ -26,6 +26,8 @@ import { PageEnum } from '/@/enums/pageEnum';
 import { IMenuListDataItem } from '/@/api/sys/model/menuModel';
 import { transformMenuDataToAppRouteRecord } from '/@/store/utils/MenuDataHelper';
 import testMenus from '/@/router/routes/modules/demo/testmenus';
+import { resetRouter, router } from '/@/router';
+import { RouteRecordRaw } from 'vue-router';
 
 interface PermissionState {
   // Permission code list
@@ -109,6 +111,7 @@ export const usePermissionStore = defineStore({
       this.isDynamicAddedRoute = false;
       this.permCodeList = [];
       this.backMenuList = [];
+      this.backMenuMap = {};
       this.lastBuildMenuTime = 0;
     },
     async changePermissionCode() {
@@ -234,6 +237,48 @@ export const usePermissionStore = defineStore({
       routes.push(ERROR_LOG_ROUTE);
       patchHomeAffix(routes);
       return routes;
+    },
+    async addMenuItem(menuItem) {
+      console.log('addMenuItem', menuItem);
+      let routes: AppRouteRecordRaw[] = [];
+      let routeList: AppRouteRecordRaw[] = [];
+      try {
+        //TODO:: 还不知道此接口作用  看文档说是按钮权限相关
+        // this.changePermissionCode();
+        const menuDataList: IMenuListDataItem = await getMenuList();
+
+        //添加多级测试路由
+        menuDataList.list.push(...(testMenus as any));
+        menuDataList.list.push(menuItem);
+        routeList = transformMenuDataToAppRouteRecord(menuDataList || { list: [] });
+        console.log('转换后的AppRouteRecord:', routeList);
+      } catch (error) {
+        debugger;
+        console.error(error);
+      }
+
+      // Dynamically introduce components
+      routeList = transformObjToRoute(routeList);
+
+      //  Background routing to menu structure
+      const backMenuList = transformRouteToMenu(routeList);
+      this.setBackMenuList(backMenuList);
+
+      // remove meta.ignoreRoute item
+      // routeList = filter(routeList, routeRemoveIgnoreFilter);
+      // routeList = routeList.filter(routeRemoveIgnoreFilter);
+
+      routeList = flatMultiLevelRoutes(routeList);
+      routes = [PAGE_NOT_FOUND_ROUTE, ...routeList];
+      resetRouter();
+
+      routes.forEach((route) => {
+        router.addRoute(route as unknown as RouteRecordRaw);
+      });
+
+      router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
+
+      this.setDynamicAddedRoute(true);
     },
   },
 });

@@ -15,10 +15,15 @@ export function useFrameKeepAlive() {
   const { currentRoute } = router;
   const { getShowMultipleTab } = useMultipleTabSetting();
   const tabStore = useMultipleTabStore();
-  const getFramePages = computed(() => {
-    const ret = getAllFramePages(toRaw(router.getRoutes()) as unknown as AppRouteRecordRaw[]) || [];
-    return ret;
-  });
+  // const getFramePages = computed(() => {
+  //   const ret = getAllFramePages(toRaw(allRoutes.value) as unknown as AppRouteRecordRaw[]) || [];
+  //   return ret;
+  // });
+
+  function getFramePages() {
+    debugger;
+    return getAllFramePages(toRaw(router.getRoutes()) as unknown as AppRouteRecordRaw[]) || [];
+  }
 
   const getOpenTabList = computed((): string[] => {
     return tabStore.getTabList.reduce((prev: string[], next) => {
@@ -30,6 +35,8 @@ export function useFrameKeepAlive() {
   });
 
   function getAllFramePages(routes: AppRouteRecordRaw[]): AppRouteRecordRaw[] {
+    console.log('routes count', routes.length);
+
     let res: AppRouteRecordRaw[] = [];
     for (const route of routes) {
       const { meta: { frameSrc } = {}, children } = route;
