@@ -13,7 +13,7 @@ export const compPathMap = {
   [compNameEnum.kProjDetailView]: 'rg/proj-setting/ProjDetailView.vue',
   [compNameEnum.kProjMenusListMgView]: 'rg/proj-setting/ProjMenusListMg.vue',
   [compNameEnum.kProjPermissionsMgView]: 'rg/proj-setting/ProjPermissionsMg.vue',
-  [compNameEnum.kProjRolesListMgView]: 'rg/proj-setting/ProjRolesListMg.vue',
+  [compNameEnum.kProjRolesListMgView]: 'rg/proj-setting/roles-list/ProjRolesListMg.vue',
   [compNameEnum.kProjUsersMgView]: 'rg/proj-setting/ProjUsersMgView.vue',
   [compNameEnum.kSysUserProfilesView]: 'rg/sys-mine/SysUserProfilesView.vue',
   [compNameEnum.kSysUserProjsView]: 'rg/sys-mine/SysUserProjsView.vue',

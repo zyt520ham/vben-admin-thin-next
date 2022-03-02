@@ -44,8 +44,6 @@ export function useFrameKeepAlive() {
   });
 
   function getAllFramePages(routes: AppRouteRecordRaw[]): AppRouteRecordRaw[] {
-    console.log('routes count', routes.length);
-
     let res: AppRouteRecordRaw[] = [];
     for (const route of routes) {
       const { meta: { frameSrc } = {}, children } = route;

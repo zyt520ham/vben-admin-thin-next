@@ -15,7 +15,6 @@
           :selectedKeys="menuSelectedKeys"
           search
           checkStrictly
-          @check="onTreeNodeCheck"
           :treeData="treeData"
           :replaceFields="replaceFields"
           @select="handleSelect"
@@ -249,10 +248,16 @@
         menuFormItem.value.menuListShow = true;
       }
       function onTreeNodeCheck(checkKeys: string[], e: any) {
-        console.log('handleSelect', checkKeys, e);
+        console.log('onTreeNodeCheck', checkKeys, e);
       }
       function handleSelect(selectedKeys: string[], e: any) {
-        console.log('handleSelect', selectedKeys, e, e.selectedNodes[0].props);
+        if (e.selected == false) {
+          console.log('selectedKeys', selectedKeys, e);
+
+          updateFormData();
+          return;
+        }
+        console.log('handleSelect', selectedKeys, e, e.selectedNodes[0]?.props);
         menuSelectedKeys.value = selectedKeys;
         treeSelectedItem.value = e.selectedNodes[0].props;
         updateFormData();
