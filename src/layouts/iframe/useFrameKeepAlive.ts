@@ -8,10 +8,10 @@ import { uniqBy } from 'lodash-es';
 
 import { useMultipleTabSetting } from '/@/hooks/setting/useMultipleTabSetting';
 
-import { useRouter } from 'vue-router';
-
+import { router } from '/@/router';
+const iframeRoutes: any[] = []; //用来缓存上次计算出的iframe路由
 export function useFrameKeepAlive() {
-  const router = useRouter();
+  // const router = useRouter();
   const { currentRoute } = router;
   const { getShowMultipleTab } = useMultipleTabSetting();
   const tabStore = useMultipleTabStore();
@@ -20,9 +20,18 @@ export function useFrameKeepAlive() {
   //   return ret;
   // });
 
-  function getFramePages() {
-    debugger;
-    return getAllFramePages(toRaw(router.getRoutes()) as unknown as AppRouteRecordRaw[]) || [];
+  function getFramePages(vRoutes?: any[]) {
+    if (vRoutes) {
+      const tempRoutes = getAllFramePages(toRaw(vRoutes) as unknown as AppRouteRecordRaw[]);
+      iframeRoutes.push(...tempRoutes);
+    }
+    if (iframeRoutes.length == 0) {
+      const tempRoutes = getAllFramePages(
+        toRaw(router.getRoutes()) as unknown as AppRouteRecordRaw[],
+      );
+      iframeRoutes.push(...tempRoutes);
+    }
+    return iframeRoutes;
   }
 
   const getOpenTabList = computed((): string[] => {
@@ -61,6 +70,12 @@ export function useFrameKeepAlive() {
     }
     return unref(getOpenTabList).includes(name);
   }
-
-  return { hasRenderFrame, getFramePages, showIframe, getAllFramePages };
+  function reloadIFrameRoutes() {
+    getFramePages(router.getRoutes());
+  }
+  return { hasRenderFrame, getFramePages, showIframe, getAllFramePages, reloadIFrameRoutes };
+}
+export function routesListChanged() {
+  const { reloadIFrameRoutes } = useFrameKeepAlive();
+  reloadIFrameRoutes();
 }

@@ -24,15 +24,9 @@
     setup() {
       const { getFramePages, hasRenderFrame, showIframe } = useFrameKeepAlive();
       const framePagesList = computed(() => {
-        debugger;
         return getFramePages();
       });
-      // const showFrame = computed(() => {
-      //   return framePagesList.value.length > 0;
-      // });
-
       function showFrame() {
-        debugger;
         return framePagesList.value.length > 0;
       }
       return { framePagesList, hasRenderFrame, showIframe, showFrame };

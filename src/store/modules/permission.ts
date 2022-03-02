@@ -28,6 +28,7 @@ import { transformMenuDataToAppRouteRecord } from '/@/store/utils/MenuDataHelper
 import testMenus from '/@/router/routes/modules/demo/testmenus';
 import { resetRouter, router } from '/@/router';
 import { RouteRecordRaw } from 'vue-router';
+import { routesListChanged } from '/@/layouts/iframe/useFrameKeepAlive';
 
 interface PermissionState {
   // Permission code list
@@ -279,6 +280,7 @@ export const usePermissionStore = defineStore({
       router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
 
       this.setDynamicAddedRoute(true);
+      routesListChanged();
     },
   },
 });
