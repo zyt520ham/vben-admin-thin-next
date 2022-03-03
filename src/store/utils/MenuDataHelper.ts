@@ -219,7 +219,7 @@ export function compentPathReplace(item: IMenuRawData): string {
       break;
     //////////////////////////
     case eCompsKeyEnum.kSysUserListView:
-      compPath = compPathMap[compNameEnum.kProjUsersMgView];
+      compPath = compPathMap[compNameEnum.kSysUsersListMgView];
       break;
     case eCompsKeyEnum.kSysDepartmentMgView:
       compPath = compPathMap[compNameEnum.kSysProjsListMgView];

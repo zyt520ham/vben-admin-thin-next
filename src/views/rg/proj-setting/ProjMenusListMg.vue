@@ -465,7 +465,7 @@
 
 <style lang="less">
   @prefix-cls: ~'@{namespace}-proj-menus-mg';
-  @ns-prefix:~ '@{namespace}';
+  @ns-prefix: ~'@{namespace}';
   .box-radius {
     border-radius: 5px;
   }
