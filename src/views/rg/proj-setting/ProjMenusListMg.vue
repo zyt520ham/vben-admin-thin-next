@@ -2,7 +2,7 @@
  * @Description  : 项目菜单管理
  * @Author       : zhangyantao
  * @Date         : 2022/2/25
- * @FilePath     : /Users/zhangyantao/wsp_web/openStudy/github-root/vben-admin-thin-next/src/views/rg/proj-setting/ProjMenusListMg.vue
+ * @FilePath     : src/views/rg/proj-setting/ProjMenusListMg.vue
 -->
 <template>
   <PageWrapper :class="`${prefixCls}`" content-class="flex pagewarp-content">

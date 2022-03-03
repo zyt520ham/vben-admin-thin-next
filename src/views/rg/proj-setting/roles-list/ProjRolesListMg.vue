@@ -2,7 +2,7 @@
  * @Description  : 项目角色管理页面
  * @Author       : zhangyantao
  * @Date         : 2022/2/25
- * @FilePath     : /Users/zhangyantao/wsp_web/openStudy/github-root/vben-admin-thin-next/src/views/rg/proj-setting/ProjRolesListMg.vue
+ * @FilePath     : src/views/rg/proj-setting/ProjRolesListMg.vue
 -->
 <template>
   <page-wrapper dense :class="`${prefixCls}`" content-class="warp-content-cls">

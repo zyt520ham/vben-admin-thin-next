@@ -2,7 +2,7 @@
  * @Description  : 用户拥有项目列表
  * @Author       : zhangyantao
  * @Date         : 2022/2/25
- * @FilePath     : /Users/zhangyantao/wsp_web/openStudy/github-root/vben-admin-thin-next/src/views/rg/sys-mine/SysUserProjsView.vue
+ * @FilePath     : src/views/rg/sys-mine/SysUserProjsView.vue
 -->
 <template> <div>SysUserProjsView</div></template>
 

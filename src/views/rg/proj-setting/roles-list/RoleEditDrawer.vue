@@ -2,7 +2,7 @@
  * @Description  : 角色编辑页面
  * @Author       : zhangyantao
  * @Date         : 2022/3/3
- * @FilePath     : /Users/zhangyantao/wsp_web/openStudy/github-root/vben-admin-thin-next/src/views/rg/proj-setting/roles-list/RoleEditDrawer.vue
+ * @FilePath     : src/views/rg/proj-setting/roles-list/RoleEditDrawer.vue
 -->
 <template>
   <BasicDrawer

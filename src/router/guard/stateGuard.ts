@@ -2,7 +2,7 @@
  * @Description  : state 路由守卫
  * @Author       : Zhang Yantao
  * @Date         : 2022/2/21
- * @FilePath     : /Users/zhangyantao/wsp_web/openStudy/github-root/vben-admin-thin-next/src/router/guard/stateGuard.ts
+ * @FilePath     : src/router/guard/stateGuard.ts
  */
 import type { Router } from 'vue-router';
 import { useAppStore } from '/@/store/modules/app';

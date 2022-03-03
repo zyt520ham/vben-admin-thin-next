@@ -2,7 +2,7 @@
  * @Description  : SysProjsListMg.vue
  * @Author       : zhangyantao
  * @Date         : 2022/2/25
- * @FilePath     : /Users/zhangyantao/wsp_web/openStudy/github-root/vben-admin-thin-next/src/views/rg/sys-settings/SysProjsListMg.vue
+ * @FilePath     : src/views/rg/sys-settings/SysProjsListMg.vue
 -->
 <template> <div>SysProjsListMg</div></template>
 
