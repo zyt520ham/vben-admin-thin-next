@@ -6,8 +6,10 @@ export interface ActionItem extends ButtonProps {
   label?: string;
   color?: 'success' | 'error' | 'warning';
   icon?: string;
+  // 按钮类型
   popConfirm?: PopConfirm;
   disabled?: boolean;
+  // 是否显示分隔线，v2.0.0+
   divider?: boolean;
   // 权限编码控制是否显示
   auth?: RoleEnum | RoleEnum[] | string | string[];
