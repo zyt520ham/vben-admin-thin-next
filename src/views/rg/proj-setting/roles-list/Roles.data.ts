@@ -7,6 +7,7 @@ export function getBasicColumns(): BasicColumn[] {
       dataIndex: 'description',
       fixed: 'left',
       width: '120px',
+      editRow: true,
       // slots: { customRender: 'id' },
     },
     {
@@ -18,6 +19,7 @@ export function getBasicColumns(): BasicColumn[] {
     {
       title: '显示顺序',
       dataIndex: 'order_num',
+      editRow: true,
       // sorter: (a, b) => {
       //   return a.order_num - b.order_num;
       // },
@@ -26,6 +28,7 @@ export function getBasicColumns(): BasicColumn[] {
     },
     {
       title: '角色状态',
+      editRow: false,
       dataIndex: 'useStatus',
       width: '120px',
       sorter: true,
@@ -52,26 +55,31 @@ export function getBasicData() {
         description: 'ADMIN',
         order_num: 0,
         role: 'root_role',
+        useStatus: 0,
       },
       {
         description: '超级管理员',
         order_num: 2,
         role: 'topmanager',
+        useStatus: 0,
       },
       {
         description: '运营',
         order_num: 3,
         role: 'operater',
+        useStatus: 0,
       },
       {
         description: '市场',
         order_num: 4,
         role: 'marketer',
+        useStatus: 1,
       },
       {
         description: '视频制作',
         order_num: 5,
         role: 'videorediter',
+        useStatus: 0,
       },
     ];
     // for (let index = 0; index < 40; index++) {
@@ -125,6 +133,46 @@ export const getformSchamas = (): FormSchema[] => {
       colProps: {
         span: 8,
       },
+      slot: 'slotField4',
+    },
+  ];
+};
+export const roleFormSchemas = (): FormSchema[] => {
+  return [
+    {
+      field: 'description',
+      component: 'Input',
+      label: '角色名称',
+      slot: 'slotField1',
+      // colProps: {
+      //   span: 8,
+      // },
+    },
+    {
+      field: 'role',
+      component: 'Input',
+      label: '权限字符',
+      // colProps: {
+      //   span: 8,
+      // },
+      slot: 'slotField2',
+    },
+    {
+      field: 'order_num',
+      component: 'Input',
+      label: '显示顺序',
+      // colProps: {
+      //   span: 8,
+      // },
+      slot: 'slotField3',
+    },
+    {
+      field: 'useStatus',
+      component: 'RadioGroup',
+      label: '状态',
+      // colProps: {
+      //   span: 8,
+      // },
       slot: 'slotField4',
     },
   ];

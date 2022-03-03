@@ -38,51 +38,17 @@
       :api="loadRolesDataFromServerFn"
       :actionColumn="actionColumn"
     >
-      <template #tableTitle>
-        <span class="flex space-x-3">
-          <span class="font-bold">项目角色列表</span>
-          <TableAction
-            :divider="false"
-            :actions="[
-              {
-                tooltip: {
-                  title: '新增角色',
-                  placement: 'top',
-                },
-                type: 'primary',
-                // color: 'success',
-                shape: 'circle',
-                icon: 'clarity:note-edit-line',
-                onClick: addBtnClickFn.bind(null),
-              },
-            ]"
-          />
-        </span>
-      </template>
       <template #toolbar>
-        <a-tooltip placement="top" v-if="showSearchFormRef === false" title="显示搜索">
-          <a-button @click="searchBtnClick" shape="circle" type="text">
-            <template #icon>
-              <SearchOutlined v-if="showSearchFormRef === false" />
-            </template>
-          </a-button>
-        </a-tooltip>
-        <a-tooltip placement="top" v-if="showSearchFormRef === true" title="隐藏搜索">
-          <a-button @click="searchBtnClick" shape="circle" type="text">
-            <template #icon>
-              <Icon icon="search-close|svg" />
-            </template>
-          </a-button>
-        </a-tooltip>
+        <a-button @click="searchBtnClick">查询</a-button>
       </template>
       <template #role="{ record }">
         <a-tag color="green">{{ record.role }}</a-tag>
+        <!--          <a-tag></a-tag>-->
       </template>
       <template #colAction="{ record, column }">
         <TableAction :actions="createActionsFn(record, column)" />
       </template>
     </BasicTable>
-    <RoleEditDrawer @register="registerDrawerFn" @success="handleSuccessDrawerFn" />
   </page-wrapper>
 </template>
 
@@ -96,7 +62,6 @@
     SorterResult,
     TableAction,
   } from '/@/components/Table';
-  import { SearchOutlined } from '@ant-design/icons-vue';
   import { useDesign } from '/@/hooks/web/useDesign';
   import {
     getBasicColumns,
@@ -106,20 +71,14 @@
   // import { CollapseContainer } from '/@/components/Container';
   import PageWrapper from '/@/components/Page/src/PageWrapper.vue';
   import { BasicForm, useForm } from '/@/components/Form';
-  import RoleEditDrawer from '/@/views/rg/proj-setting/roles-list/RoleEditDrawer.vue';
-  import { useDrawer } from '/@/components/Drawer';
-  import { Icon } from '/@/components/Icon';
 
   export default defineComponent({
-    name: 'ProjRolesListMg',
+    name: 'ProjRolesListMgBack',
     components: {
       PageWrapper,
       BasicTable,
       TableAction,
       BasicForm,
-      RoleEditDrawer,
-      Icon,
-      SearchOutlined,
     },
     setup() {
       const { prefixCls } = useDesign('proj-roles-mg');
@@ -141,9 +100,6 @@
           span: 24,
         },
       });
-
-      const [registerDrawerFn, { openDrawer }] = useDrawer();
-
       const formData = ref();
 
       const handleSubmit = (values: any) => {
@@ -187,50 +143,65 @@
           } else {
             setTimeout(() => {
               resolve(tableDatas.value);
-            }, 100);
+            }, 1000);
           }
         });
       };
       // <a-icon type="edit" />
-      const addBtnClickFn = () => {
-        console.log('addBtnClickFn');
-        openDrawer(true, {
-          record: {},
-          isUpdateRole: false,
-        });
-      };
-      function createActionsFn(record: EditRecordRow): ActionItem[] {
+      function createActionsFn(record: EditRecordRow, column: BasicColumn): ActionItem[] {
+        if (!record.editable) {
+          return [
+            {
+              // label: '编辑',
+              icon: 'clarity:note-edit-line',
+              tooltip: '编辑',
+              disabled: currentEditKeyRef.value ? currentEditKeyRef.value !== record.key : false,
+              onClick: handleEdit.bind(null, record),
+            },
+            {
+              // label: '删除',
+              icon: 'ic:outline-delete-outline',
+              tooltip: '删除',
+              onClick: handleDelete.bind(null, record),
+            },
+          ];
+        }
         return [
           {
-            // label: '编辑',
-            icon: 'clarity:note-edit-line',
-            tooltip: '编辑',
-            disabled: currentEditKeyRef.value ? currentEditKeyRef.value !== record.key : false,
-            onClick: handleEdit.bind(null, record),
+            // label: '保存',
+            icon: 'bx:save',
+            tooltip: '保存',
+            onClick: handleSave.bind(null, record, column),
           },
           {
-            // label: '删除',
-            icon: 'ant-design:delete-outlined',
-            tooltip: '删除',
-            color: 'error',
-            onClick: handleDelete.bind(null, record),
+            // label: '取消',
+            icon: 'ant-design:close-square-outlined',
+            tooltip: '取消',
+            popConfirm: {
+              title: '是否取消编辑',
+              confirm: handleCancel.bind(null, record, column),
+            },
           },
         ];
       }
       function handleEdit(record: EditRecordRow) {
         console.log('handleEdit', record);
-        openDrawer(true, {
-          record,
-          isUpdateRole: true,
-        });
+        currentEditKeyRef.value = record.key;
+        record.onEdit?.(true);
+      }
+
+      function handleCancel(record: EditRecordRow) {
+        console.log('handleCancel', record);
+        currentEditKeyRef.value = '';
+        record.onEdit?.(false, false);
+      }
+      function handleSave(record: EditRecordRow) {
+        console.log('handleSave', record);
       }
       function handleDelete(record: EditRecordRow) {
         console.log('handleDelete', record);
       }
 
-      const handleSuccessDrawerFn = () => {
-        console.log('handleSuccessDrawer');
-      };
       return {
         columns: getBasicColumns(),
         showSearchFormRef,
@@ -245,9 +216,6 @@
         tableSortFn,
         loadRolesDataFromServerFn,
         createActionsFn,
-        registerDrawerFn,
-        handleSuccessDrawerFn,
-        addBtnClickFn,
       };
     },
   });
