@@ -12,9 +12,11 @@
         <BasicTree
           ref="menusTreeRef"
           selectable
+          toolbar
           :selectedKeys="menuSelectedKeys"
           search
           checkStrictly
+          :clickRowToExpand="false"
           :treeData="treeData"
           :replaceFields="replaceFields"
           @select="handleSelect"

@@ -112,9 +112,11 @@
         }
 
         const height = `${unref(contentHeight)}px`;
+        //设置了content高度为page高度
         return {
           ...contentStyle,
           minHeight: height,
+          height: height,
           ...(fixedHeight ? { height } : {}),
         };
       });
