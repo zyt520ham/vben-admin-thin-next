@@ -7,6 +7,8 @@ import type { TableActionType } from '/@/components/Table/src/types/table';
 import type { CSSProperties } from 'vue';
 import type { RowProps } from 'ant-design-vue/lib/grid/Row';
 
+import { SizeType as ButtonSize } from 'ant-design-vue/es/config-provider';
+
 export type FieldMapToTime = [string, [string, string], string?][];
 
 export type Rule = RuleObject & {
@@ -22,6 +24,7 @@ export interface RenderCallbackParams {
 
 export interface ButtonProps extends AntdButtonProps {
   text?: string;
+  size?: ButtonSize;
 }
 
 export interface FormActionType {

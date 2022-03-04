@@ -81,14 +81,6 @@
         isSorting = true;
         const list = tableMethods.getDataSource().slice();
         const sortList = arrSortFn(list, sortInfo.field, sortInfo.order);
-        // list.sort((a, b) => {
-        //   if (sortInfo.order === 'ascend') {
-        //     //升序
-        //     return a[sortInfo.field] - b[sortInfo.field];
-        //   } else {
-        //     return b[sortInfo.field] - a[sortInfo.field];
-        //   }
-        // });
         tableDatas = sortList;
       };
       const tableColumnValueFormatFn = (record: any, column: BasicColumn) => {
@@ -136,6 +128,12 @@
         },
         advancedBtnEventFunc: () => {
           tableMethods.redoHeight();
+        },
+        resetButtonOptions: {
+          size: 'small',
+        },
+        submitButtonOptions: {
+          size: 'small',
         },
       });
       console.log(formMethods);
