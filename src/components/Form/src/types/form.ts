@@ -120,6 +120,8 @@ export interface FormProps {
   submitFunc?: () => Promise<void>;
   transformDateFunc?: (date: any) => string;
   colon?: boolean;
+  //折叠按钮点击响应回调
+  advancedBtnEventFunc?: () => void;
 }
 export interface FormSchema {
   // Field name

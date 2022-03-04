@@ -155,6 +155,7 @@ export default function ({
     getAdvanced(unref(getProps).actionColOptions || { span: BASIC_COL_LEN }, itemColSum, true);
 
     emit('advanced-change');
+    getProps.value.advancedBtnEventFunc && getProps.value.advancedBtnEventFunc();
   }
 
   function handleToggleAdvanced() {

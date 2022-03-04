@@ -7,9 +7,6 @@
     </div>
     <div class="w-2/3 lg:w-4/5 xl:w-5/6 h-full space-y-5px">
       <a-card v-if="useSearchState" class="w-full rg-antd-cart">
-        <a-input />
-        <br />
-        <a-input />
         <BasicForm @register="formRegister" />
       </a-card>
       <BasicTable @register="registerTableFn">
@@ -109,7 +106,7 @@
       const [registerTableFn, tableMethods] = useTable({
         title: '用户列表',
         api: loadUserFromServerApi,
-        rowKey: 'userId',
+
         showTableSetting: true,
         bordered: true,
         columns: getAccountColumnsCfg,
@@ -137,8 +134,12 @@
         actionColOptions: {
           span: 24,
         },
+        advancedBtnEventFunc: () => {
+          tableMethods.redoHeight();
+        },
       });
-      formMethods.resetFields();
+      console.log(formMethods);
+      // formMethods.resetFields();
       //#endregion
       //#region searchBtn =================================
       //是否使用search 组件
