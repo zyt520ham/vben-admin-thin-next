@@ -1,45 +1,56 @@
-import { BasicColumn } from '/@/components/Table';
+import { BasicColumn, FormSchema } from '/@/components/Table';
 
 export const getAccountColumnsCfg: BasicColumn[] = [
   {
     title: '编号',
-    dataIndex: 'userId',
-    width: 120,
+    dataIndex: 'user_id',
+    width: '60px',
+    slots: { customRender: 'colUserId' },
+    sorter: true,
   },
   {
     title: '账号',
     dataIndex: 'account',
     width: 120,
+    sorter: true,
   },
   {
     title: '昵称',
-    dataIndex: 'nickName',
+    dataIndex: 'nickname',
     width: 120,
+    sorter: true,
   },
   {
-    title: '角色',
-    dataIndex: 'roles',
+    title: '头像',
+    defaultHidden: true,
+    dataIndex: 'avatar',
     width: 120,
+    sorter: true,
   },
   {
     title: '状态',
-    dataIndex: 'useState',
-    width: 120,
+    dataIndex: 'status',
+    width: '70px',
+    slots: { customRender: 'colStatus' },
+    sorter: true,
   },
   {
     title: '手机号',
-    dataIndex: 'phoneNumber',
+    dataIndex: 'phone',
     width: 120,
+    sorter: true,
   },
   {
     title: '创建时间',
-    dataIndex: 'cTime',
+    dataIndex: 'created_at',
     width: 120,
+    sorter: true,
   },
   {
     title: '修改时间',
-    dataIndex: 'uTime',
+    dataIndex: 'updated_at',
     width: 120,
+    sorter: true,
   },
 ];
 
@@ -1426,5 +1437,32 @@ export const testDataList = [
     projects: ['base', 'proj_topwar', 'proj_z5'],
     default_project: 'proj_z5',
     project_roles: [],
+  },
+];
+
+export const getSearchFormCfg: FormSchema[] = [
+  {
+    field: 'user_id',
+    label: '用户Id',
+    component: 'Input',
+    colProps: { span: 8 },
+  },
+  {
+    field: 'nickname',
+    label: '用户昵称',
+    component: 'Input',
+    colProps: { span: 8 },
+  },
+  {
+    field: 'status',
+    label: '用户状态',
+    component: 'Input',
+    colProps: { span: 8 },
+  },
+  {
+    field: 'created_at',
+    label: '创建时间',
+    component: 'TimePicker',
+    colProps: { span: 8 },
   },
 ];

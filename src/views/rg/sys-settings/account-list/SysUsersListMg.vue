@@ -10,7 +10,7 @@
         <a-input />
         <br />
         <a-input />
-        <BasicForm />
+        <BasicForm @register="formRegister" />
       </a-card>
       <BasicTable @register="registerTableFn">
         <template #toolbar>
@@ -18,6 +18,17 @@
             :prop-show-state="useSearchState"
             :prop-toggle-show-state="useSearchBtnEventFn"
           />
+        </template>
+        <template #colUserId="{ record, column }">
+          <a-tag>{{ record[column.dataIndex] }}</a-tag>
+        </template>
+        <template #colStatus="{ record, column }">
+          <template v-if="record[column.dataIndex] * 1 === 0">
+            <a-tag color="blue">正常</a-tag>
+          </template>
+          <template v-else>
+            <a-tag color="red">锁定</a-tag>
+          </template>
         </template>
       </BasicTable>
     </div>
@@ -28,13 +39,15 @@
   import { useDesign } from '/@/hooks/web/useDesign';
   import { defineComponent, ref } from 'vue';
   import { PageWrapper } from '/@/components/Page';
-  import { BasicTable, SorterResult, useTable } from '/@/components/Table';
-  import { BasicForm } from '/@/components/Form';
+  import { BasicColumn, BasicTable, SorterResult, useTable } from '/@/components/Table';
+  import { BasicForm, useForm } from '/@/components/Form';
   import {
     getAccountColumnsCfg,
+    getSearchFormCfg,
     testDataList,
-  } from '/@/views/rg/sys-settings/account-list/account.data';
+  } from '/@/views/rg/sys-settings/account-list/inner/account.data';
   import GzShowSearchFormBtn from '/@/components/GzShowSearchFormBtn';
+  import { arrSortFn } from '/@/utils/arrayUtils';
 
   export default defineComponent({
     name: 'SysUsersListMg',
@@ -47,8 +60,13 @@
     setup() {
       //样式表当前页面根元素
       const prefixCls = useDesign('sys-users-mg');
-      //是否使用search 组件
-      const useSearchState = ref(false);
+
+      //#region table data =================================
+      let tableDatas: any[] = [];
+      let isSorting = false;
+      //#endregion
+      //#region table func =================================
+      //拉取人员信息列表
       const loadUserFromServerApi = () => {
         return new Promise<any[]>((resolve) => {
           if (isSorting) {
@@ -60,22 +78,34 @@
           }
         });
       };
-      let tableDatas: any[] = [];
-      let isSorting = false;
+      //table fn 排序
       const tableSortFn = (sortInfo: SorterResult) => {
         console.log('tableSortFn', sortInfo);
         isSorting = true;
         const list = tableMethods.getDataSource().slice();
-        list.sort((a, b) => {
-          if (sortInfo.order === 'ascend') {
-            //升序
-            return a[sortInfo.field] - b[sortInfo.field];
-          } else {
-            return b[sortInfo.field] - a[sortInfo.field];
-          }
-        });
-        tableDatas = list;
+        const sortList = arrSortFn(list, sortInfo.field, sortInfo.order);
+        // list.sort((a, b) => {
+        //   if (sortInfo.order === 'ascend') {
+        //     //升序
+        //     return a[sortInfo.field] - b[sortInfo.field];
+        //   } else {
+        //     return b[sortInfo.field] - a[sortInfo.field];
+        //   }
+        // });
+        tableDatas = sortList;
       };
+      const tableColumnValueFormatFn = (record: any, column: BasicColumn) => {
+        // if (column.dataIndex === 'status') {
+        //   if (record.status * 1 === 0) {
+        //     return '正常';
+        //   } else {
+        //     return '锁定';
+        //   }
+        // }
+        return record[column.dataIndex!];
+      };
+      //#endregion
+      //table 注册
       const [registerTableFn, tableMethods] = useTable({
         title: '用户列表',
         api: loadUserFromServerApi,
@@ -85,6 +115,7 @@
         columns: getAccountColumnsCfg,
         canResize: true,
         pagination: false,
+        showIndexColumn: false,
         sortFn: tableSortFn,
         actionColumn: {
           width: 120,
@@ -93,12 +124,40 @@
           slots: { customRender: 'colAction' },
         },
       });
+      //#region form data =================================
 
+      //#endregion
+      //#region form func =================================
+
+      const [formRegister, formMethods] = useForm({
+        labelWidth: '80px',
+        size: 'small',
+        showAdvancedButton: true,
+        schemas: getSearchFormCfg,
+        actionColOptions: {
+          span: 24,
+        },
+      });
+      formMethods.resetFields();
+      //#endregion
+      //#region searchBtn =================================
+      //是否使用search 组件
+      const useSearchState = ref(false);
+      //search btn event回调
       const useSearchBtnEventFn = (settingState: boolean) => {
         useSearchState.value = settingState;
         tableMethods.redoHeight();
       };
-      return { prefixCls, useSearchState, useSearchBtnEventFn, registerTableFn };
+      //#endregion
+
+      return {
+        prefixCls,
+        useSearchState,
+        useSearchBtnEventFn,
+        registerTableFn,
+        formRegister,
+        tableColumnValueFormatFn,
+      };
     },
   });
 </script>

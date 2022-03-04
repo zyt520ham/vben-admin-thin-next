@@ -18,5 +18,5 @@ export const compPathMap = {
   [compNameEnum.kSysUserProfilesView]: 'rg/sys-mine/SysUserProfilesView.vue',
   [compNameEnum.kSysUserProjsView]: 'rg/sys-mine/SysUserProjsView.vue',
   [compNameEnum.kSysProjsListMgView]: 'rg/sys-settings/projs-list/Index.vue',
-  [compNameEnum.kSysUsersListMgView]: 'rg/sys-settings/account-list/Index.vue',
+  [compNameEnum.kSysUsersListMgView]: 'rg/sys-settings/account-list/SysUsersListMg.vue',
 };
