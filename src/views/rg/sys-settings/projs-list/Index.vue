@@ -1,5 +1,12 @@
-<template> <span>projs-list</span></template>
+<template> <span>SysProjsListMg</span></template>
 
-<script lang="ts" setup></script>
+<script lang="ts">
+  import { defineComponent } from 'vue';
 
-<style scoped></style>
+  defineComponent({
+    name: 'SysProjsListMg',
+    setup() {},
+  });
+</script>
+
+<style scoped lang="less"></style>
