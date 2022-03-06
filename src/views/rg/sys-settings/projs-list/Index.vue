@@ -32,6 +32,24 @@
             :prop-toggle-show-state="useSearchBtnEventFn"
           />
         </template>
+        <template #colAction="{ record }">
+          <TableAction
+            :actions="[
+              {
+                icon: 'clarity:note-edit-line',
+                onClick: tableHandleEdit.bind(null, record),
+              },
+              {
+                icon: 'ant-design:delete-outlined',
+                color: 'error',
+                popConfirm: {
+                  title: '是否确认删除',
+                  confirm: tableHandleDelete.bind(null, record),
+                },
+              },
+            ]"
+          />
+        </template>
       </BasicTable>
     </div>
   </PageWrapper>
@@ -50,6 +68,7 @@
   } from '/@/views/rg/sys-settings/projs-list/inner/projs.data';
   import { arrSortFn } from '/@/utils/arrayUtils';
   import GzShowSearchFormBtn from '/@/components/GzShowSearchFormBtn';
+  import { log } from '/@/utils/log';
 
   export default defineComponent({
     name: 'SysProjsListMg',
@@ -106,7 +125,7 @@
         });
       };
       const tableSortFn = (sortInfo: SorterResult) => {
-        console.log('tableSortFn', sortInfo);
+        log('tableSortFn', sortInfo);
         isSorting = true;
         const list = tableMethods.getDataSource().slice();
         const sortList = arrSortFn(list, sortInfo.field, sortInfo.order);
@@ -117,6 +136,13 @@
         tableMethods.redoHeight();
       };
       const addBtnClickFn = () => {};
+
+      const tableHandleEdit = (record: any) => {
+        log('tableHandleEdit', record);
+      };
+      const tableHandleDelete = (record: any) => {
+        log('tableHandleDelete', record);
+      };
       const [registerTableFn, tableMethods] = useTable({
         title: '用户列表',
         api: getProjectsListApi,
@@ -143,6 +169,8 @@
         registerTableFn,
         useSearchBtnEventFn,
         addBtnClickFn,
+        tableHandleEdit,
+        tableHandleDelete,
       };
     },
   });

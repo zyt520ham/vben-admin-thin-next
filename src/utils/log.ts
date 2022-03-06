@@ -9,5 +9,5 @@ export function error(message: string) {
 }
 
 export function log(...args: any[]) {
-  console.log(...args);
+  console.log(...args, console.trace('JS 堆栈：'));
 }
