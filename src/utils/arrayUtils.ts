@@ -1,6 +1,12 @@
 import { isEmpty, isNumber, isString } from '/@/utils/is';
 const localSortAsc = (a: string, b: string) => {
-  return a.localeCompare(b, 'kf', { sensitivity: 'variant' });
+  try {
+    return a.localeCompare(b, 'kf', { sensitivity: 'variant' });
+  } catch (e) {
+    debugger;
+    console.error(e);
+    return 0;
+  }
 };
 const localSortDesc = (a: string, b: string) => {
   return a.localeCompare(b, 'kf', { sensitivity: 'variant' });
@@ -42,9 +48,9 @@ export function arrSortFn<T = any>(
     } else {
       sortArr.sort((a: any, b: any) => {
         if (sortDir === 'ascend') {
-          return localSortAsc(a[sortValueKey] || '', b[sortValueKey] || '');
+          return localSortAsc(a[sortValueKey] + '' || '', b[sortValueKey] + '' || '');
         } else {
-          return localSortDesc(a[sortValueKey] || '', b[sortValueKey] || '');
+          return localSortDesc(a[sortValueKey] + '' || '', b[sortValueKey] + '' || '');
         }
       });
     }

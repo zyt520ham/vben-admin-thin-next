@@ -37,10 +37,21 @@ export const LoginRoute: AppRouteRecordRaw = {
   },
 };
 
+export const TestRoute: AppRouteRecordRaw = {
+  path: '/test1',
+  name: 'Test1',
+  component: () => import('/@/views/test/Test1.vue'),
+  meta: {
+    title: '测试组件',
+    hideMenu: false,
+  },
+};
+
 // Basic routing without permission
 export const basicRoutes = [
   LoginRoute,
   RootRoute,
+  TestRoute,
   ...mainOutRoutes,
   REDIRECT_ROUTE,
   PAGE_NOT_FOUND_ROUTE,

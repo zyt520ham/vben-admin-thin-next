@@ -42,14 +42,19 @@ export function transformRouteToMenu(routeModList: AppRouteModule[], routerMappi
   const routeList: AppRouteRecordRaw[] = [];
 
   cloneRouteModList.forEach((item) => {
-    if (routerMapping && item.meta.hideChildrenInMenu && typeof item.redirect === 'string') {
-      item.path = item.redirect;
-    }
-    if (item.meta?.single) {
-      const realItem = item?.children?.[0];
-      realItem && routeList.push(realItem);
-    } else {
-      routeList.push(item);
+    try {
+      if (routerMapping && item.meta.hideChildrenInMenu && typeof item.redirect === 'string') {
+        item.path = item.redirect;
+      }
+      if (item.meta?.single) {
+        const realItem = item?.children?.[0];
+        realItem && routeList.push(realItem);
+      } else {
+        routeList.push(item);
+      }
+    } catch (e) {
+      debugger;
+      console.error(e);
     }
   });
   const list = treeMap(routeList, {

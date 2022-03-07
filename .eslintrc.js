@@ -77,5 +77,6 @@ module.exports = defineConfig({
       },
     ],
     '@typescript-eslint/no-namespace': 'off',
+    'vue/prop-name-casing': 'off',
   },
 });
