@@ -14,7 +14,12 @@
     </a-input>
     <div class="flex-shrink flex-grow overflow-hidden">
       <div class="w-full h-full">
-        <VScroll class="h-full" :items="itemListData" :itemHeight="itemHeightState" :bench="20">
+        <VScroll
+          class="h-full"
+          :items="getItemListComputed"
+          :itemHeight="itemHeightState"
+          :bench="20"
+        >
           <template #default="{ item }">
             <GZSelectItem :itemData="item" @update:itemData="changedItemDataFn" />
           </template>
@@ -67,10 +72,22 @@
     },
     emits: ['selectedItemsFn'],
     setup(props, { emit }) {
-      const itemListData = ref([]);
+      const itemListData = ref<ISelectItem[]>([]);
       const itemsMapData = ref<{ [key: string]: ISelectItem }>({});
       const chooseIdList = ref<string[]>([]);
-
+      const getItemListComputed = computed<any[]>(() => {
+        return itemListData.value.filter((item) => {
+          if (searchInput.value) {
+            if (item.title.indexOf(searchInput.value) >= 0) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            return true;
+          }
+        });
+      });
       const searchInput = ref<string>('');
       watch(
         () => props.prop_chooseList,
@@ -144,6 +161,7 @@
         itemHeightState,
         searchInput,
         onBlurEventFn,
+        getItemListComputed,
       };
     },
   });
