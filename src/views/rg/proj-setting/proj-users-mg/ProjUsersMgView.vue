@@ -167,7 +167,7 @@
             const list = testUserlist;
             setTimeout(() => {
               resolve(list);
-            }, 1000);
+            }, 10);
           }
         });
       };

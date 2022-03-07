@@ -1,10 +1,26 @@
 <template>
-  <div class="w-full h-full">
-    <VScroll class="h-full" :items="itemListData" :itemHeight="itemHeightState" :bench="20">
-      <template #default="{ item }">
-        <GZSelectItem :itemData="item" @update:itemData="changedItemDataFn" />
+  <div class="w-full h-full flex flex-col">
+    <h3 class="text-center m-0 px-0 py-5px flex-grow-0 flex-shrink-0">可选择列表</h3>
+    <a-input
+      class="flex-grow-0 flex-shrink-0"
+      placeholder="请输入搜索值"
+      allowClear
+      v-model:value="searchInput"
+      @blur="onBlurEventFn"
+    >
+      <template #prefix>
+        <SearchOutlined />
       </template>
-    </VScroll>
+    </a-input>
+    <div class="flex-shrink flex-grow overflow-hidden">
+      <div class="w-full h-full">
+        <VScroll class="h-full" :items="itemListData" :itemHeight="itemHeightState" :bench="20">
+          <template #default="{ item }">
+            <GZSelectItem :itemData="item" @update:itemData="changedItemDataFn" />
+          </template>
+        </VScroll>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -14,6 +30,7 @@
   import { buildShortUUID } from '/@/utils/uuid';
   import { VScroll } from '/@/components/VirtualScroll';
   import GZSelectItem from './GZSelectItem.vue';
+  import { SearchOutlined } from '@ant-design/icons-vue';
   export interface ISelectItem {
     id: string;
     title: string;
@@ -27,6 +44,7 @@
       // PageWrapper,
       VScroll,
       GZSelectItem,
+      SearchOutlined,
     },
     props: {
       prop_chooseList: {
@@ -52,6 +70,8 @@
       const itemListData = ref([]);
       const itemsMapData = ref<{ [key: string]: ISelectItem }>({});
       const chooseIdList = ref<string[]>([]);
+
+      const searchInput = ref<string>('');
       watch(
         () => props.prop_chooseList,
         (nVal, oldVal) => {
@@ -114,7 +134,17 @@
           emit('selectedItemsFn', items);
         }
       };
-      return { itemListData, itemsMapData, changedItemDataFn, itemHeightState };
+      const onBlurEventFn = (event: any) => {
+        log('onBlurEvent', event);
+      };
+      return {
+        itemListData,
+        itemsMapData,
+        changedItemDataFn,
+        itemHeightState,
+        searchInput,
+        onBlurEventFn,
+      };
     },
   });
 </script>
