@@ -1,5 +1,11 @@
 <template>
-  <div ref="wrapRef" :class="getWrapperClass">
+  <div
+    ref="wrapRef"
+    :class="[
+      getWrapperClass,
+      { 'use-parent-height-mark': !getBindValues.useSearchForm && canResize },
+    ]"
+  >
     <BasicForm
       submitOnReset
       v-bind="getFormProps"
@@ -15,6 +21,7 @@
     </BasicForm>
 
     <Table
+      :class="{ 'h-full': !getBindValues.useSearchForm && canResize }"
       ref="tableElRef"
       v-bind="getBindValues"
       :rowClassName="getRowClassName"
@@ -346,7 +353,52 @@
 
   .@{prefix-cls} {
     max-width: 100%;
-
+    &.use-parent-height-mark {
+      .ant-table-wrapper {
+        .ant-spin-nested-loading {
+          height: 100%;
+          .ant-spin-container {
+            height: 100%;
+            .ant-table {
+              height: 100%;
+              display: flex;
+              flex-direction: column;
+              flex-wrap: nowrap;
+              .ant-table-title {
+                flex-grow: 0;
+                flex-shrink: 0;
+                //flex-none: 1;
+              }
+              .ant-table-content {
+                flex-grow: 1;
+                flex-shrink: 1;
+                overflow-y: hidden;
+                .ant-table-scroll {
+                  height: 100%;
+                  display: flex;
+                  flex-direction: column;
+                  flex-wrap: nowrap;
+                  .ant-table-header {
+                    flex-grow: 0;
+                    flex-shrink: 0;
+                  }
+                  .ant-table-body {
+                    flex-grow: 1;
+                    flex-shrink: 1;
+                    overflow-y: hidden;
+                  }
+                  .ant-table-placeholder {
+                    flex-grow: 1;
+                    flex-shrink: 1;
+                    height: 100%;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
     &-row__striped {
       td {
         background-color: @app-content-background;

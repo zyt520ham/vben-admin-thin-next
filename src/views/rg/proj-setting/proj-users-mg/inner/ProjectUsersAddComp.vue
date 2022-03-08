@@ -11,7 +11,7 @@
         @selectedIdsFn="selectedIdsEventFn"
       />
     </div>
-    <div class="w-2/3 h-full bg-green-300 flex flex-col flex-nowrap">
+    <div class="w-2/3 h-full flex flex-col flex-nowrap">
       <h3 class="flex-none text-center m-0 px-0 py-5px">已选择成员</h3>
       <div class="flex-shrink flex-grow overflow-y-hidden">
         <div class="x-full h-full">
@@ -53,7 +53,7 @@
       BasicTable,
       TableAction,
     },
-    setup() {
+    setup(_, { expose }) {
       const addUsersCheckComp = ref(null);
       const optionsUsersData = ref<any[]>([]);
       const checkedUsersList = ref<any[]>([]);
@@ -64,12 +64,12 @@
           nickname: '' + i,
         });
       }
-      const selectedItemsEventFn = (checkedList: any[]) => {
-        log('selectedItemsEventFn', checkedList);
-        checkedUsersList.value = checkedList.slice();
-        tableMethods.redoHeight();
-        tableMethods.setTableData(checkedUsersList.value);
-      };
+      // const selectedItemsEventFn = (checkedList: any[]) => {
+      //   log('selectedItemsEventFn', checkedList);
+      //   checkedUsersList.value = checkedList.slice();
+      //   tableMethods.redoHeight();
+      //   tableMethods.setTableData(checkedUsersList.value);
+      // };
       const selectedIdsEventFn = (idsList: string[]) => {
         log('selectedIdsEventFn', idsList);
         const checkedList = (addUsersCheckComp.value as any).checkCompGetModelList(idsList);
@@ -111,7 +111,7 @@
         // tableDatas = sortList;
       };
       const [registerTable, tableMethods] = useTable({
-        title: '添加的用户列表',
+        title: '',
         // api: null,
         dataSource: checkedUsersList.value,
         showTableSetting: true,
@@ -135,14 +135,22 @@
           slots: { customRender: 'colAction' },
         },
       });
+      //对外开放获取已选择列表逻辑
+      const projUsersAddCompGetSelectedUserList = () => {
+        return checkedUsersList.value.slice();
+      };
+      expose({
+        projUsersAddCompGetSelectedUserList,
+      });
       return {
         addUsersCheckComp,
         optionsUsersData,
         registerTable,
         checkedUsersList,
-        selectedItemsEventFn,
+        // selectedItemsEventFn,
         tableOnDeleteActionEventFn,
         selectedIdsEventFn,
+        projUsersAddCompGetSelectedUserList,
       };
     },
   });

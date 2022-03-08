@@ -36,7 +36,7 @@
                     size: 'small',
                     shape: 'circle',
                     icon: 'akar-icons:person-add',
-                    // onClick: addBtnClickFn.bind(null),
+                    onClick: tableToolsAddUsersEventFn.bind(null),
                   },
                 ]"
               />
@@ -91,8 +91,25 @@
           </template>
         </BasicTable>
       </div>
-    </div> </PageWrapper
-></template>
+    </div>
+
+    <BasicModal
+      v-bind="$attrs"
+      @register="registerAddUsersModal"
+      title="添加用户"
+      width="700px"
+      :useWrapper="false"
+      @ok="addUsersModalOkBtnEventFn"
+      @cancel="addUsersModalCancalBtnEventFn"
+    >
+      <template #default>
+        <div class="w-full h-500px">
+          <ProjectUsersAddComp ref="projUsersAddComp" />
+        </div>
+      </template>
+    </BasicModal>
+  </PageWrapper>
+</template>
 
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
@@ -109,6 +126,9 @@
   import RolesTreeComp from './inner/RolesTreeComp.vue';
   import GzShowSearchFormBtn from '/@/components/GzShowSearchFormBtn';
   import { arrSortFn } from '/@/utils/arrayUtils';
+  import { BasicModal, useModal } from '/@/components/Modal';
+  import ProjectUsersAddComp from './inner/ProjectUsersAddComp.vue';
+  import { log } from '/@/utils/log';
 
   export default defineComponent({
     name: 'ProjUsersMgView',
@@ -119,6 +139,8 @@
       RolesTreeComp,
       GzShowSearchFormBtn,
       TableAction,
+      ProjectUsersAddComp,
+      BasicModal,
     },
     setup() {
       const { prefixCls } = useDesign('proj-users-mg');
@@ -156,7 +178,10 @@
         useSearchState.value = settingState;
         tableMethods.redoHeight();
       };
-
+      const tableToolsAddUsersEventFn = () => {
+        console.log('tableToolsAddUsersEventFn');
+        addUsersModalMethods.openModal();
+      };
       //拉取人员信息列表
       const loadUserFromServerApi = () => {
         return new Promise<any[]>((resolve) => {
@@ -198,6 +223,25 @@
         },
       });
       //#endregion
+
+      //#region modal =================================
+      const projUsersAddComp = ref<any>(null);
+      const addUsersModalOkBtnEventFn = () => {
+        log('addUsersModalOkBtnEventFn');
+        const list = projUsersAddComp.value.projUsersAddCompGetSelectedUserList();
+        console.log(list);
+        addUsersModalMethods.closeModal();
+      };
+
+      const addUsersModalCancalBtnEventFn = () => {
+        log('addUsersModalCancalBtnEventFn');
+      };
+      const [registerAddUsersModal, addUsersModalMethods] = useModal();
+      // addUsersModalMethods.setModalProps({
+      //   centered: true,
+      //   useWrapper: true,
+      // });
+      //#endregion
       return {
         prefixCls,
         projsTreeData,
@@ -206,6 +250,11 @@
         formRegister,
         registerTableFn,
         useSearchBtnEventFn,
+        registerAddUsersModal,
+        tableToolsAddUsersEventFn,
+        addUsersModalOkBtnEventFn,
+        addUsersModalCancalBtnEventFn,
+        projUsersAddComp,
       };
     },
   });
