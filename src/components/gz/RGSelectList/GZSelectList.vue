@@ -70,8 +70,8 @@
         },
       },
     },
-    emits: ['selectedItemsFn'],
-    setup(props, { emit }) {
+    emits: ['selectedItemsFn', 'selectedIdsFn'],
+    setup(props, { emit, expose }) {
       const itemListData = ref<ISelectItem[]>([]);
       const itemsMapData = ref<{ [key: string]: ISelectItem }>({});
       const chooseIdList = ref<string[]>([]);
@@ -144,7 +144,7 @@
               chooseIdList.value.splice(searchIndex, 1);
             }
           }
-
+          emit('selectedIdsFn', chooseIdList.value.slice());
           const items = chooseIdList.value.map((id: string) => {
             return itemsMapData.value[id].oriObj;
           });
@@ -154,6 +154,47 @@
       const onBlurEventFn = (event: any) => {
         log('onBlurEvent', event);
       };
+
+      //#region public func =================================
+      const checkCompGetModelList = (idsList: string[]): any[] => {
+        if (idsList && idsList.length > 0) {
+          const modelList: any = [];
+          idsList.map((id: string) => {
+            if (itemsMapData.value[id]) {
+              modelList.push(itemsMapData.value[id]);
+            }
+          });
+          return modelList;
+        }
+        return [];
+      };
+      const selectCompUncheckedById = (id: string) => {
+        if (chooseIdList.value.includes(id)) {
+          const itemData = itemsMapData.value[id];
+          if (itemData) {
+            itemData.checked = false;
+            const searchIndex = chooseIdList.value.findIndex((value: string) => {
+              if (value === itemData.id) {
+                return true;
+              }
+              return false;
+            });
+            if (searchIndex >= 0) {
+              chooseIdList.value.splice(searchIndex, 1);
+            }
+            emit('selectedIdsFn', chooseIdList.value.slice());
+            const items = chooseIdList.value.map((id: string) => {
+              return itemsMapData.value[id].oriObj;
+            });
+            emit('selectedItemsFn', items);
+          }
+        }
+      };
+      expose({
+        checkCompGetModelList,
+        selectCompUncheckedById,
+      });
+      //#endregion
       return {
         itemListData,
         itemsMapData,
@@ -162,6 +203,7 @@
         searchInput,
         onBlurEventFn,
         getItemListComputed,
+        checkCompGetModelList,
       };
     },
   });
