@@ -19,6 +19,8 @@ export interface MultipleTabState {
   cacheTabList: Set<string>;
   tabList: RouteLocationNormalized[];
   lastDragEndIndex: number;
+  //自定义缓存页面的path
+  cacheTabPathList: Set<string>;
 }
 
 function handleGotoPage(router: Router) {
@@ -46,6 +48,7 @@ export const useMultipleTabStore = defineStore({
     tabList: cacheTab ? Persistent.getLocal(MULTIPLE_TABS_KEY) || [] : [],
     // Index of the last moved tab
     lastDragEndIndex: 0,
+    cacheTabPathList: new Set<string>(),
   }),
   getters: {
     getTabList(): RouteLocationNormalized[] {
@@ -57,6 +60,9 @@ export const useMultipleTabStore = defineStore({
     getLastDragEndIndex(): number {
       return this.lastDragEndIndex;
     },
+    getCachedPathList(): string[] {
+      return Array.from(this.cacheTabPathList!);
+    },
   },
   actions: {
     /**
@@ -64,7 +70,7 @@ export const useMultipleTabStore = defineStore({
      */
     async updateCacheTab() {
       const cacheMap: Set<string> = new Set();
-
+      const cachePathSet: Set<string> = new Set();
       for (const tab of this.tabList) {
         const item = getRawRoute(tab);
         // Ignore the cache
@@ -73,9 +79,12 @@ export const useMultipleTabStore = defineStore({
           continue;
         }
         const name = item.name as string;
+        const path = item.fullPath as string;
         cacheMap.add(name);
+        cachePathSet.add(path);
       }
       this.cacheTabList = cacheMap;
+      this.cacheTabPathList = cachePathSet;
     },
 
     /**
@@ -85,16 +94,19 @@ export const useMultipleTabStore = defineStore({
       const { currentRoute } = router;
       const route = unref(currentRoute);
       const name = route.name;
-
+      const path = route.fullPath;
       const findTab = this.getCachedTabList.find((item) => item === name);
+      const findPath = this.getCachedPathList.find((item) => item === path);
       if (findTab) {
         this.cacheTabList.delete(findTab);
+        this.cacheTabPathList.delete(findPath!);
       }
       const redo = useRedo(router);
       await redo();
     },
     clearCacheTabs(): void {
       this.cacheTabList = new Set();
+      this.cacheTabPathList = new Set();
     },
     resetState(): void {
       this.tabList = [];

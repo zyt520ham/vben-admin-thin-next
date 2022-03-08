@@ -61,13 +61,20 @@
         if (!unref(getOpenKeepAlive)) {
           return [];
         }
-        const list = useMultipleTabStore().getCachedTabList;
+        const list = useMultipleTabStore().getCachedPathList;
         return list;
       });
       function canOpenCache(route: RouteLocationNormalized) {
         if (openCache.value) {
           //缓存页面大前提允许
           if (route.meta.ignoreKeepAlive) {
+            return false;
+          }
+
+          //自行实现include的逻辑
+          if (getCaches.value.includes(route.fullPath)) {
+            return true;
+          } else {
             return false;
           }
           return true;
