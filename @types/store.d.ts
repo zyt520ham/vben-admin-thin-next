@@ -72,3 +72,19 @@ export interface BeforeMiniState {
   menuMode?: MenuModeEnum;
   menuType?: MenuTypeEnum;
 }
+//  项目对象
+export interface IProjectInfo {
+  project_id: string;
+  project_name: string;
+  game_name: string;
+  created_at: number;
+  updated_at: number;
+  order_num: number;
+  state: number;
+}
+//  服务端RoleItem
+export interface IRoleInfo {
+  description: string;
+  role: string;
+  order_num: number;
+}

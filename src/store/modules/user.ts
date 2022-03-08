@@ -23,7 +23,6 @@ interface UserState {
   roleList: RoleEnum[];
   sessionTimeout?: boolean;
   lastUpdateTime: number;
-
   loginInfo: Nullable<ILoginServerData>;
 }
 
