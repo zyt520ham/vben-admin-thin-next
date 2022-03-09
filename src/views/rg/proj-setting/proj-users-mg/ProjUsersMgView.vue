@@ -138,7 +138,7 @@
   import { IReqErr } from '/#/axios';
   import { useUserStoreWithOut } from '/@/store/modules/user';
   import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
-  import { IUserInfo } from '/#/store';
+  import { IRoleInfo, IUserInfo } from '/#/store';
 
   export default defineComponent({
     name: 'ProjUsersMgView',
@@ -155,7 +155,7 @@
     setup() {
       const { prefixCls } = useDesign('proj-users-mg');
       //#region tree =================================
-      const projsTreeData = computed(() => useProjsStoreWithOut().getCurrentProjRoles);
+      const projsTreeData = computed<IRoleInfo[]>(() => useProjsStoreWithOut().getCurrentProjRoles);
       const selectedItemKey = ref('');
       //树形选择回调
       const projsTreeSelectFn = (selectedKey) => {
@@ -176,7 +176,41 @@
 
       //#endregion
       //#region form =================================
-      const [formRegister] = useForm({
+      const resetFormEventFn = () =>
+        new Promise<void>((resolve) => {
+          tableMethods.setTableData(tableDatas.slice());
+          resolve();
+        });
+
+      const searchFormEventFn = () => {
+        return new Promise<void>((resolve) => {
+          console.log('searchFormEventFn');
+          const formData = formMethods.getFieldsValue();
+          const allSearchKeys = Object.keys(formData);
+          const filterList = tableDatas.filter((ele) => {
+            let oldSearchResult: Nullable<boolean> = null;
+            allSearchKeys.forEach((key) => {
+              if (ele[key].indexOf(formData[key]) >= 0) {
+                if (null === oldSearchResult) {
+                  oldSearchResult = true;
+                } else {
+                  oldSearchResult = oldSearchResult && true;
+                }
+              } else {
+                if (null === oldSearchResult) {
+                  oldSearchResult = false;
+                } else {
+                  oldSearchResult = oldSearchResult && false;
+                }
+              }
+            });
+            return oldSearchResult;
+          });
+          tableMethods.setTableData(filterList);
+          resolve();
+        });
+      };
+      const [formRegister, formMethods] = useForm({
         labelWidth: '80px',
         size: 'small',
         showAdvancedButton: true,
@@ -193,10 +227,12 @@
         submitButtonOptions: {
           size: 'small',
         },
+        resetFunc: resetFormEventFn,
+        submitFunc: searchFormEventFn,
       });
       //#endregion
       //#region table data =================================
-      let tableDatas: any[] = [];
+      let tableDatas: IUserInfo[] = [];
       let isSorting = false;
       //获取当前项目角色map
       const getProjRolesMapComputed = computed(() => {

@@ -1,32 +1,5 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
 
-export const testRolesList = [
-  {
-    description: '运营',
-    order_num: 3,
-    role: 'operater',
-  },
-  {
-    description: '市场',
-    order_num: 4,
-    role: 'marketer',
-  },
-  {
-    description: '视频制作',
-    order_num: 5,
-    role: 'videorediter',
-  },
-  {
-    description: '超级管理员',
-    order_num: 2,
-    role: 'topmanager',
-  },
-  {
-    description: 'ADMIN',
-    order_num: 0,
-    role: 'root_role',
-  },
-];
 export const getUsersTableColumnsCfg: BasicColumn[] = [
   {
     title: '编号',
@@ -89,14 +62,14 @@ export const getUsersTableColumnsCfg: BasicColumn[] = [
 ];
 export const getUsersSearchFormCfg: FormSchema[] = [
   {
-    field: 'user_id',
-    label: '用户Id',
+    field: 'account',
+    label: '账号',
     component: 'Input',
     colProps: { span: 8 },
   },
   {
     field: 'nickname',
-    label: '用户昵称',
+    label: '昵称',
     component: 'Input',
     colProps: { span: 8 },
   },
@@ -109,7 +82,7 @@ export const getUsersSearchFormCfg: FormSchema[] = [
   {
     field: 'created_at',
     label: '创建时间',
-    component: 'TimePicker',
+    component: 'RangePicker',
     colProps: { span: 8 },
   },
 ];
