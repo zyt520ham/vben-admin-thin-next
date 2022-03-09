@@ -19,10 +19,10 @@
         />
         <MenuDivider v-if="getShowDoc" />
         <MenuItem
-          key="changeproject"
-          text="切换项目"
-          icon="octicon:project-24"
           v-if="getShowChangedProject"
+          key="changeproject"
+          :text="t('layout.header.changeProject')"
+          icon="octicon:project-24"
         />
         <MenuItem
           v-if="getUseLockPage"
