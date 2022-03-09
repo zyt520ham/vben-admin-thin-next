@@ -46,6 +46,14 @@ export const useProjsStore = defineStore({
         return [];
       }
     },
+    getCurrentProjRoleMap(): { [key: string]: IRoleInfo } {
+      const projId = useUserStoreWithOut().getLoginInfo?.project || '';
+      const item = this.rolesMap[projId];
+      if (item) {
+        return item.projRoleMap;
+      }
+      return {};
+    },
   },
   actions: {
     async checkAllProjects() {

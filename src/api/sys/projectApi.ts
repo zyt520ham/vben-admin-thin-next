@@ -1,5 +1,10 @@
 import { doBaseApiRequest } from '/@/utils/http/NetworkEngine';
-import { IProjectListReq, IRespProjectsData } from '/@/api/sys/model/projectModel';
+import {
+  IProjectListReq,
+  IReqProjIncludeUsers,
+  IRespProjectsData,
+  IRespProjsIncludeUsers,
+} from '/@/api/sys/model/projectModel';
 import { RequestOptions } from '/#/axios';
 
 enum Api {
@@ -7,6 +12,8 @@ enum Api {
 
   UpdateChooseProj = '/personal/set-default-project',
   rgGetMenuList = '/rbac/menu/list',
+
+  rgGetProjUsers = '/project/users',
 }
 
 /**
@@ -18,3 +25,7 @@ export const getProjsListApi = (params: IProjectListReq) =>
 
 export const updateCurrentChooseProjApi = (params: any = {}, options: RequestOptions = {}) =>
   doBaseApiRequest<any>(Api.UpdateChooseProj, params, options || {});
+
+//获取当前项目下的用户列表
+export const getProjUsersApi = (params: IReqProjIncludeUsers, options: RequestOptions = {}) =>
+  doBaseApiRequest<IRespProjsIncludeUsers>(Api.rgGetProjUsers, params, options);

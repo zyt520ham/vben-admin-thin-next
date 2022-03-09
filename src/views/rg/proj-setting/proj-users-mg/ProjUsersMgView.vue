@@ -11,7 +11,7 @@
         <a-card class="w-full max-h-full rg-antd-cart overflow-auto" :bordered="true" hoverable>
           <RolesTreeComp
             @select="projsTreeSelectFn"
-            :prop-replace-fields="{ key: 'root_role', title: 'description' }"
+            :prop-replace-fields="{ key: 'role', title: 'description' }"
             :prop-tree-data="projsTreeData"
           />
         </a-card>
@@ -52,7 +52,7 @@
             <a-tag>{{ record[column.dataIndex] }}</a-tag>
           </template>
           <template #colRoles="{ record, column }">
-            <template v-for="role in record[column.dataIndex]" :key="role">
+            <template v-for="role in tableRowFormatFn(record, column)" :key="role">
               <a-tag color="green">{{ role }}</a-tag>
             </template>
           </template>
@@ -112,15 +112,19 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
+  import { computed, defineComponent, ref } from 'vue';
   import {
     getUsersSearchFormCfg,
     getUsersTableColumnsCfg,
-    testRolesList,
-    testUserlist,
   } from '/@/views/rg/proj-setting/proj-users-mg/inner/projUsers.data';
   import { BasicForm, useForm } from '/@/components/Form';
-  import { BasicTable, SorterResult, TableAction, useTable } from '/@/components/Table';
+  import {
+    BasicColumn,
+    BasicTable,
+    SorterResult,
+    TableAction,
+    useTable,
+  } from '/@/components/Table';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { PageWrapper } from '/@/components/Page';
   import RolesTreeComp from './inner/RolesTreeComp.vue';
@@ -129,6 +133,12 @@
   import { BasicModal, useModal } from '/@/components/Modal';
   import ProjectUsersAddComp from './inner/ProjectUsersAddComp.vue';
   import { log } from '/@/utils/log';
+  import { getProjUsersApi } from '/@/api/sys/projectApi';
+  import { IReqProjIncludeUsers } from '/@/api/sys/model/projectModel';
+  import { IReqErr } from '/#/axios';
+  import { useUserStoreWithOut } from '/@/store/modules/user';
+  import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
+  import { IUserInfo } from '/#/store';
 
   export default defineComponent({
     name: 'ProjUsersMgView',
@@ -145,8 +155,25 @@
     setup() {
       const { prefixCls } = useDesign('proj-users-mg');
       //#region tree =================================
-      const projsTreeData = ref<any[]>(testRolesList);
-      const projsTreeSelectFn = () => {};
+      const projsTreeData = computed(() => useProjsStoreWithOut().getCurrentProjRoles);
+      const selectedItemKey = ref('');
+      //树形选择回调
+      const projsTreeSelectFn = (selectedKey) => {
+        log(selectedKey);
+        selectedItemKey.value = selectedKey;
+        const filterList = tableDatas.filter((ele: IUserInfo) => {
+          if (!selectedItemKey.value) {
+            return true;
+          } else {
+            if (ele.project_roles.includes(selectedItemKey.value)) {
+              return true;
+            }
+            return false;
+          }
+        });
+        tableMethods.setTableData(filterList);
+      };
+
       //#endregion
       //#region form =================================
       const [formRegister] = useForm({
@@ -171,6 +198,10 @@
       //#region table data =================================
       let tableDatas: any[] = [];
       let isSorting = false;
+      //获取当前项目角色map
+      const getProjRolesMapComputed = computed(() => {
+        return useProjsStoreWithOut().getCurrentProjRoleMap;
+      });
       //#endregion -----------------------------------------
       //#region table =================================
       const useSearchState = ref<boolean>(false);
@@ -184,15 +215,36 @@
       };
       //拉取人员信息列表
       const loadUserFromServerApi = () => {
-        return new Promise<any[]>((resolve) => {
+        return new Promise<any[]>((resolve, reject) => {
           if (isSorting) {
             isSorting = false;
             resolve(tableDatas);
           } else {
-            const list = testUserlist;
-            setTimeout(() => {
-              resolve(list);
-            }, 10);
+            const params: IReqProjIncludeUsers = {
+              page: 1,
+              page_size: 1000,
+              project_id: useUserStoreWithOut().getLoginInfo?.project || '',
+            };
+            getProjUsersApi(params).then(
+              (resp) => {
+                const list = resp.list.filter((ele) => {
+                  if (!selectedItemKey.value) {
+                    return true;
+                  }
+                  if (ele.project_roles.includes(selectedItemKey.value)) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+                });
+                tableDatas = resp.list.slice();
+                resolve(list.slice());
+              },
+              (err: IReqErr) => {
+                console.error('err', err);
+                reject(err);
+              },
+            );
           }
         });
       };
@@ -204,6 +256,21 @@
         const sortList = arrSortFn(list, sortInfo.field, sortInfo.order);
         tableDatas = sortList;
       };
+      const tableRowFormatFn = (record: any, column: BasicColumn) => {
+        if (column.dataIndex === 'project_roles') {
+          const keyList: string[] = record[column.dataIndex];
+          const valueList: string[] = [];
+          keyList.map((ele: string) => {
+            const value = getProjRolesMapComputed.value[ele];
+            if (value) {
+              valueList.push(value.description);
+            }
+          });
+          return valueList;
+        }
+        return record[column.dataIndex!];
+      };
+
       const [registerTableFn, tableMethods] = useTable({
         title: '用户列表',
         api: loadUserFromServerApi,
@@ -255,6 +322,8 @@
         addUsersModalOkBtnEventFn,
         addUsersModalCancalBtnEventFn,
         projUsersAddComp,
+        getProjRolesMapComputed,
+        tableRowFormatFn,
       };
     },
   });

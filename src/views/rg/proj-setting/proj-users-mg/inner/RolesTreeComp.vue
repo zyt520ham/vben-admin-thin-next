@@ -47,6 +47,8 @@
       const handleSelectFn = (selectedKeys: string[]) => {
         if (selectedKeys.length > 0) {
           emit('select', selectedKeys[0]);
+        } else {
+          emit('select', '');
         }
       };
       return {
