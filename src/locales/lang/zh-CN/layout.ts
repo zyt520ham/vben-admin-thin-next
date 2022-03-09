@@ -18,6 +18,8 @@ export default {
     lockScreen: '锁定屏幕',
     lockScreenBtn: '锁定',
 
+    changeProject: '切换项目',
+
     home: '首页',
   },
   multipleTab: {

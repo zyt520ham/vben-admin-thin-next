@@ -98,17 +98,13 @@
   } from '/@/components/Table';
   import { SearchOutlined } from '@ant-design/icons-vue';
   import { useDesign } from '/@/hooks/web/useDesign';
-  import {
-    getBasicColumns,
-    getBasicData,
-    getformSchamas,
-  } from '/@/views/rg/proj-setting/roles-list/Roles.data';
-  // import { CollapseContainer } from '/@/components/Container';
+  import { getBasicColumns, getformSchamas } from '/@/views/rg/proj-setting/roles-list/Roles.data';
   import PageWrapper from '/@/components/Page/src/PageWrapper.vue';
   import { BasicForm, useForm } from '/@/components/Form';
   import RoleEditDrawer from '/@/views/rg/proj-setting/roles-list/RoleEditDrawer.vue';
   import { useDrawer } from '/@/components/Drawer';
   import { Icon } from '/@/components/Icon';
+  import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
 
   export default defineComponent({
     name: 'ProjRolesListMg',
@@ -152,7 +148,7 @@
         formData.value = getFieldsValue();
       };
 
-      const tableDatas = ref(getBasicData());
+      const tableDatas = ref([]);
       let isSorting = false;
       const actionColumn: BasicColumn = {
         width: '120px',
@@ -185,9 +181,8 @@
             resolve(tableDatas.value);
             return;
           } else {
-            setTimeout(() => {
-              resolve(tableDatas.value);
-            }, 100);
+            const list = useProjsStoreWithOut().getCurrentProjRoles;
+            resolve(list);
           }
         });
       };

@@ -34,6 +34,9 @@ export const useProjsStore = defineStore({
     getAllProjs(): IProjectInfo[] {
       return this.projectsList.slice();
     },
+    getAllProjectsMap(): { [key: string]: IProjectInfo } {
+      return this.projectsMap;
+    },
     getCurrentProjRoles(): IRoleInfo[] {
       const projId = useUserStoreWithOut().getLoginInfo?.project || '';
       const item = this.rolesMap[projId];

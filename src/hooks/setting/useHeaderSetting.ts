@@ -77,7 +77,9 @@ export function useHeaderSetting() {
   const getShowContent = computed(() => {
     return unref(getShowBread) || unref(getShowHeaderTrigger);
   });
-
+  const getShowChangedProject = computed(() => {
+    return computed(() => appStore.getHeaderSetting.showChangeProject);
+  });
   // Set header configuration
   function setHeaderSetting(headerSetting: Partial<HeaderSetting>) {
     appStore.setProjectConfig({ headerSetting });
@@ -101,5 +103,6 @@ export function useHeaderSetting() {
     getShowInsetHeaderRef,
     getUnFixedAndFull,
     getHeaderBgColor,
+    getShowChangedProject,
   };
 }

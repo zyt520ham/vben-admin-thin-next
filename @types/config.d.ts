@@ -68,6 +68,8 @@ export interface HeaderSetting {
   showNotice: boolean;
   // 显示菜单搜索按钮
   showSearch: boolean;
+  // 显示是否切换项目
+  showChangeProject: boolean;
 }
 // 多语言配置
 export interface LocaleSetting {

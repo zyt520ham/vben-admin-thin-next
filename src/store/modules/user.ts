@@ -15,6 +15,8 @@ import { usePermissionStore } from '/@/store/modules/permission';
 import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { h } from 'vue';
+import { updateCurrentChooseProjApi } from '/@/api/sys/projectApi';
+import { useMultipleTabStore } from '/@/store/modules/multipleTab';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
@@ -222,6 +224,16 @@ export const useUserStore = defineStore({
           await this.logout(true);
         },
       });
+    },
+    //切换项目
+    async doChangeProject(changedProj: string) {
+      const tempLoginInfo = Object.assign({}, this.getLoginInfo);
+      tempLoginInfo.project = changedProj;
+      this.setLoginInfo(tempLoginInfo);
+      usePermissionStore().resetState();
+      useMultipleTabStore().resetState();
+      await updateCurrentChooseProjApi();
+      return this.afterLoginAction();
     },
   },
 });

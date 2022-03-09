@@ -63,12 +63,12 @@
   import { BasicTable, SorterResult, TableAction, useTable } from '/@/components/Table';
   import {
     getProjsColumnsCfg,
-    projectsList,
     getSearchFormCfg,
   } from '/@/views/rg/sys-settings/projs-list/inner/projs.data';
   import { arrSortFn } from '/@/utils/arrayUtils';
   import GzShowSearchFormBtn from '/@/components/GzShowSearchFormBtn';
   import { log } from '/@/utils/log';
+  import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
 
   export default defineComponent({
     name: 'SysProjsListMg',
@@ -116,7 +116,7 @@
               isSorting = false;
               resolve(tableDatas);
             } else {
-              const list = projectsList;
+              const list = useProjsStoreWithOut().getAllProjs;
               resolve(list);
             }
           } else {

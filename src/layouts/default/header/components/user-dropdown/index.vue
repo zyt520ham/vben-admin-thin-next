@@ -19,6 +19,12 @@
         />
         <MenuDivider v-if="getShowDoc" />
         <MenuItem
+          key="changeproject"
+          text="切换项目"
+          icon="octicon:project-24"
+          v-if="getShowChangedProject"
+        />
+        <MenuItem
           v-if="getUseLockPage"
           key="lock"
           :text="t('layout.header.tooltipLock')"
@@ -33,6 +39,7 @@
     </template>
   </Dropdown>
   <LockAction @register="register" />
+  <ChangeProjectModal @register="registerChangeProjectModal" />
 </template>
 <script lang="ts">
   // components
@@ -53,12 +60,14 @@
   import { openWindow } from '/@/utils';
 
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
+  import ChangeProjectModal from '/@/layouts/default/header/components/change-project/ChangeProjectModal.vue';
 
-  type MenuEvent = 'logout' | 'doc' | 'lock';
+  type MenuEvent = 'logout' | 'doc' | 'lock' | 'changeproject';
 
   export default defineComponent({
     name: 'UserDropdown',
     components: {
+      ChangeProjectModal,
       Dropdown,
       Menu,
       MenuItem: createAsyncComponent(() => import('./DropMenuItem.vue')),
@@ -71,7 +80,7 @@
     setup() {
       const { prefixCls } = useDesign('header-user-dropdown');
       const { t } = useI18n();
-      const { getShowDoc, getUseLockPage } = useHeaderSetting();
+      const { getShowDoc, getUseLockPage, getShowChangedProject } = useHeaderSetting();
       const userStore = useUserStore();
 
       const getUserInfo = computed(() => {
@@ -80,7 +89,7 @@
       });
 
       const [register, { openModal }] = useModal();
-
+      const [registerChangeProjectModal, changeProjMethods] = useModal();
       function handleLock() {
         openModal(true);
       }
@@ -94,7 +103,10 @@
       function openDoc() {
         openWindow(DOC_URL);
       }
-
+      function changedProject() {
+        console.log('changedProject');
+        changeProjMethods.openModal(true);
+      }
       function handleMenuClick(e: { key: MenuEvent }) {
         switch (e.key) {
           case 'logout':
@@ -105,6 +117,9 @@
             break;
           case 'lock':
             handleLock();
+            break;
+          case 'changeproject':
+            changedProject();
             break;
         }
       }
@@ -117,6 +132,8 @@
         getShowDoc,
         register,
         getUseLockPage,
+        getShowChangedProject,
+        registerChangeProjectModal,
       };
     },
   });
