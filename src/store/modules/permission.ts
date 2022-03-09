@@ -29,6 +29,7 @@ import testMenus from '/@/router/routes/modules/demo/testmenus';
 import { resetRouter, router } from '/@/router';
 import { RouteRecordRaw } from 'vue-router';
 import { routesListChanged } from '/@/layouts/iframe/useFrameKeepAlive';
+import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
 
 interface PermissionState {
   // Permission code list
@@ -236,7 +237,10 @@ export const usePermissionStore = defineStore({
       }
 
       routes.push(ERROR_LOG_ROUTE);
+      //首页显示处理
       patchHomeAffix(routes);
+      // 项目列表处理
+      useProjsStoreWithOut().checkAllProjects();
       return routes;
     },
     async addMenuItem(menuItem) {

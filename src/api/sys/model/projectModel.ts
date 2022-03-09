@@ -12,3 +12,8 @@ export interface IProjectDataItem {
   order_num: number;
   state: number;
 }
+
+export interface IRespProjectsData {
+  list: IProjectDataItem[];
+  total: number;
+}

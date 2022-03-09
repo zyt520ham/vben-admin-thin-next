@@ -85,6 +85,12 @@ export interface IProjectInfo {
 //  服务端RoleItem
 export interface IRoleInfo {
   description: string;
+  /** 角色id */
   role: string;
   order_num: number;
+}
+interface IProjRoles {
+  projectId: string;
+  projRoleList: IRoleInfo[];
+  projRoleMap: { [key: string]: IRoleInfo };
 }

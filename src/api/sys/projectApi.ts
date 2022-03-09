@@ -1,5 +1,5 @@
 import { doBaseApiRequest } from '/@/utils/http/NetworkEngine';
-import { IProjectListReq } from '/@/api/sys/model/projectModel';
+import { IProjectListReq, IRespProjectsData } from '/@/api/sys/model/projectModel';
 
 enum Api {
   GetProjectsList = '/project/list',
@@ -12,4 +12,4 @@ enum Api {
  */
 
 export const getProjsListApi = (params: IProjectListReq) =>
-  doBaseApiRequest<any>(Api.GetProjectsList, params, {});
+  doBaseApiRequest<IRespProjectsData>(Api.GetProjectsList, params, {});
