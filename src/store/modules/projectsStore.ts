@@ -86,6 +86,12 @@ export const useProjsStore = defineStore({
       // promise.response.params.project_id
       // log('roleData:', roleData.list);
     },
+    resetState(): void {
+      this.projectsList = [];
+      this.projectsMap = {};
+      this.rolesList = [];
+      this.rolesMap = {};
+    },
     //#region setter =================================
     setProjects(projects: IProjectInfo[]) {
       this.projectsList = projects.slice();

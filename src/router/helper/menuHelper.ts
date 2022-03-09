@@ -43,7 +43,7 @@ export function transformRouteToMenu(routeModList: AppRouteModule[], routerMappi
 
   cloneRouteModList.forEach((item) => {
     try {
-      if (routerMapping && item.meta.hideChildrenInMenu && typeof item.redirect === 'string') {
+      if (routerMapping && item.meta?.hideChildrenInMenu && typeof item.redirect === 'string') {
         item.path = item.redirect;
       }
       if (item.meta?.single) {

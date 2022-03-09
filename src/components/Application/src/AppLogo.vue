@@ -6,7 +6,7 @@
   <div class="anticon" :class="getAppLogoClass" @click="goHome">
     <img src="../../../assets/images/logo.png" />
     <div class="ml-2 truncate md:opacity-100" :class="getTitleClass" v-show="showTitle">
-      {{ title }}
+      {{ getShowTitleComputed }}
     </div>
   </div>
 </template>
@@ -18,6 +18,8 @@
   import { useDesign } from '/@/hooks/web/useDesign';
   import { PageEnum } from '/@/enums/pageEnum';
   import { useUserStore } from '/@/store/modules/user';
+  import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
+  import { IProjectInfo } from '/#/store';
 
   const props = defineProps({
     /**
@@ -38,6 +40,14 @@
   const { getCollapsedShowTitle } = useMenuSetting();
   const userStore = useUserStore();
   const { title } = useGlobSetting();
+  const getShowTitleComputed = computed(() => {
+    const projs: IProjectInfo =
+      useProjsStoreWithOut().getAllProjectsMap[useUserStore().getLoginInfo?.project || ''];
+    if (projs) {
+      return projs.project_name;
+    }
+    return title;
+  });
   const go = useGo();
 
   const getAppLogoClass = computed(() => [

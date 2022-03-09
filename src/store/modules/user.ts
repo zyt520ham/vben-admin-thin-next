@@ -11,12 +11,13 @@ import { doLogout, getUserInfo, loginApi } from '/@/api/sys/user';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { router } from '/@/router';
-import { usePermissionStore } from '/@/store/modules/permission';
+import { usePermissionStore, usePermissionStoreWithOut } from '/@/store/modules/permission';
 import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { h } from 'vue';
 import { updateCurrentChooseProjApi } from '/@/api/sys/projectApi';
-import { useMultipleTabStore } from '/@/store/modules/multipleTab';
+import { useMultipleTabWithOutStore } from '/@/store/modules/multipleTab';
+import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
@@ -161,13 +162,17 @@ export const useUserStore = defineStore({
       } else {
         const permissionStore = usePermissionStore();
         if (!permissionStore.isDynamicAddedRoute) {
-          const routes = await permissionStore.buildRoutesAction();
+          try {
+            const routes = await permissionStore.buildRoutesAction();
 
-          routes.forEach((route) => {
-            router.addRoute(route as unknown as RouteRecordRaw);
-          });
-          router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
-          permissionStore.setDynamicAddedRoute(true);
+            routes.forEach((route) => {
+              router.addRoute(route as unknown as RouteRecordRaw);
+            });
+            router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
+            permissionStore.setDynamicAddedRoute(true);
+          } catch (e) {
+            debugger;
+          }
         }
 
         goHome && (await router.replace(userInfo?.homePath || PageEnum.BASE_HOME));
@@ -206,7 +211,8 @@ export const useUserStore = defineStore({
       this.setSessionTimeout(false);
       this.setUserInfo(null);
       this.setUserInfoV1(null);
-
+      useProjsStoreWithOut().resetState();
+      usePermissionStoreWithOut().resetState();
       goLogin && router.push(PageEnum.BASE_LOGIN);
     },
 
@@ -230,8 +236,8 @@ export const useUserStore = defineStore({
       const tempLoginInfo = Object.assign({}, this.getLoginInfo);
       tempLoginInfo.project = changedProj;
       this.setLoginInfo(tempLoginInfo);
-      usePermissionStore().resetState();
-      useMultipleTabStore().resetState();
+      usePermissionStoreWithOut().resetState();
+      useMultipleTabWithOutStore().resetState();
       await updateCurrentChooseProjApi();
       return this.afterLoginAction();
     },
