@@ -80,6 +80,8 @@ export function useDataSource(
       const sortInfo = sortFn(sorter);
       searchState.sortInfo = sortInfo;
       params.sortInfo = sortInfo;
+      //fix by gz  判断当前行为是sort是，不在向后执行，由外部组件table实例自行管理数据
+      return;
     }
 
     if (filters && isFunction(filterFn)) {
