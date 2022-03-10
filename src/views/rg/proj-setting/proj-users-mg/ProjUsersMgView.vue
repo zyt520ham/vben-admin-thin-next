@@ -186,24 +186,53 @@
         return new Promise<void>((resolve) => {
           console.log('searchFormEventFn');
           const formData = formMethods.getFieldsValue();
-          const allSearchKeys = Object.keys(formData);
+          const searchItem: any = {};
+          for (const formDataKey in formData) {
+            if (formData[formDataKey]) {
+              searchItem[formDataKey] = formData[formDataKey];
+            }
+          }
+          const allSearchKeys = Object.keys(searchItem);
+          debugger;
           const filterList = tableDatas.filter((ele) => {
             let oldSearchResult: Nullable<boolean> = null;
-            allSearchKeys.forEach((key) => {
-              if (ele[key].indexOf(formData[key]) >= 0) {
-                if (null === oldSearchResult) {
+            let index = 0;
+            while (index < allSearchKeys.length) {
+              const key = allSearchKeys[index];
+              if (index === 0) {
+                if (ele[key].indexOf(searchItem[key]) >= 0) {
                   oldSearchResult = true;
                 } else {
-                  oldSearchResult = oldSearchResult && true;
+                  oldSearchResult = false;
                 }
               } else {
-                if (null === oldSearchResult) {
-                  oldSearchResult = false;
+                if (ele[key].indexOf(searchItem[key]) >= 0) {
+                  oldSearchResult = oldSearchResult && true;
                 } else {
                   oldSearchResult = oldSearchResult && false;
                 }
               }
-            });
+              index++;
+            }
+            // allSearchKeys.forEach((key, index) => {
+            //   log('foreach:', ele.account, key, index);
+            //   if (index === 0) {
+            //     if (ele[key].indexOf(formData[key]) >= 0) {
+            //       oldSearchResult = true;
+            //     } else {
+            //       oldSearchResult = false;
+            //     }
+            //   } else {
+            //     if (ele[key].indexOf(formData[key]) >= 0) {
+            //       oldSearchResult = oldSearchResult && true;
+            //     } else {
+            //       oldSearchResult = oldSearchResult && false;
+            //     }
+            //   }
+            // });
+            if (oldSearchResult) {
+              debugger;
+            }
             return oldSearchResult;
           });
           tableMethods.setTableData(filterList);
@@ -288,7 +317,7 @@
       const tableSortFn = (sortInfo: SorterResult) => {
         console.log('tableSortFn', sortInfo);
         isSorting = true;
-        const list = tableMethods.getDataSource().slice();
+        const list: any[] = tableMethods.getDataSource().slice();
         const sortList = arrSortFn(list, sortInfo.field, sortInfo.order);
         tableDatas = sortList;
       };
