@@ -26,13 +26,13 @@ export function getBasicColumns(): BasicColumn[] {
       sorter: true,
       width: '120px',
     },
-    {
-      title: '角色状态',
-      editRow: false,
-      dataIndex: 'useStatus',
-      width: '120px',
-      sorter: true,
-    },
+    // {
+    //   title: '角色状态',
+    //   editRow: false,
+    //   dataIndex: 'useStatus',
+    //   width: '120px',
+    //   sorter: true,
+    // },
     {
       title: '创建时间',
       width: '120px',
@@ -166,14 +166,23 @@ export const roleFormSchemas = (): FormSchema[] => {
       // },
       slot: 'slotField3',
     },
+    // {
+    //   field: 'useStatus',
+    //   component: 'RadioGroup',
+    //   label: '状态',
+    //   // colProps: {
+    //   //   span: 8,
+    //   // },
+    //   slot: 'slotField4',
+    // },
     {
-      field: 'useStatus',
-      component: 'RadioGroup',
-      label: '状态',
+      field: 'menusList',
+      component: 'TreeSelect',
+      label: '添加菜单',
       // colProps: {
       //   span: 8,
       // },
-      slot: 'slotField4',
+      slot: 'slotMenu',
     },
   ];
 };
