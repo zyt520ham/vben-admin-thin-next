@@ -70,11 +70,13 @@
                 {
                   icon: 'codicon:key',
                   tooltip: '重置密码',
+                  onClick: tableActionResetPsdFn.bind(null, record),
                 },
                 {
                   icon: 'carbon:user-role',
                   // color: 'error',
                   tooltip: '分配角色',
+                  onClick: tableActionSettingRoleFn.bind(null, record),
                 },
 
                 {
@@ -83,7 +85,7 @@
                   tooltip: '项目移出',
                   popConfirm: {
                     title: `是否移出用户【${record.nickname}】`,
-                    // confirm: tableRowHandleDeleteFn.bind(null, record),
+                    confirm: tableActionLeaveProjsFn.bind(null, record),
                   },
                 },
               ]"
@@ -109,6 +111,8 @@
         </div>
       </template>
     </BasicModal>
+    <RoleSettingDrawer @register="registerDrawerFn" @success="roleSettingSuccessFn" />
+    <UserResetPsdModal @register="registerResetPsdModalFn" />
   </PageWrapper>
 </template>
 
@@ -139,6 +143,9 @@
   import { IReqErr } from '/#/axios';
   import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
   import { IRoleInfo, IUserInfo } from '/#/store';
+  import RoleSettingDrawer from './inner/RoleSettingDrawer.vue';
+  import { useDrawer } from '/@/components/Drawer';
+  import UserResetPsdModal from './inner/UserResetPsdModal.vue';
 
   export default defineComponent({
     name: 'ProjUsersMgView',
@@ -151,9 +158,12 @@
       TableAction,
       ProjectUsersAddComp,
       BasicModal,
+      RoleSettingDrawer,
+      UserResetPsdModal,
     },
     setup() {
       const { prefixCls } = useDesign('proj-users-mg');
+
       //#region tree =================================
       const projsTreeData = computed<IRoleInfo[]>(() => useProjsStoreWithOut().getCurrentProjRoles);
       const selectedItemKey = ref('');
@@ -257,6 +267,7 @@
       //#region table data =================================
       let tableDatas: IUserInfo[] = [];
       let isSorting = false;
+      const edittingInfo = ref<IUserInfo>({} as any);
       //获取当前项目角色map
       const getProjRolesMapComputed = computed(() => {
         return useProjsStoreWithOut().getCurrentProjRoleMap;
@@ -300,7 +311,7 @@
                     return false;
                   }
                 });
-                tableDatas = resp.list.slice();
+                // tableDatas = resp.list.slice();
                 resolve(list.slice());
               },
               (err: IReqErr) => {
@@ -327,17 +338,34 @@
         if (column.dataIndex === 'project_roles') {
           const keyList: string[] = record[column.dataIndex];
           const valueList: string[] = [];
-          keyList.map((ele: string) => {
-            const value = getProjRolesMapComputed.value[ele];
-            if (value) {
-              valueList.push(value.description);
-            }
-          });
-          return valueList;
+          try {
+            keyList.map((ele: string) => {
+              const value = getProjRolesMapComputed.value[ele];
+              if (value) {
+                valueList.push(value.description);
+              }
+            });
+            return valueList;
+          } catch (e) {
+            debugger;
+          }
         }
         return record[column.dataIndex!];
       };
+      const tableActionResetPsdFn = (record) => {
+        log('tableActionResetPsdFn', record);
 
+        resetPsdModelMethods.openModal(true, record);
+      };
+      const tableActionSettingRoleFn = (record) => {
+        edittingInfo.value = record as any;
+        openDrawer(true, record);
+      };
+      const tableActionLeaveProjsFn = (record) => {
+        log('tableActionleaveProjsFn', record);
+        //TODO::添加移除项目的网络请求
+        tableMethods.deleteTableDataRecord(record.key);
+      };
       const [registerTableFn, tableMethods] = useTable({
         title: '用户列表',
         api: loadUserFromServerApi,
@@ -371,10 +399,16 @@
         log('addUsersModalCancalBtnEventFn');
       };
       const [registerAddUsersModal, addUsersModalMethods] = useModal();
+      const [registerDrawerFn, { openDrawer }] = useDrawer();
       // addUsersModalMethods.setModalProps({
       //   centered: true,
       //   useWrapper: true,
       // });
+      const roleSettingSuccessFn = (editRecord) => {
+        edittingInfo.value.project_roles = editRecord.value.project_roles;
+      };
+
+      const [registerResetPsdModalFn, resetPsdModelMethods] = useModal();
       //#endregion
       return {
         prefixCls,
@@ -391,6 +425,13 @@
         projUsersAddComp,
         getProjRolesMapComputed,
         tableRowFormatFn,
+        registerDrawerFn,
+        tableActionLeaveProjsFn,
+        tableActionSettingRoleFn,
+        tableActionResetPsdFn,
+        edittingInfo,
+        roleSettingSuccessFn,
+        registerResetPsdModalFn,
       };
     },
   });

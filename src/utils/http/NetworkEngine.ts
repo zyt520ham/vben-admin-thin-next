@@ -3,7 +3,7 @@ import { getSecondTimestampNow } from '/@/utils/dateUtil';
 import { md5 } from '/@/utils/stringUtils';
 // import { getAppEnvConfig } from '/@/utils/env';
 import { defHttp } from '/@/utils/http/axios';
-import { AxiosRequestConfig } from 'axios';
+import { AxiosError, AxiosRequestConfig } from 'axios';
 import { IReqErr, RequestOptions, Result } from '/#/axios';
 import { useUserStoreWithOut } from '/@/store/modules/user';
 export interface IReqCommomParams {
@@ -100,20 +100,42 @@ export function doBaseApiRequest<T>(
   const promise = new Promise<T>((resolve, reject) => {
     defHttp
       .post<Result<T>>(cfg, requestOption)
-      .then((resp) => {
-        console.log('resp', resp);
-        if (resp.retCode === 0) {
-          resolve(resp.data);
-        } else {
-          const err: IReqErr = new Error(resp.retMsg);
-          err.retCode = resp.retCode;
-          err.retMsg = resp.retMsg;
-          err.respData = resp.data;
-          reject(err);
-        }
-      })
+      .then(
+        (resp) => {
+          console.log('resp', resp);
+          if (resp.retCode === 0) {
+            resolve(resp.data);
+          } else {
+            const err: IReqErr = new Error(resp.retMsg);
+            err.retCode = resp.retCode;
+            err.retMsg = resp.retMsg;
+            err.respData = resp.data;
+            reject(err);
+          }
+        },
+        (error: AxiosError) => {
+          // debugger;
+          const errData = error.response?.data;
+          if (errData) {
+            const err: IReqErr = new Error(errData.retMsg);
+            err.retCode = errData.retCode;
+            // err.status = error.response?.status;
+            err.retMsg = errData.retMsg;
+            err.respData = errData.data;
+            reject(err);
+            return;
+            // debugger;
+          }
+          // const err: IReqErr = new Error(resp.retMsg);
+          // err.retCode = resp.retCode;
+          // err.retMsg = resp.retMsg;
+          // err.respData = resp.data;
+          reject(error);
+        },
+      )
       .catch((err: IReqErr) => {
         console.error(err);
+        debugger;
         reject(err);
       });
   });

@@ -46,6 +46,12 @@ export const useUserStore = defineStore({
     userInfo_v1: null,
   }),
   getters: {
+    getUserId(): number {
+      return this.getLoginInfo!.user_id;
+    },
+    getChooseProjectId(): string {
+      return this.getLoginInfo!.project;
+    },
     getLoginInfo(): ILoginServerData | null {
       let loginInfo = null;
       const cacheLoginInfo = getAuthCache<string>(TOKEN_KEY);

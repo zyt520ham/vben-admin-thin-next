@@ -11,7 +11,7 @@
       :toolbar="false"
       search
       :clickRowToExpand="false"
-      :treeData="treeData"
+      :treeData="treeDataComputd"
       :replaceFields="replaceFieldsData"
       @select="handleSelectFn"
     />
@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
+  import { computed, defineComponent, ref } from 'vue';
   import { BasicTree, ReplaceFields } from '/@/components/Tree';
   import { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
 
@@ -43,7 +43,10 @@
     emits: ['select'],
     setup(props, { emit }) {
       const replaceFieldsData = ref<ReplaceFields>(props.propReplaceFields as any);
-      const treeData = ref<TreeDataItem>(props.propTreeData as any);
+      // const treeData = ref<TreeDataItem>(props.propTreeData as any);
+      const treeDataComputd = computed(() => {
+        return props.propTreeData as any;
+      });
       const handleSelectFn = (selectedKeys: string[]) => {
         if (selectedKeys.length > 0) {
           emit('select', selectedKeys[0]);
@@ -53,7 +56,7 @@
       };
       return {
         handleSelectFn,
-        treeData,
+        treeDataComputd,
         replaceFieldsData,
       };
     },

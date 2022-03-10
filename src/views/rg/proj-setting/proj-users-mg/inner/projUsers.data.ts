@@ -1958,3 +1958,26 @@ export const getAddUserTableColumnsCfg: BasicColumn[] = [
     sorter: true,
   },
 ];
+
+export const roleSettingFormSchemas = (): FormSchema[] => {
+  return [
+    {
+      field: 'account',
+      component: 'Input',
+      label: '账号',
+      slot: 'slotField1',
+    },
+    {
+      field: 'nickname',
+      component: 'Input',
+      label: '昵称',
+      slot: 'slotField2',
+    },
+    {
+      field: 'project_roles',
+      component: 'Input',
+      label: '角色',
+      slot: 'slotField3',
+    },
+  ];
+};

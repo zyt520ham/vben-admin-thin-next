@@ -2,11 +2,12 @@ import { defHttp } from '/@/utils/http/axios';
 import {
   ILoginParams,
   ILoginServerData,
+  IReqUserPsdResetByAdmin,
   IUserInfoParams,
   IUserItemServerData,
 } from './model/userModel';
 
-import { ErrorMessageMode } from '/#/axios';
+import { ErrorMessageMode, RequestOptions } from '/#/axios';
 import { doBaseApiRequest } from '/@/utils/http/NetworkEngine';
 
 enum Api {
@@ -18,6 +19,9 @@ enum Api {
   rgLogin = '/site/login',
   rgLogout = '/site/logout',
   rgUserInfo = '/user/info',
+
+  //管理员重置用户密码
+  rgUserPsdReset = '/user/reset-password',
 }
 
 /**
@@ -56,3 +60,7 @@ export function doLogout() {
   return promise;
   // return defHttp.get({ url: Api.Logout });
 }
+
+//管理员重置用户密码
+export const resetUserPsdByAdminApi = (params: IReqUserPsdResetByAdmin, options?: RequestOptions) =>
+  doBaseApiRequest<any>(Api.rgUserPsdReset, params, options);

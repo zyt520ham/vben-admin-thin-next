@@ -77,3 +77,14 @@ export interface IUserItemServerData {
   default_project: string;
   project_roles: string[];
 }
+
+/** 管理员重置user密码参数*/
+export interface IReqUserPsdResetByAdmin {
+  user_id: number;
+  new_password: string;
+}
+/** 管理员ban user 参数*/
+// declare interface IReqUserBanByAdmin {
+//   user_id: number;
+//   ban: boolean;
+// }

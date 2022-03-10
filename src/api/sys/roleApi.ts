@@ -1,9 +1,15 @@
 import { doBaseApiRequest } from '/@/utils/http/NetworkEngine';
-import { IReqGetRoles, IRespRolesListData } from '/@/api/sys/model/roleModel';
+import {
+  IReqGetRoles,
+  IReqUserRolesUpdate,
+  IRespRolesListData,
+  IRespUserRolesData,
+} from '/@/api/sys/model/roleModel';
 import { RequestOptions } from '/#/axios';
 
 enum Api {
   GetRoleList = '/rbac/role/list',
+  rgUpdateUserRole = '/rbac/association/role-user',
 }
 
 /**
@@ -12,3 +18,6 @@ enum Api {
 
 export const getRoleListApi = (params: IReqGetRoles, options?: RequestOptions) =>
   doBaseApiRequest<IRespRolesListData>(Api.GetRoleList, params, options ? options : {});
+
+export const updateUserRolesApi = (params: IReqUserRolesUpdate, options?: RequestOptions) =>
+  doBaseApiRequest<IRespUserRolesData>(Api.rgUpdateUserRole, params, options);
