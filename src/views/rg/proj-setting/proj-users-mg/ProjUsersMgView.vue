@@ -132,7 +132,7 @@
   import { arrSortFn } from '/@/utils/arrayUtils';
   import { BasicModal, useModal } from '/@/components/Modal';
   import ProjectUsersAddComp from './inner/ProjectUsersAddComp.vue';
-  import { log } from '/@/utils/log';
+  import { log, logNoTrace } from '/@/utils/log';
   import { getProjUsersApi } from '/@/api/sys/projectApi';
   import { IReqProjIncludeUsers } from '/@/api/sys/model/projectModel';
   import { IReqErr } from '/#/axios';
@@ -178,7 +178,13 @@
       //#region form =================================
       const resetFormEventFn = () =>
         new Promise<void>((resolve) => {
-          tableMethods.setTableData(tableDatas.slice());
+          let rowDataList = tableMethods.getRawDataSource();
+          if (selectedItemKey.value) {
+            rowDataList = rowDataList.filter((ele: IUserInfo) => {
+              return ele.project_roles.includes(selectedItemKey.value);
+            });
+          }
+          tableMethods.setTableData(rowDataList.slice());
           resolve();
         });
 
@@ -193,8 +199,14 @@
             }
           }
           const allSearchKeys = Object.keys(searchItem);
-          debugger;
-          const filterList = tableDatas.filter((ele) => {
+
+          let rowDataList = tableMethods.getRawDataSource();
+          if (selectedItemKey.value) {
+            rowDataList = rowDataList.filter((ele: IUserInfo) => {
+              return ele.project_roles.includes(selectedItemKey.value);
+            });
+          }
+          const filterList = rowDataList.filter((ele) => {
             let oldSearchResult: Nullable<boolean> = null;
             let index = 0;
             while (index < allSearchKeys.length) {
@@ -214,25 +226,7 @@
               }
               index++;
             }
-            // allSearchKeys.forEach((key, index) => {
-            //   log('foreach:', ele.account, key, index);
-            //   if (index === 0) {
-            //     if (ele[key].indexOf(formData[key]) >= 0) {
-            //       oldSearchResult = true;
-            //     } else {
-            //       oldSearchResult = false;
-            //     }
-            //   } else {
-            //     if (ele[key].indexOf(formData[key]) >= 0) {
-            //       oldSearchResult = oldSearchResult && true;
-            //     } else {
-            //       oldSearchResult = oldSearchResult && false;
-            //     }
-            //   }
-            // });
-            if (oldSearchResult) {
-              debugger;
-            }
+
             return oldSearchResult;
           });
           tableMethods.setTableData(filterList);
@@ -278,12 +272,15 @@
         console.log('tableToolsAddUsersEventFn');
         addUsersModalMethods.openModal();
       };
+      let rawDataSource: any = [];
       //拉取人员信息列表
       const loadUserFromServerApi = () => {
+        logNoTrace('loadUserFromServerApi');
         return new Promise<any[]>((resolve, reject) => {
           if (isSorting) {
             isSorting = false;
-            resolve(tableDatas);
+            resolve(rawDataSource);
+            tableMethods.setTableData(tableDatas);
           } else {
             const params: IReqProjIncludeUsers = {
               page: 1,
@@ -313,13 +310,17 @@
           }
         });
       };
+
       //table fn 排序
       const tableSortFn = (sortInfo: SorterResult) => {
-        console.log('tableSortFn', sortInfo);
+        debugger;
+        logNoTrace('tableSortFn', sortInfo);
         isSorting = true;
+        rawDataSource = tableMethods.getRawDataSource().slice();
         const list: any[] = tableMethods.getDataSource().slice();
         const sortList = arrSortFn(list, sortInfo.field, sortInfo.order);
-        tableDatas = sortList;
+        // tableDatas = sortList;
+        tableMethods.setTableData(sortList);
       };
       const tableRowFormatFn = (record: any, column: BasicColumn) => {
         if (column.dataIndex === 'project_roles') {
