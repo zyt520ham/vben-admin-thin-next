@@ -121,7 +121,7 @@
       const { prefixCls } = useDesign('proj-roles-mg');
       const pagination = ref<any>(false);
       const showSearchFormRef = ref<boolean>(false);
-      const projRolesMgTableComp = ref();
+      const projRolesMgTableComp = ref<any>();
       const searchBtnClick = ($event) => {
         console.log('searchBtnClick', $event);
         showSearchFormRef.value = !showSearchFormRef.value;
@@ -225,6 +225,7 @@
 
       const handleSuccessDrawerFn = () => {
         console.log('handleSuccessDrawer');
+        projRolesMgTableComp.value.reload();
       };
       return {
         columns: getBasicColumns(),

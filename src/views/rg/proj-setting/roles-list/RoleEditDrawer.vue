@@ -53,6 +53,7 @@
   import { roleFormSchemas } from '/@/views/rg/proj-setting/roles-list/Roles.data';
   import { BasicTree, TreeItem } from '/@/components/Tree';
   import {
+    createRoleInfoApi,
     getPermissionsByRoleApi,
     updateRoleInfoApi,
     updateRolePermissionsApi,
@@ -60,19 +61,22 @@
   import { usePermissionStoreWithOut } from '/@/store/modules/permission';
   import { log } from '/@/utils/log';
   import {
+    IReqCreatRole,
     IReqGetPermissionsByRole,
     IReqUpdateRoleInfo,
     IReqUpdateRolePermissions,
+    IRespCreateRole,
   } from '/@/api/sys/model/roleModel';
   import { IRoleInfo } from '/#/store';
   import { IReqErr } from '/#/axios';
   import { message } from 'ant-design-vue';
+  import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
 
   export default defineComponent({
     name: 'RoleEditDrawer',
     components: { BasicDrawer, BasicForm, BasicTree },
     emits: ['success', 'register'],
-    setup() {
+    setup(_, { emit }) {
       const editRoleInfo = ref<IRoleInfo>({} as any);
       const [registerDraw, { setDrawerProps, closeDrawer }] = useDrawerInner(
         async (data: { record: IRoleInfo; isUpdateRole: boolean }) => {
@@ -109,10 +113,47 @@
       const isUpdateMenu = ref(true);
       const checkedList = ref([]);
       const getTitle = computed(() => (!unref(isUpdateMenu.value) ? '新增角色' : '编辑角色'));
-      const handleSubmitFn = () => {
+      const handleSubmitFn = async () => {
         const formItemData = formMethods.getFieldsValue();
         if (!isUpdateMenu.value) {
           // 新增角色
+
+          const roleInfoParams: IReqCreatRole = {
+            role: formItemData.role,
+            description: formItemData.description,
+            order_num: formItemData.order_num,
+          };
+          let result: Nullable<IRespCreateRole> = null;
+          try {
+            message.success('创建角色成功');
+
+            result = await createRoleInfoApi(roleInfoParams);
+          } catch (e: any) {
+            message.error(e.retMsg!);
+            return;
+          }
+
+          log(result);
+          if (result) {
+            const allCheckedKeys: any[] = roleEdtiDrawerTree.value.getCheckedKeys();
+            if (allCheckedKeys.length > 0) {
+              const params1: IReqUpdateRolePermissions = {
+                role: result.role,
+                selected_menus: allCheckedKeys.join('##'),
+              };
+              try {
+                message.success('角色设置角色菜单权限成功');
+                const subResult = await updateRolePermissionsApi(params1);
+                log(subResult);
+              } catch (e: any) {
+                message.error(e.retMsg!);
+              }
+            } else {
+              //完成修改
+              await useProjsStoreWithOut().reGetCurrentProjectRoles();
+              emit('success');
+            }
+          }
         } else {
           let basicFlag = false;
           let permissionsFlag = false;

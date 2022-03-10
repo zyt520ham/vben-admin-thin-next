@@ -1,10 +1,12 @@
 import { doBaseApiRequest } from '/@/utils/http/NetworkEngine';
 import {
+  IReqCreatRole,
   IReqGetPermissionsByRole,
   IReqGetRoles,
   IReqUpdateRoleInfo,
   IReqUpdateRolePermissions,
   IReqUserRolesUpdate,
+  IRespCreateRole,
   IRespRolesListData,
   IRespUserRolesData,
 } from '/@/api/sys/model/roleModel';
@@ -19,6 +21,8 @@ enum Api {
   rgUpdateRolePermissions = '/rbac/association/role-menu',
   //更新role 基础信息
   rgUpdateRoleInfo = '/rbac/role/update',
+
+  rgCreateRoleInfo = '/rbac/role/create',
 }
 
 /**
@@ -31,6 +35,10 @@ export const getRoleListApi = (params: IReqGetRoles, options?: RequestOptions) =
 //更新user的角色
 export const updateUserRolesApi = (params: IReqUserRolesUpdate, options?: RequestOptions) =>
   doBaseApiRequest<IRespUserRolesData>(Api.rgUpdateUserRole, params, options);
+
+//创建 role 的基础数据
+export const createRoleInfoApi = (params: IReqCreatRole, options?: RequestOptions) =>
+  doBaseApiRequest<IRespCreateRole>(Api.rgCreateRoleInfo, params, options);
 
 //更新role 的基础数据
 export const updateRoleInfoApi = (params: IReqUpdateRoleInfo, options?: RequestOptions) =>

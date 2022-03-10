@@ -94,6 +94,9 @@ export const useProjsStore = defineStore({
       // promise.response.params.project_id
       // log('roleData:', roleData.list);
     },
+    async reGetCurrentProjectRoles() {
+      await this.getProjectRoles();
+    },
     resetState(): void {
       this.projectsList = [];
       this.projectsMap = {};
