@@ -42,9 +42,13 @@
   import { defineComponent, onMounted, ref, watch } from 'vue';
   import GZSelectList from '/@/components/gz/RGSelectList/GZSelectList.vue';
   import { BasicTable, SorterResult, TableAction, useTable } from '/@/components/Table';
-  import { getAddUserTableColumnsCfg, testAddsUsersList } from './projUsers.data';
+  import { getAddUserTableColumnsCfg } from './projUsers.data';
   import { log } from '/@/utils/log';
   import { arrSortFn } from '/@/utils/arrayUtils';
+  import { onUnmounted } from '@vue/runtime-core';
+  import { getProjUsersV1Api } from '/@/api/sys/projectApi';
+  import { IReqGetProjUser } from '/@/api/sys/model/projectModel';
+  import { IReqErr } from '/#/axios';
 
   export default defineComponent({
     name: 'ProjectUsersAddComp',
@@ -57,19 +61,7 @@
       const addUsersCheckComp = ref(null);
       const optionsUsersData = ref<any[]>([]);
       const checkedUsersList = ref<any[]>([]);
-      for (let i = 0; i < 30; i++) {
-        optionsUsersData.value.push({
-          user_id: i + '',
-          account: i + '',
-          nickname: '' + i,
-        });
-      }
-      // const selectedItemsEventFn = (checkedList: any[]) => {
-      //   log('selectedItemsEventFn', checkedList);
-      //   checkedUsersList.value = checkedList.slice();
-      //   tableMethods.redoHeight();
-      //   tableMethods.setTableData(checkedUsersList.value);
-      // };
+
       const selectedIdsEventFn = (idsList: string[]) => {
         log('selectedIdsEventFn', idsList);
         const checkedList = (addUsersCheckComp.value as any).checkCompGetModelList(idsList);
@@ -84,8 +76,19 @@
         tableMethods.setTableData(checkedUsersList.value);
       };
       onMounted(() => {
-        //TODO::加载数据源改造
-        optionsUsersData.value = testAddsUsersList;
+        log('ProjectUsersAddComp onMounted');
+        const params: IReqGetProjUser = { not_auth_project: 'yes', page: 1, page_size: 1000 };
+        getProjUsersV1Api(params).then(
+          (resp) => {
+            optionsUsersData.value = resp.list.slice();
+          },
+          (err: IReqErr) => {
+            console.error(err);
+          },
+        );
+      });
+      onUnmounted(() => {
+        log('ProjectUsersAddComp onUnmounted');
       });
       watch(
         optionsUsersData.value,

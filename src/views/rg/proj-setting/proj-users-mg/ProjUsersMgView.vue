@@ -95,6 +95,7 @@
 
     <BasicModal
       v-bind="$attrs"
+      destroyOnClose
       @register="registerAddUsersModal"
       title="添加用户"
       width="700px"
@@ -133,10 +134,9 @@
   import { BasicModal, useModal } from '/@/components/Modal';
   import ProjectUsersAddComp from './inner/ProjectUsersAddComp.vue';
   import { log, logNoTrace } from '/@/utils/log';
-  import { getProjUsersApi } from '/@/api/sys/projectApi';
-  import { IReqProjIncludeUsers } from '/@/api/sys/model/projectModel';
+  import { getProjUsersV1Api } from '/@/api/sys/projectApi';
+  import { IReqGetProjUser } from '/@/api/sys/model/projectModel';
   import { IReqErr } from '/#/axios';
-  import { useUserStoreWithOut } from '/@/store/modules/user';
   import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
   import { IRoleInfo, IUserInfo } from '/#/store';
 
@@ -282,12 +282,13 @@
             resolve(rawDataSource);
             tableMethods.setTableData(tableDatas);
           } else {
-            const params: IReqProjIncludeUsers = {
-              page: 1,
-              page_size: 1000,
-              project_id: useUserStoreWithOut().getLoginInfo?.project || '',
-            };
-            getProjUsersApi(params).then(
+            // const params: IReqProjIncludeUsers = {
+            //   page: 1,
+            //   page_size: 1000,
+            //   project_id: useUserStoreWithOut().getLoginInfo?.project || '',
+            // };
+            const params: IReqGetProjUser = { page: 1, page_size: 1000 };
+            getProjUsersV1Api(params).then(
               (resp) => {
                 const list = resp.list.filter((ele) => {
                   if (!selectedItemKey.value) {

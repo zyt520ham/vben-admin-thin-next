@@ -28,3 +28,20 @@ export interface IRespProjsIncludeUsers {
   total: number;
   list: IUserInfo[];
 }
+
+//获取项目用户（当前，非当前）
+export interface IReqGetProjUser {
+  page: number;
+  page_size: number;
+  user_type?: string;
+  /** 用户名搜索关键字 */
+  account?: string;
+  /** 状态 { number }（0-正常，1-禁用) */
+  status?: number;
+  /** 获取非当前项目用户 */
+  not_auth_project?: 'yes';
+}
+export interface IRespProjUsers {
+  total: number;
+  list: IUserInfo[];
+}

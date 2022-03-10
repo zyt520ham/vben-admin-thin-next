@@ -1,9 +1,11 @@
 import { doBaseApiRequest } from '/@/utils/http/NetworkEngine';
 import {
   IProjectListReq,
+  IReqGetProjUser,
   IReqProjIncludeUsers,
   IRespProjectsData,
   IRespProjsIncludeUsers,
+  IRespProjUsers,
 } from '/@/api/sys/model/projectModel';
 import { RequestOptions } from '/#/axios';
 
@@ -14,6 +16,8 @@ enum Api {
   rgGetMenuList = '/rbac/menu/list',
 
   rgGetProjUsers = '/project/users',
+
+  rgGetProjUsers_v1 = '/user/list',
 }
 
 /**
@@ -29,3 +33,7 @@ export const updateCurrentChooseProjApi = (params: any = {}, options: RequestOpt
 //获取当前项目下的用户列表
 export const getProjUsersApi = (params: IReqProjIncludeUsers, options: RequestOptions = {}) =>
   doBaseApiRequest<IRespProjsIncludeUsers>(Api.rgGetProjUsers, params, options);
+
+//获取用户列表新接口
+export const getProjUsersV1Api = (params: IReqGetProjUser, options: RequestOptions = {}) =>
+  doBaseApiRequest<IRespProjUsers>(Api.rgGetProjUsers_v1, params, options);
