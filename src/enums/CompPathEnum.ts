@@ -15,8 +15,8 @@ export const compPathMap = {
   [compNameEnum.kProjPermissionsMgView]: 'rg/proj-setting/ProjPermissionsMg.vue',
   [compNameEnum.kProjRolesListMgView]: 'rg/proj-setting/roles-list/ProjRolesListMg.vue',
   [compNameEnum.kProjUsersMgView]: 'rg/proj-setting/proj-users-mg/ProjUsersMgView.vue',
-  [compNameEnum.kSysUserProfilesView]: 'rg/sys-mine/SysUserProfilesView.vue',
-  [compNameEnum.kSysUserProjsView]: 'rg/sys-mine/SysUserProjsView.vue',
+  [compNameEnum.kSysUserProfilesView]: 'rg/sys-mine/user-profile/SysUserProfilesView.vue',
+  [compNameEnum.kSysUserProjsView]: 'rg/sys-mine/user-projects/SysUserProjsView.vue',
   [compNameEnum.kSysProjsListMgView]: 'rg/sys-settings/projs-list/SysProjsListMg.vue',
   [compNameEnum.kSysUsersListMgView]: 'rg/sys-settings/account-list/SysUsersListMg.vue',
 };

@@ -1,16 +1,16 @@
 <!--
- * @Description  : 项目个人信息修改页面
+ * @Description  : 用户拥有项目列表
  * @Author       : zhangyantao
  * @Date         : 2022/2/25
- * @FilePath     : src/views/rg/sys-mine/SysUserProfilesView.vue
+ * @FilePath     : src/views/rg/sys-mine/SysUserProjsView.vue
 -->
-<template> <div>SysUserProfilesView</div></template>
+<template> <div> </div></template>
 
 <script lang="ts">
   import { defineComponent } from 'vue';
 
   export default defineComponent({
-    name: 'SysUserProfilesView',
+    name: 'SysUserProjsView',
   });
 </script>
 
