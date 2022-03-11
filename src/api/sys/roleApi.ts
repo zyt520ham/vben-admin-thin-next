@@ -1,6 +1,7 @@
 import { doBaseApiRequest } from '/@/utils/http/NetworkEngine';
 import {
   IReqCreatRole,
+  IReqDelRole,
   IReqGetPermissionsByRole,
   IReqGetRoles,
   IReqUpdateRoleInfo,
@@ -23,6 +24,8 @@ enum Api {
   rgUpdateRoleInfo = '/rbac/role/update',
 
   rgCreateRoleInfo = '/rbac/role/create',
+
+  rgDelRole = '/rbac/role/delete',
 }
 
 /**
@@ -43,6 +46,10 @@ export const createRoleInfoApi = (params: IReqCreatRole, options?: RequestOption
 //更新role 的基础数据
 export const updateRoleInfoApi = (params: IReqUpdateRoleInfo, options?: RequestOptions) =>
   doBaseApiRequest<IRespUserRolesData>(Api.rgUpdateRoleInfo, params, options);
+
+//删除role
+export const delRoleInfoApi = (params: IReqDelRole, options?: RequestOptions) =>
+  doBaseApiRequest<any>(Api.rgDelRole, params, options);
 
 //通过role 获取菜单权限接口
 export const getPermissionsByRoleApi = (

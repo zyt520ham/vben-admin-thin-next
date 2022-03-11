@@ -105,6 +105,11 @@
   import { useDrawer } from '/@/components/Drawer';
   import { Icon } from '/@/components/Icon';
   import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
+  import { IReqDelRole } from '/@/api/sys/model/roleModel';
+  import { delRoleInfoApi } from '/@/api/sys/roleApi';
+  import { log } from '/@/utils/log';
+  import { IReqErr } from '/#/axios';
+  import { message } from 'ant-design-vue';
 
   export default defineComponent({
     name: 'ProjRolesListMg',
@@ -175,13 +180,18 @@
 
       const loadRolesDataFromServerFn = (...params) => {
         console.log('loadRolesDataFromServerFn', ...params);
-        return new Promise((resolve) => {
+        return new Promise(async (resolve) => {
           if (isSorting) {
             isSorting = false;
             resolve(tableDatas.value);
             return;
           } else {
-            const list = useProjsStoreWithOut().getCurrentProjRoles;
+            // debugger;
+            let list: any[] = useProjsStoreWithOut().getCurrentProjRoles;
+            if (!list || list.length === 0) {
+              list = (await useProjsStoreWithOut().reGetCurrentProjectRoles()) as any;
+              log('loadRolesDataFromServerFn', list);
+            }
             resolve(list);
           }
         });
@@ -208,19 +218,36 @@
             icon: 'ant-design:delete-outlined',
             tooltip: '删除',
             color: 'error',
-            onClick: handleDelete.bind(null, record),
+            popConfirm: {
+              title: `是否删除角色【${record.description}】`,
+              confirm: handleDelete.bind(null, record),
+            },
           },
         ];
       }
       function handleEdit(record: EditRecordRow) {
-        console.log('handleEdit', record);
+        log('handleEdit', record);
         openDrawer(true, {
           record,
           isUpdateRole: true,
         });
       }
       function handleDelete(record: EditRecordRow) {
-        console.log('handleDelete', record);
+        log('handleDelete', record);
+        const params: IReqDelRole = {
+          role: record.role,
+        };
+        delRoleInfoApi(params).then(
+          (resp) => {
+            log('delRoleInfoApi', resp);
+            message.success('角色已经删除');
+            projRolesMgTableComp.value.deleteTableDataRecord(record.key);
+            useProjsStoreWithOut().reGetCurrentProjectRoles();
+          },
+          (err: IReqErr) => {
+            message.error(err.retMsg!);
+          },
+        );
       }
 
       const handleSuccessDrawerFn = () => {

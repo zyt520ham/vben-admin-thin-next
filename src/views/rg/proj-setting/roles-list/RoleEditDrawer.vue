@@ -110,9 +110,11 @@
       });
 
       const treeData = ref<TreeItem[]>([]);
-      const isUpdateMenu = ref(true);
-      const checkedList = ref([]);
-      const getTitle = computed(() => (!unref(isUpdateMenu.value) ? '新增角色' : '编辑角色'));
+      const isUpdateMenu = ref<boolean>(true);
+      const checkedList = ref<string[]>([]);
+      const getTitle = computed<string>(() =>
+        !unref(isUpdateMenu.value) ? '新增角色' : '编辑角色',
+      );
       const handleSubmitFn = async () => {
         const formItemData = formMethods.getFieldsValue();
         if (!isUpdateMenu.value) {
@@ -145,6 +147,9 @@
                 message.success('角色设置角色菜单权限成功');
                 const subResult = await updateRolePermissionsApi(params1);
                 log(subResult);
+                await useProjsStoreWithOut().reGetCurrentProjectRoles();
+                emit('success');
+                closeDrawer();
               } catch (e: any) {
                 message.error(e.retMsg!);
               }
@@ -152,6 +157,7 @@
               //完成修改
               await useProjsStoreWithOut().reGetCurrentProjectRoles();
               emit('success');
+              closeDrawer();
             }
           }
         } else {

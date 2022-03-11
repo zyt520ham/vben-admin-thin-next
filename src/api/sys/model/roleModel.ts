@@ -53,3 +53,7 @@ export interface IRespCreateRole {
   role: string;
   selected_node?: any[];
 }
+
+export interface IReqDelRole {
+  role: string;
+}

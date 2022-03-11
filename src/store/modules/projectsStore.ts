@@ -4,8 +4,9 @@ import { getProjsListApi } from '/@/api/sys/projectApi';
 import { IProjectListReq, IRespProjectsData } from '/@/api/sys/model/projectModel';
 import { store } from '/@/store';
 import { getRoleListApi } from '/@/api/sys/roleApi';
-import { IReqGetRoles, IRespRolesListData } from '/@/api/sys/model/roleModel';
+import { IReqGetRoles } from '/@/api/sys/model/roleModel';
 import { useUserStoreWithOut } from '/@/store/modules/user';
+import { log } from '/@/utils/log';
 // interface IProjectModel {
 //   projectId: string;
 //   projectInfo: IProjectInfo;
@@ -78,24 +79,36 @@ export const useProjsStore = defineStore({
       });
     },
     async getProjectRoles(projectId?: string) {
-      const params: IReqGetRoles = {};
-      if (projectId) {
-        params.project_id = projectId;
-      }
-      const promise: Promise<IRespRolesListData> = getRoleListApi(params);
-      const roleData = await promise;
-      console.log(promise);
-      let requestProjectId: string = useUserStoreWithOut().getLoginInfo?.project || '';
-      if (projectId) {
-        requestProjectId = projectId;
-      }
+      return new Promise<IRoleInfo[]>(async (resolve, reject) => {
+        const params: IReqGetRoles = {};
+        if (projectId) {
+          params.project_id = projectId;
+        }
+        // const promise: Promise<IRespRolesListData> = getRoleListApi(params);
+        try {
+          const roleData = await getRoleListApi(params);
+          console.log(roleData);
+          let requestProjectId: string = useUserStoreWithOut().getLoginInfo?.project || '';
+          if (projectId) {
+            requestProjectId = projectId;
+          }
 
-      this.setProjsRoleData(roleData.list, requestProjectId);
+          this.setProjsRoleData(roleData.list, requestProjectId);
+          resolve(roleData.list || []);
+        } catch (e) {
+          reject(e);
+        }
+
+        // return roleData.list;
+      });
+
       // promise.response.params.project_id
       // log('roleData:', roleData.list);
     },
     async reGetCurrentProjectRoles() {
-      await this.getProjectRoles();
+      const roleList = await this.getProjectRoles();
+      log('reGetCurrentProjectRoles', roleList);
+      return roleList;
     },
     resetState(): void {
       this.projectsList = [];
