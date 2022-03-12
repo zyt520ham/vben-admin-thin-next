@@ -13,7 +13,12 @@
               </template>
             </a-button>
           </a-tooltip>
-          <MenusListTree ref="menusListTreeRef" @changedSelectedTree="changedSelectedTreeEventFn" />
+          <MenusListTree
+            ref="menusListTreeRef"
+            @changedSelectedTree="changedSelectedTreeEventFn"
+            @deleteItemEventFn="treeDelItemEventFn"
+            @addItemEventFn="treeAddItemEventFn"
+          />
         </a-card>
       </div>
       <div class="w-4/7 lg:w-7/12 xl:w-7/12 h-full">
@@ -57,12 +62,13 @@
 <script lang="ts">
   import { defineComponent, ref } from 'vue';
   import { PageWrapper } from '/@/components/Page';
-  import MenusListTree from '/@/views/rg/proj-setting/menus-list-mg/inner/MenusListTree.vue';
+  import MenusListTree from './inner/MenusListTree.vue';
   import { log } from '/@/utils/log';
   import { PlusOutlined } from '@ant-design/icons-vue';
   import Icon from '/@/components/Icon/src/Icon.vue';
-  import MenuInfoEditComp from '/@/views/rg/proj-setting/menus-list-mg/inner/MenuInfoEditComp.vue';
+  import MenuInfoEditComp from './inner/MenuInfoEditComp.vue';
   import { Menu } from '/@/router/types';
+  import { message } from 'ant-design-vue';
   export default defineComponent({
     name: 'ProjMenusListMg',
     components: {
@@ -80,6 +86,7 @@
         menusListTreeRef.value!.menuTreeClearSelectedItem();
 
         getFormEditingState.value = true;
+        editFormMenuItem.value = null as any;
         menuInfoEditCompRef.value.doAddRootMenu();
       };
       const changedSelectedTreeEventFn = (selectedKey: string, selectedItem: Menu) => {
@@ -90,6 +97,12 @@
           getFormEditingState.value = false;
           editFormMenuItem.value = selectedItem;
         }
+      };
+      const treeDelItemEventFn = () => {
+        message.warn('暂不允许删除菜单');
+      };
+      const treeAddItemEventFn = () => {
+        addRootNodeFn();
       };
       //#endregion---------------------
 
@@ -108,6 +121,8 @@
         menusListTreeRef,
         addRootNodeFn,
         changedSelectedTreeEventFn,
+        treeDelItemEventFn,
+        treeAddItemEventFn,
         editFormMenuItem,
         activeTabKey,
         getFormEditingState,

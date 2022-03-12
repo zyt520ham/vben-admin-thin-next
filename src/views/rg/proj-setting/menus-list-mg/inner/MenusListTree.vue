@@ -24,7 +24,7 @@
   export default defineComponent({
     name: 'MenusListTree',
     components: { BasicTree },
-    emits: ['changedSelectedTree'],
+    emits: ['changedSelectedTree', 'addItemEventFn', 'deleteItemEventFn'],
     setup(_, { emit, expose }) {
       //#region life cycle =================================
       onMounted(() => {
@@ -64,9 +64,11 @@
       const menusTreeRef = ref<Nullable<TreeActionType>>(null);
       const treeHandlePlusFn = (node: VNode) => {
         console.log('treeHandlePlusFn', node);
+        emit('addItemEventFn', node);
       };
       const treeHandleDeleteFn = (node: VNode) => {
         console.log('treeHandleDeleteFn', node);
+        emit('deleteItemEventFn', node);
       };
       let lastSelectKey = '';
       const treeSelectEventFn = (selectedKeys: string[], e: any) => {

@@ -92,7 +92,7 @@
   import { computed, defineComponent, onMounted, ref, watch } from 'vue';
   import { usePermissionStoreWithOut } from '/@/store/modules/permission';
   import { MenuNodeTypeEnum } from '/@/enums/menuEnum';
-  import { log } from '/@/utils/log';
+  import { log, logNoTrace } from '/@/utils/log';
   import { menuFormClearItem } from './menu.data';
 
   export default defineComponent({
@@ -120,9 +120,13 @@
       watch(
         () => props.prop_treeSelectedItem,
         (nV: any) => {
-          treeSelectedItem.value = nV;
-          getIsAddState.value = false;
-          formUpdatePropItemFn();
+          if (nV) {
+            getIsAddState.value = false;
+            treeSelectedItem.value = nV;
+            formUpdatePropItemFn();
+          } else {
+            treeSelectedItem.value = null;
+          }
         },
       );
       watch(
@@ -139,9 +143,13 @@
         return MenuNodeTypeEnum;
       });
       //#endregion
-      const treeSelectedItem: any = ref({});
+      const treeSelectedItem: any = ref(null);
       const menuFormItem: any = ref({});
       const formUpdatePropItemFn = () => {
+        if (!treeSelectedItem.value) {
+          debugger;
+          return;
+        }
         if (treeSelectedItem.value!.meta?.menuType === 'endPoint') {
           menuFormItem.value.menuType = getMenuTypeEnum.value.leaf;
         } else {
@@ -199,11 +207,12 @@
       };
       //#region public =================================
       const doAddRootMenu = () => {
-        log('触发新建menu');
+        logNoTrace('触发新建menu');
 
         getIsAddState.value = true;
+
         // getEditingState.value = true;
-        menuFormItem.value = menuFormClearItem;
+        menuFormItem.value = Object.assign({}, menuFormClearItem);
       };
       expose({ formUpdatePropItemFn, doAddRootMenu });
       //#endregion
