@@ -25,7 +25,7 @@
     name: 'MenusListTree',
     components: { BasicTree },
     emits: ['changedSelectedTree'],
-    setup(_, { emit }) {
+    setup(_, { emit, expose }) {
       //#region life cycle =================================
       onMounted(() => {
         actionList.value = [
@@ -90,12 +90,23 @@
         children: 'children',
       };
       const actionList = ref<ActionItem[]>([]);
+      const menuTreeClearSelectedItem = () => {
+        lastSelectKey = '';
+        menusTreeRef.value!.setSelectedKeys([]);
+        emit('changedSelectedTree', lastSelectKey, null);
+      };
+      //#region public function =================================
+      expose({
+        menuTreeClearSelectedItem,
+      });
+      //#endregion
       return {
         menusTreeRef,
         menuTreeData,
         replaceFields,
         actionList,
         treeSelectEventFn,
+        menuTreeClearSelectedItem,
       };
     },
   });

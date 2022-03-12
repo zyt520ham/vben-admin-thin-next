@@ -13,7 +13,7 @@
               </template>
             </a-button>
           </a-tooltip>
-          <MenusListTree @changedSelectedTree="changedSelectedTreeEventFn" />
+          <MenusListTree ref="menusListTreeRef" @changedSelectedTree="changedSelectedTreeEventFn" />
         </a-card>
       </div>
       <div class="w-4/7 lg:w-7/12 xl:w-7/12 h-full">
@@ -74,18 +74,22 @@
     },
     setup() {
       //#region MenuList =================================
+      const menusListTreeRef = ref<any>(null);
       const addRootNodeFn = () => {
         log('addRootNodeFn');
+        menusListTreeRef.value!.menuTreeClearSelectedItem();
+
         getFormEditingState.value = true;
         menuInfoEditCompRef.value.doAddRootMenu();
       };
       const changedSelectedTreeEventFn = (selectedKey: string, selectedItem: Menu) => {
         log('changedSelectedTreeEventFn', selectedKey, selectedItem);
-        getFormEditingState.value = true;
-        editFormMenuItem.value = selectedItem;
-        // if (menuInfoEditCompRef.value) {
-        //   menuInfoEditCompRef.value.formUpdatePropItemFn();
-        // }
+        //判断选中条目存
+        if (selectedKey) {
+          //选择菜单，默认设置预览模式
+          getFormEditingState.value = false;
+          editFormMenuItem.value = selectedItem;
+        }
       };
       //#endregion---------------------
 
@@ -101,6 +105,7 @@
       //#endregion ---------------------
 
       return {
+        menusListTreeRef,
         addRootNodeFn,
         changedSelectedTreeEventFn,
         editFormMenuItem,

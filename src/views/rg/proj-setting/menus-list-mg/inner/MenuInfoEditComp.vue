@@ -121,6 +121,7 @@
         () => props.prop_treeSelectedItem,
         (nV: any) => {
           treeSelectedItem.value = nV;
+          getIsAddState.value = false;
           formUpdatePropItemFn();
         },
       );
@@ -184,12 +185,24 @@
       // formUpdatePropItemFn();
       const editBtnClick = () => {
         log('editBtnClick');
+        if (getIsAddState.value) {
+          doAddMenuItem();
+        } else {
+          doEditMenuItem();
+        }
+      };
+      const doAddMenuItem = () => {
+        log('doAddMenuItem');
+      };
+      const doEditMenuItem = () => {
+        log('doEditMenuItem');
       };
       //#region public =================================
       const doAddRootMenu = () => {
         log('触发新建menu');
 
-        getIsAddState.value = false;
+        getIsAddState.value = true;
+        // getEditingState.value = true;
         menuFormItem.value = menuFormClearItem;
       };
       expose({ formUpdatePropItemFn, doAddRootMenu });
