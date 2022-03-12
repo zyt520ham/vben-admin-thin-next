@@ -76,9 +76,12 @@
       //#region MenuList =================================
       const addRootNodeFn = () => {
         log('addRootNodeFn');
+        getFormEditingState.value = true;
+        menuInfoEditCompRef.value.doAddRootMenu();
       };
       const changedSelectedTreeEventFn = (selectedKey: string, selectedItem: Menu) => {
         log('changedSelectedTreeEventFn', selectedKey, selectedItem);
+        getFormEditingState.value = true;
         editFormMenuItem.value = selectedItem;
         // if (menuInfoEditCompRef.value) {
         //   menuInfoEditCompRef.value.formUpdatePropItemFn();
@@ -88,7 +91,6 @@
 
       //#region tabBar =================================
       const activeTabKey = ref('editUserMenusTab1');
-
       //#endregion---------------------
       //#region menu edit view =================================
       const menuInfoEditCompRef = ref<any>(null);

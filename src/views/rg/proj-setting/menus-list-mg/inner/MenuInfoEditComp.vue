@@ -41,7 +41,7 @@
     <a-form-item label="排序" name="orderNo">
       <a-input v-model:value="menuFormItem.orderNo" />
     </a-form-item>
-    <template v-if="menuFormItem.menuType === getEditingState.leaf">
+    <template v-if="menuFormItem.menuType === getMenuTypeEnum.leaf">
       <a-form-item label="组件类型">
         <a-radio-group size="small" button-style="solid" v-model:value="menuFormItem.compType">
           <a-radio-button value="customComp">自定义组件</a-radio-button>
@@ -80,9 +80,9 @@
     <!--                </a-form-item>-->
     <template v-if="getEditingState">
       <div class="w-auto text-center">
-        <!--        <a-button size="small" type="primary" @click="editBtnClick">{{-->
-        <!--          getAddState ? '添加' : '修改'-->
-        <!--        }}</a-button>-->
+        <a-button size="small" type="primary" @click="editBtnClick">{{
+          getIsAddState ? '添加' : '修改'
+        }}</a-button>
       </div>
     </template>
   </a-form>
@@ -92,6 +92,8 @@
   import { computed, defineComponent, onMounted, ref, watch } from 'vue';
   import { usePermissionStoreWithOut } from '/@/store/modules/permission';
   import { MenuNodeTypeEnum } from '/@/enums/menuEnum';
+  import { log } from '/@/utils/log';
+  import { menuFormClearItem } from './menu.data';
 
   export default defineComponent({
     name: 'MenuInfoEditComp',
@@ -109,6 +111,7 @@
       const getEditingState = computed(() => {
         return props.prop_useEditing;
       });
+      const getIsAddState = ref<boolean>(false);
       onMounted(() => {
         if (treeSelectedItem.value) {
           formUpdatePropItemFn();
@@ -124,6 +127,7 @@
       watch(
         () => props.prop_useEditing,
         () => {
+          getIsAddState.value = false;
           formUpdatePropItemFn();
         },
       );
@@ -178,14 +182,26 @@
         menuFormItem.value.menuListShow = !treeSelectedItem.value?.meta?.hideMenu;
       };
       // formUpdatePropItemFn();
+      const editBtnClick = () => {
+        log('editBtnClick');
+      };
       //#region public =================================
-      expose({ formUpdatePropItemFn });
+      const doAddRootMenu = () => {
+        log('触发新建menu');
+
+        getIsAddState.value = false;
+        menuFormItem.value = menuFormClearItem;
+      };
+      expose({ formUpdatePropItemFn, doAddRootMenu });
       //#endregion
       return {
         getEditingState,
         getMenuTypeEnum,
         menuFormItem,
         formUpdatePropItemFn,
+        editBtnClick,
+        doAddRootMenu,
+        getIsAddState,
       };
     },
   });
