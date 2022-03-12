@@ -2,7 +2,7 @@
  * @Description  : 项目菜单管理
  * @Author       : zhangyantao
  * @Date         : 2022/2/25
- * @FilePath     : src/views/rg/proj-setting/ProjMenusListMg.vue
+ * @FilePath     : src/views/rg/proj-setting/ProjMenusListMg1.vue
 -->
 <template>
   <PageWrapper :class="`${prefixCls}`" content-class="flex pagewarp-content">
@@ -161,15 +161,15 @@
   import { useDesign } from '/@/hooks/web/useDesign';
   import { BasicTree, ReplaceFields } from '/@/components/Tree/index';
   import { usePermissionStoreWithOut } from '/@/store/modules/permission';
-  // import { BasicForm } from '/@/components/Form';
   import { MenuNodeTypeEnum } from '/@/enums/menuEnum';
   import { Menu } from '/@/router/types';
   import { DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue';
   import AButton from '/@/components/Button/src/BasicButton.vue';
   import { IMenuRawData } from '/@/api/sys/model/menuModel';
+  import { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
 
   export default defineComponent({
-    name: 'ProjMenusListMg',
+    name: 'ProjMenusListMg1',
     components: { AButton, PageWrapper, BasicTree },
     setup() {
       const { prefixCls } = useDesign('proj-menus-mg');
@@ -227,8 +227,8 @@
       ];
       //tab选中页
       const activeTableKey = ref(tabBarTabs[0].key);
-      const treeData = computed(() => {
-        return usePermissionStoreWithOut().getBackMenuList;
+      const treeData = computed<TreeDataItem>(() => {
+        return usePermissionStoreWithOut().getBackMenuList as any;
       });
       function addRootNode() {
         console.log('addRootNode');

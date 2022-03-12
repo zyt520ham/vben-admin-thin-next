@@ -11,7 +11,7 @@ export enum compNameEnum {
 }
 export const compPathMap = {
   [compNameEnum.kProjDetailView]: 'rg/proj-setting/ProjDetailView.vue',
-  [compNameEnum.kProjMenusListMgView]: 'rg/proj-setting/ProjMenusListMg.vue',
+  [compNameEnum.kProjMenusListMgView]: 'rg/proj-setting/menus-list-mg/ProjMenusListMg.vue',
   [compNameEnum.kProjPermissionsMgView]: 'rg/proj-setting/ProjPermissionsMg.vue',
   [compNameEnum.kProjRolesListMgView]: 'rg/proj-setting/roles-list/ProjRolesListMg.vue',
   [compNameEnum.kProjUsersMgView]: 'rg/proj-setting/proj-users-mg/ProjUsersMgView.vue',
