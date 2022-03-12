@@ -17,12 +17,6 @@
         <svg-icon prop_iconName="userinfo" />&nbsp;用户邮箱
         <span class="pull-right">{{ user.email }}</span>
       </li>
-      <!--              <li class="list-group-item">-->
-      <!--                <svg-icon prop_iconName="user" />&nbsp;所属部门-->
-      <!--                <span class="pull-right" v-if="user.dept">-->
-      <!--                  {{ user.dept.deptName }} / {{ postGroup }}-->
-      <!--                </span>-->
-      <!--              </li>-->
       <li class="list-group-item">
         <svg-icon prop_iconName="userinfo" />&nbsp;所属角色
         <a-tooltip placement="top" class="relative">
@@ -48,19 +42,19 @@
   export default defineComponent({
     name: 'UserProfileInfoView',
     setup() {
-      const user = computed<IUserInfo>(() => {
+      const user = computed<Nullable<IUserInfo>>(() => {
         return useUserStoreWithOut().getUserInfoV1;
       });
       const getSex = computed(() => {
-        if (user.value.sex + '' === '0') {
+        if (user.value?.sex + '' === '0') {
           return '男';
-        } else if (user.value.sex + '' === '1') {
+        } else if (user.value?.sex + '' === '1') {
           return '女';
         }
         return '未知';
       });
       const getRoles = computed(() => {
-        let roleStr = user.value.project_roles.join(',');
+        let roleStr = (user.value?.project_roles && user.value.project_roles.join(',')) || '';
         roleStr = roleStr;
         return roleStr;
       });
@@ -100,7 +94,7 @@
     white-space: nowrap;
     width: 70%;
     overflow: hidden;
-
+    text-align: right;
     text-overflow: ellipsis;
   }
   .text-center {

@@ -6,8 +6,13 @@ import { RoleEnum } from '/@/enums/roleEnum';
 import { PageEnum } from '/@/enums/pageEnum';
 import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
 import { getAuthCache, setAuthCache } from '/@/utils/auth';
-import { ILoginParams, ILoginServerData, LoginParams } from '/@/api/sys/model/userModel';
-import { doLogout, getUserInfo, loginApi } from '/@/api/sys/user';
+import {
+  ILoginParams,
+  ILoginServerData,
+  IReqUpdateUserInfo,
+  LoginParams,
+} from '/@/api/sys/model/userModel';
+import { doLogout, getUserInfo, loginApi, updateUserProfileApi } from '/@/api/sys/user';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { router } from '/@/router';
@@ -18,6 +23,7 @@ import { h } from 'vue';
 import { updateCurrentChooseProjApi } from '/@/api/sys/projectApi';
 import { useMultipleTabWithOutStore } from '/@/store/modules/multipleTab';
 import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
+import { log } from '/@/utils/log';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
@@ -188,7 +194,7 @@ export const useUserStore = defineStore({
     async getUserInfoAction(): Promise<IUserInfo | null> {
       if (!this.getToken) return null;
       const userInfo = await getUserInfo({ user_id: this.getLoginInfo!.user_id });
-      this.setUserInfoV1(userInfo);
+      this.setUserInfoV1(userInfo as any);
       // debugger;
       // const { roles = [] } = userInfo;
       // if (isArray(roles)) {
@@ -246,6 +252,12 @@ export const useUserStore = defineStore({
       useMultipleTabWithOutStore().resetState();
       await updateCurrentChooseProjApi();
       return this.afterLoginAction();
+    },
+
+    async modifyUserInfo(changedUserInfo: IReqUpdateUserInfo) {
+      const result = await updateUserProfileApi(changedUserInfo);
+      log('modifyUserInfo', result);
+      this.setUserInfoV1(result);
     },
   },
 });

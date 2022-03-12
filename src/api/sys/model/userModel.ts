@@ -1,6 +1,7 @@
 /**
  * @description: Login interface parameters
  */
+
 export interface LoginParams {
   username: string;
   password: string;
@@ -88,3 +89,17 @@ export interface IReqUserPsdResetByAdmin {
 //   user_id: number;
 //   ban: boolean;
 // }
+
+export interface IReqUpdateUserInfo {
+  nickname?: string;
+  email?: string;
+  phone?: string;
+  sex?: number;
+  avatar?: string;
+}
+
+/** 用户修改密码接口 */
+export interface IReqUpdateUserPsd {
+  old_password: string;
+  new_password: string;
+}

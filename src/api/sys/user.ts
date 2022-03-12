@@ -1,7 +1,8 @@
-import { defHttp } from '/@/utils/http/axios';
 import {
   ILoginParams,
   ILoginServerData,
+  IReqUpdateUserInfo,
+  IReqUpdateUserPsd,
   IReqUserPsdResetByAdmin,
   IUserInfoParams,
   IUserItemServerData,
@@ -9,19 +10,22 @@ import {
 
 import { ErrorMessageMode, RequestOptions } from '/#/axios';
 import { doBaseApiRequest } from '/@/utils/http/NetworkEngine';
+import { IUserInfo } from '/#/store';
 
 enum Api {
   Login = '/login',
   Logout = '/logout',
   GetUserInfo = '/getUserInfo',
-  GetPermCode = '/getPermCode',
-
+  // GetPermCode = '/getPermCode',
+  rgUpdateUserInfo = '/personal/update',
   rgLogin = '/site/login',
   rgLogout = '/site/logout',
   rgUserInfo = '/user/info',
 
   //管理员重置用户密码
-  rgUserPsdReset = '/user/reset-password',
+  rgResetUserPsd = '/user/reset-password',
+  //个人修改密码
+  rgUpdateUserPsd = '/personal/modify-password',
 }
 
 /**
@@ -46,7 +50,8 @@ export function getUserInfo(params: IUserInfoParams) {
 }
 
 export function getPermCode() {
-  return defHttp.get<string[]>({ url: Api.GetPermCode });
+  return '';
+  // return defHttp.get<string[]>({ url: Api.GetPermCode });
 }
 
 export function doLogout() {
@@ -63,4 +68,12 @@ export function doLogout() {
 
 //管理员重置用户密码
 export const resetUserPsdByAdminApi = (params: IReqUserPsdResetByAdmin, options?: RequestOptions) =>
-  doBaseApiRequest<any>(Api.rgUserPsdReset, params, options);
+  doBaseApiRequest<any>(Api.rgResetUserPsd, params, options);
+
+//修改用户信息
+export const updateUserProfileApi = (params: IReqUpdateUserInfo, options?: RequestOptions) =>
+  doBaseApiRequest<IUserInfo>(Api.rgUpdateUserInfo, params, options);
+
+//修改个人密码
+export const updateUserPsdApi = (params: IReqUpdateUserPsd, options?: RequestOptions) =>
+  doBaseApiRequest<IUserInfo>(Api.rgUpdateUserPsd, params, options);

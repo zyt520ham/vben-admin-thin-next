@@ -15,11 +15,15 @@
   import { BasicForm, useForm } from '/@/components/Form';
 
   import { formSchema } from './pwd.data';
+  import { message } from 'ant-design-vue';
+  import { IReqUpdateUserPsd } from '/@/api/sys/model/userModel';
+  import { updateUserPsdApi } from '/@/api/sys/user';
+  import { useUserStoreWithOut } from '/@/store/modules/user';
   export default defineComponent({
     name: 'ChangePassword',
     components: { BasicForm, PageWrapper },
     setup() {
-      const [register, { validate, resetFields }] = useForm({
+      const [register, { validate, resetFields, getFieldsValue }] = useForm({
         size: 'small',
         labelWidth: 100,
         showActionButtonGroup: false,
@@ -28,14 +32,30 @@
 
       async function handleSubmit() {
         try {
-          const values = await validate();
-          const { passwordOld, passwordNew } = values;
+          await validate();
+        } catch (error: any) {
+          const errFields = error.errorFields;
+          if (errFields.errors?.length > 0) {
+            message.error(errFields.errors?.[0]);
+          }
+          return;
+        }
 
-          // TODO custom api
-          console.log(passwordOld, passwordNew);
-          // const { router } = useRouter();
-          // router.push(pageEnum.BASE_LOGIN);
-        } catch (error) {}
+        const { passwordOld, passwordNew } = getFieldsValue();
+        // TODO custom api
+        const params: IReqUpdateUserPsd = {
+          old_password: passwordOld,
+          new_password: passwordNew,
+        };
+        try {
+          await updateUserPsdApi(params);
+        } catch (e: any) {
+          message.error(e.retMsg!);
+          return;
+        }
+
+        message.success('修改密码 成功，请重新登录');
+        useUserStoreWithOut().logout(true);
       }
 
       return { register, resetFields, handleSubmit };

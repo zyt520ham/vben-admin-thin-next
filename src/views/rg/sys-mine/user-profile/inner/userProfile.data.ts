@@ -2,17 +2,17 @@ import { FormSchema } from '/@/components/Form';
 
 export const userInfoEditSchema: FormSchema[] = [
   {
-    field: 'nickName',
+    field: 'nickname',
     label: '昵称',
     component: 'Input',
     required: true,
   },
   {
-    field: 'phoneNumber',
+    field: 'phone',
     label: '手机号',
     component: 'Input',
     componentProps: {
-      placeholder: '新密码',
+      // placeholder: '',
     },
     rules: [
       {
@@ -30,13 +30,25 @@ export const userInfoEditSchema: FormSchema[] = [
       {
         type: 'email',
         message: "'请输入正确的邮箱地址",
-        trigger: ['blur', 'change'],
+        trigger: 'blur',
       },
     ],
   },
   {
     field: 'sex',
     label: '性别',
-    component: 'InputPassword',
+    component: 'RadioGroup',
+    componentProps: {
+      options: [
+        {
+          label: '男',
+          value: 1,
+        },
+        {
+          label: '女',
+          value: 2,
+        },
+      ],
+    },
   },
 ];

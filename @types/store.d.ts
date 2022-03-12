@@ -47,6 +47,7 @@ export interface IUserInfo {
   password: string;
   phone: string;
   sex: number;
+  email?: string;
   status: number;
   avatar: string;
   last_visit_ip: string;
