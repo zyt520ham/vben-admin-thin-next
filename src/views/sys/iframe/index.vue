@@ -2,7 +2,7 @@
   <div :class="prefixCls" :style="getWrapStyle">
     <Spin :spinning="loading" size="large" :style="getWrapStyle">
       <iframe
-        :src="frameSrc"
+        :src="iframeUrlString"
         :class="`${prefixCls}__main`"
         ref="frameRef"
         @load="hideLoading"
@@ -12,17 +12,20 @@
 </template>
 <script lang="ts" setup>
   import type { CSSProperties } from 'vue';
-  import { ref, unref, computed } from 'vue';
+  import { ref, unref, computed, onMounted } from 'vue';
   import { Spin } from 'ant-design-vue';
   import { useWindowSizeFn } from '/@/hooks/event/useWindowSizeFn';
   import { propTypes } from '/@/utils/propTypes';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useLayoutHeight } from '/@/layouts/default/content/useContentViewHeight';
+  import { error, log } from '/@/utils/log';
+  import { getTokenExchangedUrlApi } from '/@/api/sys/urlTokenApi';
+  import { IReqErr } from '/#/axios';
 
-  defineProps({
+  const props = defineProps({
     frameSrc: propTypes.string.def(''),
   });
-
+  const iframeUrlString = ref<string>('');
   const loading = ref(true);
   const topRef = ref(50);
   const heightRef = ref(window.innerHeight);
@@ -32,6 +35,23 @@
   const { prefixCls } = useDesign('iframe-page');
   useWindowSizeFn(calcHeight, 150, { immediate: true });
 
+  onMounted(() => {
+    log('iframe index mounted');
+
+    let patt = /###\w+###$/;
+    if (patt.test(props.frameSrc)) {
+      getTokenExchangedUrlApi({ url: props.frameSrc }).then(
+        (resp) => {
+          iframeUrlString.value = resp;
+        },
+        (err: IReqErr) => {
+          error(err.retMsg!);
+        },
+      );
+    } else {
+      iframeUrlString.value = props.frameSrc;
+    }
+  });
   const getWrapStyle = computed((): CSSProperties => {
     return {
       height: `${unref(heightRef)}px`,
