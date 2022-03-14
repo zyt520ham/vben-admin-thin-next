@@ -52,12 +52,14 @@ export const getUsersTableColumnsCfg: BasicColumn[] = [
     dataIndex: 'created_at',
     width: 120,
     sorter: true,
+    slots: { customRender: 'colCreated_at' },
   },
   {
     title: '修改时间',
     dataIndex: 'updated_at',
     width: 120,
     sorter: true,
+    slots: { customRender: 'colUpdated_at' },
   },
 ];
 export const getUsersSearchFormCfg: FormSchema[] = [

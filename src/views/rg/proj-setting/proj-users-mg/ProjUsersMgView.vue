@@ -56,6 +56,12 @@
               <a-tag color="green">{{ role }}</a-tag>
             </template>
           </template>
+          <template #colCreated_at="{ record, column }">
+            <span>{{ tableRowFormatFn(record, column) }}</span>
+          </template>
+          <template #colUpdated_at="{ record, column }">
+            <span>{{ tableRowFormatFn(record, column) }}</span>
+          </template>
           <template #colStatus="{ record, column }">
             <template v-if="record[column.dataIndex] * 1 === 0">
               <a-tag color="blue">正常</a-tag>
@@ -146,6 +152,7 @@
   import RoleSettingDrawer from './inner/RoleSettingDrawer.vue';
   import { useDrawer } from '/@/components/Drawer';
   import UserResetPsdModal from './inner/UserResetPsdModal.vue';
+  import { formatToDate } from '/@/utils/dateUtil';
 
   export default defineComponent({
     name: 'ProjUsersMgView',
@@ -349,6 +356,8 @@
           } catch (e) {
             debugger;
           }
+        } else if (column.dataIndex === 'updated_at' || column.dataIndex === 'created_at') {
+          return formatToDate(record[column.dataIndex] * 1000);
         }
         return record[column.dataIndex!];
       };
