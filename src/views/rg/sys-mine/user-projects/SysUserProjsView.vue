@@ -4,7 +4,7 @@
  * @Date         : 2022/2/25
  * @FilePath     : src/views/rg/sys-mine/SysUserProjsView.vue
 -->
-<template> <div> </div></template>
+<template> <div> SysUserProjsView</div></template>
 
 <script lang="ts">
   import { defineComponent } from 'vue';

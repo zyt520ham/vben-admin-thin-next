@@ -1,4 +1,5 @@
 import type { RouteMeta } from 'vue-router';
+
 export interface RouteItem {
   path: string;
   component: any;
@@ -13,7 +14,7 @@ export interface RouteItem {
 export interface IMenuRawData extends Record<string, any> {
   id: string; // fullPath
   label: string; //title
-  icon: string; //图标
+  icon?: string; //图标
   compsKey: string; //解析组件映射key
   useStatus: boolean; //是否可用
   cTime: number; //创建时间
@@ -43,3 +44,22 @@ export interface IMenuListDataItem {
  * @description: Get menu return value
  */
 export type getMenuListResultModel = RouteItem[];
+/** 删除菜单参数*/
+export interface IReqDelMenuItem {
+  serverId: number;
+}
+export interface IReqAddMenuItem {
+  hiddenInMenu;
+  viewHiddenMenubar?;
+  id;
+  label;
+  icon;
+  compsKey;
+  useStatus;
+  menuType;
+  path;
+  menuLevel;
+  orderNum;
+  openLinkUseExternal;
+  externalLinkUrl;
+}

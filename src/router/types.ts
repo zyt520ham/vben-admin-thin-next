@@ -1,6 +1,7 @@
 import type { RouteRecordRaw, RouteMeta } from 'vue-router';
 import { RoleEnum } from '/@/enums/roleEnum';
 import { defineComponent } from 'vue';
+import { IMenuRawData } from '/@/api/sys/model/menuModel';
 
 export type Component<T = any> =
   | ReturnType<typeof defineComponent>
@@ -23,8 +24,8 @@ export interface MenuTag {
   content?: string;
   dot?: boolean;
 }
-
-export interface Menu {
+//让原项目的menu 继承于当前我们定义的服务端menu数据
+export interface Menu extends IMenuRawData {
   name: string;
 
   icon?: string;

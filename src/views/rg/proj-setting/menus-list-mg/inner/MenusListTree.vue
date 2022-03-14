@@ -97,9 +97,22 @@
         menusTreeRef.value!.setSelectedKeys([]);
         emit('changedSelectedTree', lastSelectKey, null);
       };
+      const menuTreeToSelectedFirstItem = () => {
+        if (menuTreeData.value.length > 0) {
+          const item = menuTreeData.value[0];
+          lastSelectKey = item.path;
+          menusTreeRef.value!.setSelectedKeys([lastSelectKey]);
+          emit('changedSelectedTree', lastSelectKey, item);
+        }
+      };
+      const menuTreeToSelectedItemByKey = (key: string) => {
+        menusTreeRef.value!.setSelectedKeys([key]);
+      };
       //#region public function =================================
       expose({
         menuTreeClearSelectedItem,
+        menuTreeToSelectedFirstItem,
+        menuTreeToSelectedItemByKey,
       });
       //#endregion
       return {
@@ -109,6 +122,8 @@
         actionList,
         treeSelectEventFn,
         menuTreeClearSelectedItem,
+        menuTreeToSelectedFirstItem,
+        menuTreeToSelectedItemByKey,
       };
     },
   });

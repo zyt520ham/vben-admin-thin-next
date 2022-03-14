@@ -6,6 +6,7 @@ import { defHttp } from '/@/utils/http/axios';
 import { AxiosError, AxiosRequestConfig } from 'axios';
 import { IReqErr, RequestOptions, Result } from '/#/axios';
 import { useUserStoreWithOut } from '/@/store/modules/user';
+import { isBoolean } from '/@/utils/is';
 export interface IReqCommomParams {
   /** 时间戳, 60秒内有效 长度秒级 */
   timestamp?: number;
@@ -38,9 +39,8 @@ function apiReqHelper() {
       const value = params[key];
       // console.log(value);
       if (
-        key !== 'sign' ||
-        (value !== undefined && value !== null && value !== '') ||
-        value === false
+        key !== 'sign' &&
+        ((value !== undefined && value !== null && value !== '') || isBoolean(value))
       ) {
         if (queryString.length === 0) {
           queryString = queryString + `${key}=${value}`;

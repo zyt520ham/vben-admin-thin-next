@@ -40,6 +40,7 @@
                 ref="menuInfoEditCompRef"
                 :prop_useEditing="getFormEditingState"
                 :prop_treeSelectedItem="editFormMenuItem"
+                @editItemFinish="editCompEditFinishFn"
               />
             </a-tab-pane>
             <a-tab-pane key="editUserMenusTab2">
@@ -69,6 +70,11 @@
   import MenuInfoEditComp from './inner/MenuInfoEditComp.vue';
   import { Menu } from '/@/router/types';
   import { message } from 'ant-design-vue';
+  import { isDevMode } from '/@/utils/env';
+  import { deleteMenuItemApi } from '/@/api/sys/menu';
+  import { IReqDelMenuItem } from '/@/api/sys/model/menuModel';
+  import { IReqErr } from '/#/axios';
+  import { usePermissionStoreWithOut } from '/@/store/modules/permission';
   export default defineComponent({
     name: 'ProjMenusListMg',
     components: {
@@ -98,11 +104,36 @@
           editFormMenuItem.value = selectedItem;
         }
       };
-      const treeDelItemEventFn = () => {
-        message.warn('暂不允许删除菜单');
+      const treeDelItemEventFn = (record: Menu) => {
+        if (isDevMode()) {
+          const params: IReqDelMenuItem = {
+            serverId: record.serverId!,
+          };
+          deleteMenuItemApi(params).then(
+            (resp) => {
+              log(resp);
+              usePermissionStoreWithOut()
+                .refreshLoadServerMenus()
+                .then(() => {
+                  menusListTreeRef.value.menuTreeToSelectedFirstItem();
+                });
+            },
+            (err: IReqErr) => {
+              message.error(err.retMsg!);
+            },
+          );
+        } else {
+          message.warn('暂不允许删除菜单');
+        }
       };
-      const treeAddItemEventFn = () => {
-        addRootNodeFn();
+      const treeAddItemEventFn = (record: Menu) => {
+        log('treeAddItemEventFn', record);
+        // editFormMenuItem.value = record;
+        // addRootNodeFn();
+        menusListTreeRef.value!.menuTreeClearSelectedItem();
+        editFormMenuItem.value = undefined;
+        getFormEditingState.value = true;
+        menuInfoEditCompRef.value.doAddOtherMenu(record);
       };
       //#endregion---------------------
 
@@ -114,7 +145,10 @@
       //是否编辑模式
       const getFormEditingState = ref<boolean>(false);
       const editFormMenuItem = ref<Menu & Record<any, any>>();
-
+      const editCompEditFinishFn = (editItem: Menu) => {
+        menusListTreeRef.value.menuTreeToSelectedItemByKey(editItem.path);
+        getFormEditingState.value = false;
+      };
       //#endregion ---------------------
 
       return {
@@ -127,6 +161,7 @@
         activeTabKey,
         getFormEditingState,
         menuInfoEditCompRef,
+        editCompEditFinishFn,
       };
     },
   });

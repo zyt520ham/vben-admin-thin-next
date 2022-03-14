@@ -85,9 +85,9 @@ export function transformMenuDataToAppRouteRecord(
 
 export function transformToAppRouteRecordItem(item: IMenuRawData): AppRouteRecordRaw {
   const metaItem: RouteMeta = {} as RouteMeta;
-  if (item.label == 'aa') {
-    debugger;
-  }
+  // if (item.label == 'aa') {
+  //   debugger;
+  // }
   metaItem.title = item.label;
   metaItem.currentPath = item.path;
   if (item.redirect) {
@@ -174,9 +174,9 @@ enum eCompsKeyEnum {
 }
 
 export function compentPathReplace(item: IMenuRawData): string {
-  if (item.label === 'aa') {
-    debugger;
-  }
+  // if (item.label === 'aa') {
+  //   debugger;
+  // }
   let compPath = item.compsKey;
   if (item.menuLevel == 0 && item.menuType === 'rootpath') {
     return 'layout';

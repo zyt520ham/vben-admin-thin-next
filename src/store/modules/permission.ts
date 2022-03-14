@@ -18,8 +18,7 @@ import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { filter } from '/@/utils/helper/treeHelper';
 
-import { getMenuList } from '/@/api/sys/menu';
-import { getPermCode } from '/@/api/sys/user';
+import { addMenuItemApi, getMenuList } from '/@/api/sys/menu';
 
 import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
@@ -30,6 +29,7 @@ import { resetRouter, router } from '/@/router';
 import { RouteRecordRaw } from 'vue-router';
 import { routesListChanged } from '/@/layouts/iframe/useFrameKeepAlive';
 import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
+import { error, log, logNoTrace } from '/@/utils/log';
 
 interface PermissionState {
   // Permission code list
@@ -64,7 +64,7 @@ export const usePermissionStore = defineStore({
     getBackMenuList(): Menu[] {
       return this.backMenuList;
     },
-    getBackMenuMap(): any {
+    getBackMenuMap(): { [key: string]: Menu } {
       return this.backMenuMap;
     },
     getFrontMenuList(): Menu[] {
@@ -116,9 +116,16 @@ export const usePermissionStore = defineStore({
       this.backMenuMap = {};
       this.lastBuildMenuTime = 0;
     },
+
+    searchBackMenuByPath(path: string) {
+      if (this.backMenuMap[path]) {
+        return this.backMenuMap[path];
+      }
+      return null;
+    },
     async changePermissionCode() {
-      const codeList = await getPermCode();
-      this.setPermCodeList(codeList);
+      // const codeList = await getPermCode();
+      // this.setPermCodeList(codeList);
     },
     async buildRoutesAction(): Promise<AppRouteRecordRaw[]> {
       const { t } = useI18n();
@@ -190,7 +197,7 @@ export const usePermissionStore = defineStore({
             return (a.meta?.orderNo || 0) - (b.meta?.orderNo || 0);
           });
 
-          this.setFrontMenuList(menuList);
+          this.setFrontMenuList(menuList as any);
           // Convert multi-level routing to level 2 routing
           routes = flatMultiLevelRoutes(routes);
           break;
@@ -225,7 +232,7 @@ export const usePermissionStore = defineStore({
 
           //  Background routing to menu structure
           const backMenuList = transformRouteToMenu(routeList);
-          this.setBackMenuList(backMenuList);
+          this.setBackMenuList(backMenuList as any);
 
           // remove meta.ignoreRoute item
           routeList = filter(routeList, routeRemoveIgnoreFilter);
@@ -243,48 +250,72 @@ export const usePermissionStore = defineStore({
       useProjsStoreWithOut().checkAllProjects();
       return routes;
     },
-    async addMenuItem(menuItem) {
-      console.log('addMenuItem', menuItem);
-      let routes: AppRouteRecordRaw[] = [];
+    //重新拉取服务端菜单列表
+    refreshLoadServerMenus() {
+      return new Promise<void>(async (resolve) => {
+        let routeList = await this.loadServerMenusData();
+        log('refreshLoadServerMenus', routeList);
+        // Dynamically introduce components
+        routeList = transformObjToRoute(routeList as any);
+
+        //  Background routing to menu structure
+        const backMenuList = transformRouteToMenu(routeList);
+        this.setBackMenuList(backMenuList as any);
+
+        // remove meta.ignoreRoute item
+        // routeList = filter(routeList, routeRemoveIgnoreFilter);
+        // routeList = routeList.filter(routeRemoveIgnoreFilter);
+        let routes: AppRouteRecordRaw[] = [];
+        routeList = flatMultiLevelRoutes(routeList);
+        routes = [PAGE_NOT_FOUND_ROUTE, ...routeList];
+        resetRouter();
+
+        routes.forEach((route) => {
+          router.addRoute(route as unknown as RouteRecordRaw);
+        });
+
+        router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
+
+        this.setDynamicAddedRoute(true);
+        routesListChanged();
+
+        resolve();
+      });
+    },
+    //从服务器拉去menulist
+    async loadServerMenusData() {
       let routeList: AppRouteRecordRaw[] = [];
       try {
         //TODO:: 还不知道此接口作用  看文档说是按钮权限相关
         // this.changePermissionCode();
+
         const menuDataList: IMenuListDataItem = await getMenuList();
 
-        //添加多级测试路由
+        //TODO:: 添加多级测试路由
         menuDataList.list.push(...(testMenus as any));
-        menuDataList.list.push(menuItem);
+
         routeList = transformMenuDataToAppRouteRecord(menuDataList || { list: [] });
         console.log('转换后的AppRouteRecord:', routeList);
+
+        return routeList;
       } catch (error) {
         debugger;
         console.error(error);
+
+        return null;
       }
+    },
 
-      // Dynamically introduce components
-      routeList = transformObjToRoute(routeList);
-
-      //  Background routing to menu structure
-      const backMenuList = transformRouteToMenu(routeList);
-      this.setBackMenuList(backMenuList);
-
-      // remove meta.ignoreRoute item
-      // routeList = filter(routeList, routeRemoveIgnoreFilter);
-      // routeList = routeList.filter(routeRemoveIgnoreFilter);
-
-      routeList = flatMultiLevelRoutes(routeList);
-      routes = [PAGE_NOT_FOUND_ROUTE, ...routeList];
-      resetRouter();
-
-      routes.forEach((route) => {
-        router.addRoute(route as unknown as RouteRecordRaw);
-      });
-
-      router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
-
-      this.setDynamicAddedRoute(true);
-      routesListChanged();
+    //新增菜单逻辑
+    async addMenuItem(menuItem) {
+      console.log('addMenuItem', menuItem);
+      try {
+        const resp = await addMenuItemApi(menuItem);
+        logNoTrace(resp);
+        await this.refreshLoadServerMenus();
+      } catch (e: any) {
+        error(e.retMsg!);
+      }
     },
   },
 });
