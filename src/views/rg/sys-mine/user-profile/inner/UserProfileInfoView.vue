@@ -2,23 +2,23 @@
   <div class="w-full h-full">
     <ul class="list-group list-group-striped">
       <li class="list-group-item">
-        <svg-icon prop_iconName="userinfo" />&nbsp;用户账号
+        <Icon :size="13" class="mr-5px" icon="userinfo|svg" />用户账号
         <span class="pull-right">{{ user.account }}</span>
       </li>
       <li class="list-group-item">
-        <svg-icon prop_iconName="userinfo" />&nbsp;用户昵称
+        <Icon :size="13" class="mr-5px" icon="userinfo|svg" />用户昵称
         <span class="pull-right">{{ user.nickname }}</span>
       </li>
       <li class="list-group-item">
-        <svg-icon prop_iconName="userinfo" />&nbsp;手机号码
+        <Icon :size="13" class="mr-5px" icon="userinfo|svg" />手机号码
         <span class="pull-right">{{ user.phone }}</span>
       </li>
       <li class="list-group-item">
-        <svg-icon prop_iconName="userinfo" />&nbsp;用户邮箱
+        <Icon :size="13" class="mr-5px" icon="userinfo|svg" />用户邮箱
         <span class="pull-right">{{ user.email }}</span>
       </li>
       <li class="list-group-item">
-        <svg-icon prop_iconName="userinfo" />&nbsp;所属角色
+        <Icon :size="13" class="mr-5px" icon="userinfo|svg" />所属角色
         <a-tooltip placement="top" class="relative">
           <template #title>
             <span>{{ getRoles }}</span>
@@ -27,7 +27,7 @@
         </a-tooltip>
       </li>
       <li class="list-group-item">
-        <svg-icon prop_iconName="userinfo" />&nbsp;性别
+        <Icon :size="13" class="mr-5px" icon="userinfo|svg" />性别
         <span class="pull-right">{{ getSex }}</span>
       </li>
     </ul>
@@ -38,9 +38,11 @@
   import { computed, defineComponent } from 'vue';
   import { useUserStoreWithOut } from '/@/store/modules/user';
   import { IUserInfo } from '/#/store';
+  import { Icon } from '/@/components/Icon';
 
   export default defineComponent({
     name: 'UserProfileInfoView',
+    components: { Icon },
     setup() {
       const user = computed<Nullable<IUserInfo>>(() => {
         return useUserStoreWithOut().getUserInfoV1;
