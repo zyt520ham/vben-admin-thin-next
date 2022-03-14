@@ -19,7 +19,6 @@
               <template #tab>
                 <span>
                   <EditOutlined />
-                  <apple-outlined />
                   基本资料
                 </span>
               </template>
