@@ -7,6 +7,7 @@ import { AxiosError, AxiosRequestConfig } from 'axios';
 import { IReqErr, RequestOptions, Result } from '/#/axios';
 import { useUserStoreWithOut } from '/@/store/modules/user';
 import { isBoolean } from '/@/utils/is';
+import { logNoTrace } from '/@/utils/log';
 export interface IReqCommomParams {
   /** 时间戳, 60秒内有效 长度秒级 */
   timestamp?: number;
@@ -102,7 +103,8 @@ export function doBaseApiRequest<T>(
       .post<Result<T>>(cfg, requestOption)
       .then(
         (resp) => {
-          console.log('resp', resp);
+          logNoTrace('[url]:' + cfg.url, '\n', '[resp]:', resp);
+          // console.log('resp', resp);
           if (resp.retCode === 0) {
             resolve(resp.data);
           } else {
