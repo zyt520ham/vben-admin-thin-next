@@ -171,7 +171,8 @@
       const projsTreeSelectFn = (selectedKey) => {
         log(selectedKey);
         selectedItemKey.value = selectedKey;
-        const filterList = tableDatas.filter((ele: IUserInfo) => {
+        const list = tableMethods.getRawDataSource();
+        const filterList = list.filter((ele: IUserInfo) => {
           if (!selectedItemKey.value) {
             return true;
           } else {
@@ -325,7 +326,6 @@
 
       //table fn 排序
       const tableSortFn = (sortInfo: SorterResult) => {
-        debugger;
         logNoTrace('tableSortFn', sortInfo);
         isSorting = true;
         rawDataSource = tableMethods.getRawDataSource().slice();
