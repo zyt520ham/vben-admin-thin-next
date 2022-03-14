@@ -12,7 +12,7 @@
 </template>
 <script lang="ts" setup>
   import type { CSSProperties } from 'vue';
-  import { ref, unref, computed, onMounted } from 'vue';
+  import { ref, unref, computed, onMounted, watch } from 'vue';
   import { Spin } from 'ant-design-vue';
   import { useWindowSizeFn } from '/@/hooks/event/useWindowSizeFn';
   import { propTypes } from '/@/utils/propTypes';
@@ -21,20 +21,48 @@
   import { error, log } from '/@/utils/log';
   import { getTokenExchangedUrlApi } from '/@/api/sys/urlTokenApi';
   import { IReqErr } from '/#/axios';
+  import { useMultipleTabWithOutStore } from '/@/store/modules/multipleTab';
 
   const props = defineProps({
     frameSrc: propTypes.string.def(''),
+    routeFullPath: propTypes.string.def(''),
+    isShowing: propTypes.bool.def(false),
   });
   const iframeUrlString = ref<string>('');
   const loading = ref(true);
   const topRef = ref(50);
   const heightRef = ref(window.innerHeight);
-  const frameRef = ref<HTMLFrameElement>();
+  const frameRef = ref<HTMLIFrameElement>();
   const { headerHeightRef } = useLayoutHeight();
 
   const { prefixCls } = useDesign('iframe-page');
   useWindowSizeFn(calcHeight, 150, { immediate: true });
-
+  const routeCachePathList = computed(() => {
+    return useMultipleTabWithOutStore().getCachedPathList;
+  });
+  watch(
+    () => routeCachePathList.value,
+    (nV: string[]) => {
+      if (props.isShowing && !nV.includes(props.routeFullPath)) {
+        console.log('routeCachePathList changed', nV, props.routeFullPath);
+        iframeUrlString.value = '';
+        loading.value = true;
+        let patt = /###\w+###$/;
+        if (patt.test(props.frameSrc)) {
+          getTokenExchangedUrlApi({ url: props.frameSrc }).then(
+            (resp) => {
+              iframeUrlString.value = resp;
+            },
+            (err: IReqErr) => {
+              error(err.retMsg!);
+            },
+          );
+        } else {
+          iframeUrlString.value = props.frameSrc;
+        }
+      }
+    },
+  );
   onMounted(() => {
     log('iframe index mounted');
 
