@@ -1,10 +1,13 @@
 <template>
   <div v-if="showFrame">
-    <template v-for="frame in framePagesList" :key="frame.path">
+    <template v-for="frame in framePagesList">
       <FramePage
+        :key="frame.path"
         v-if="frame.meta.frameSrc && hasRenderFrame(frame.name)"
         v-show="showIframe(frame)"
-        :frameSrc="frame.meta.frameSrc"
+        :is-showing="showIframe(frame)"
+        :frame-src="frame.meta.frameSrc"
+        :route-full-path="frame.fullPath"
       />
     </template>
   </div>
@@ -29,7 +32,12 @@
       function showFrame() {
         return framePagesList.value.length > 0;
       }
-      return { framePagesList, hasRenderFrame, showIframe, showFrame };
+      return {
+        framePagesList,
+        hasRenderFrame,
+        showIframe,
+        showFrame,
+      };
     },
   });
 </script>
