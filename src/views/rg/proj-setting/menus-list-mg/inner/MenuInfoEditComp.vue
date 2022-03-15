@@ -60,8 +60,16 @@
       </a-form-item>
       <template v-if="menuFormItem.compType === 'customComp'">
         <a-form-item label="组件选择">
-          <a-input v-model:value="menuFormItem.compsKey" :disabled="getEditingState === false" />
-          <!--                      <a-select />-->
+          <template v-if="getEditingState">
+            <a-select v-model:value="menuFormItem.compsKey">
+              <template v-for="item in compsSelectedOptions" :key="item.value">
+                <a-select-option :value="item.value">{{ item.label }}</a-select-option>
+              </template>
+            </a-select></template
+          >
+          <template v-else>
+            <span>{{ menuFormItem.compsKey }}</span>
+          </template>
         </a-form-item>
       </template>
       <template v-else-if="menuFormItem.compType === 'iframeComp'">
@@ -130,6 +138,7 @@
 
   import { Menu } from '/@/router/types';
   import { IMenuRawData } from '/@/api/sys/model/menuModel';
+  import { compDescMap, compPathMap, compsList } from '/@/enums/CompPathEnum';
 
   export default defineComponent({
     name: 'MenuInfoEditComp',
@@ -223,13 +232,24 @@
           }
         } else {
           menuFormItem.value.compType = 'customComp';
-          menuFormItem.value.compsKey = treeSelectedItem.value?.meta?.compPath;
+          menuFormItem.value.compsKey = treeSelectedItem.value?.meta?.compsKey;
           menuFormItem.value.iframeSrc = '';
           menuFormItem.value.iframeTokenType = '';
         }
         menuFormItem.value.useCache = !treeSelectedItem.value?.meta?.ignoreKeepAlive;
         menuFormItem.value.menuListShow = !treeSelectedItem.value?.meta?.hideMenu;
       };
+      const compsSelectedOptions = computed(() => {
+        const list: any = [];
+        compsList.forEach((ele) => {
+          const item = {
+            label: `${compDescMap[ele]}(${compPathMap[ele]})`,
+            value: ele,
+          };
+          list.push(item);
+        });
+        return list;
+      });
       // formUpdatePropItemFn();
       const editBtnClick = () => {
         log('editBtnClick');
@@ -396,6 +416,7 @@
         doAddRootMenu,
         doAddOtherMenu,
         getIsAddState,
+        compsSelectedOptions,
       };
     },
   });

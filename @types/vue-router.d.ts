@@ -52,5 +52,6 @@ declare module 'vue-router' {
     redirect?: string; //重定向地址
     currentPath?: string; //当前route的path，不带父级
     compPath?: string; //使用组件路劲
+    compsKey?: string; //使用的组件key定义
   }
 }

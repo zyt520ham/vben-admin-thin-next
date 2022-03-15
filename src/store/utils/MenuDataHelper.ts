@@ -113,7 +113,9 @@ export function transformToAppRouteRecordItem(item: IMenuRawData): AppRouteRecor
   metaItem.serverId = item.serverId;
   metaItem.project_id = item.project_id;
   metaItem.orderNo = item.orderNum;
+
   metaItem.compPath = compentPathReplace(item);
+  metaItem.compsKey = item.compsKey;
   if (item.menuLevel === 0 && item.menuType === 'endPoint') {
     //一层菜单
 
@@ -191,38 +193,49 @@ export function compentPathReplace(item: IMenuRawData): string {
   switch (item.compsKey) {
     case eCompsKeyEnum.kLayoutIndex:
       compPath = 'layout';
+      item.compsKey = 'layout';
       break;
     case eCompsKeyEnum.kRouteMiddleView:
       compPath = 'ParentLayout';
+      item.compsKey = 'RouterMiddleView';
       break;
     case eCompsKeyEnum.kSysProjUserMg:
       compPath = compPathMap[compNameEnum.kProjUsersMgView];
+      item.compsKey = compNameEnum.kProjUsersMgView;
       break;
     case eCompsKeyEnum.kSysProjRoleMg:
       compPath = compPathMap[compNameEnum.kProjRolesListMgView];
+      item.compsKey = compNameEnum.kProjRolesListMgView;
       break;
     case eCompsKeyEnum.kSysProjDetailView:
       compPath = compPathMap[compNameEnum.kProjDetailView];
+      item.compsKey = compNameEnum.kProjDetailView;
       break;
     case eCompsKeyEnum.kSysProjPermissionMg:
       compPath = compPathMap[compNameEnum.kProjPermissionsMgView];
+      item.compsKey = compNameEnum.kProjPermissionsMgView;
       break;
     case eCompsKeyEnum.kSysProjMenusMg:
       compPath = compPathMap[compNameEnum.kProjMenusListMgView];
+      item.compsKey = compNameEnum.kProjMenusListMgView;
       break;
     //////////////////////////
     case eCompsKeyEnum.kSysMyDepartment:
       compPath = compPathMap[compNameEnum.kSysUserProjsView];
+      item.compsKey = compNameEnum.kSysUserProjsView;
       break;
     case eCompsKeyEnum.kSysUserProfile:
       compPath = compPathMap[compNameEnum.kSysUserProfilesView];
+      item.compsKey = compNameEnum.kSysUserProfilesView;
       break;
     //////////////////////////
     case eCompsKeyEnum.kSysUserListView:
       compPath = compPathMap[compNameEnum.kSysUsersListMgView];
+      item.compsKey = compNameEnum.kSysUsersListMgView;
       break;
     case eCompsKeyEnum.kSysDepartmentMgView:
       compPath = compPathMap[compNameEnum.kSysProjsListMgView];
+      item.compsKey = compNameEnum.kSysProjsListMgView;
       break;
     /////////////////////////////
     case eCompsKeyEnum.kMenu1_1:
