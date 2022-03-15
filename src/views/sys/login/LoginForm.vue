@@ -109,12 +109,13 @@
     if (!data) return;
 
     loading.value = true;
-    const userInfo = await userStore.login({
-      password: data.password,
-      username: data.account,
-      mode: 'none', //不要默认的错误提示
-    });
+
     try {
+      const userInfo = await userStore.login({
+        password: data.password,
+        username: data.account,
+        mode: 'none', //不要默认的错误提示
+      });
       console.log('login', userInfo);
       if (userInfo) {
         notification.success({
@@ -124,7 +125,7 @@
         });
       }
     } catch (error) {
-      debugger;
+      // debugger;
       createErrorModal({
         title: t('sys.api.errorTip'),
         content: (error as unknown as Error).message || t('sys.api.networkExceptionMsg'),
