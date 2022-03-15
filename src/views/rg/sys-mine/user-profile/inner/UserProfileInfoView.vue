@@ -1,5 +1,15 @@
 <template>
   <div class="w-full h-full">
+    <div class="change-avatar">
+      <CropperAvatar
+        :uploadApi="uploadApiFn"
+        :value="avatar"
+        btnText="更换头像"
+        :btnProps="{ preIcon: 'ant-design:cloud-upload-outlined' }"
+        @change="updateAvatarFn"
+        width="150"
+      />
+    </div>
     <ul class="list-group list-group-striped">
       <li class="list-group-item">
         <Icon :size="13" class="mr-5px" icon="userinfo|svg" />用户账号
@@ -39,10 +49,11 @@
   import { useUserStoreWithOut } from '/@/store/modules/user';
   import { IUserInfo } from '/#/store';
   import { Icon } from '/@/components/Icon';
-
+  import { CropperAvatar } from '/@/components/Cropper';
+  import { log } from '/@/utils/log';
   export default defineComponent({
     name: 'UserProfileInfoView',
-    components: { Icon },
+    components: { Icon, CropperAvatar },
     setup() {
       const user = computed<Nullable<IUserInfo>>(() => {
         return useUserStoreWithOut().getUserInfoV1;
@@ -60,16 +71,41 @@
         roleStr = roleStr;
         return roleStr;
       });
+
+      const avatar = computed(() => {
+        return 'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640';
+        // const { avatar } = userStore.getUserInfo;
+        // return avatar || headerImg;
+      });
+
+      function updateAvatarFn(src: string) {
+        log(src);
+        // const userinfo = userStore.getUserInfo;
+        // userinfo.avatar = src;
+        // userStore.setUserInfo(userinfo);
+      }
+      const uploadApiFn = () => {};
       return {
         user,
         getSex,
         getRoles,
+        avatar,
+        updateAvatarFn,
+        uploadApiFn,
       };
     },
   });
 </script>
 
 <style scoped lang="less">
+  .change-avatar {
+    text-align: center;
+    img {
+      display: block;
+      margin-bottom: 15px;
+      border-radius: 50%;
+    }
+  }
   .list-group-striped > .list-group-item {
     border-left: 0;
     border-right: 0;

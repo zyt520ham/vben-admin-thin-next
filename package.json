@@ -28,6 +28,7 @@
     "gen:icon": "esno ./build/generate/icon/index.ts"
   },
   "dependencies": {
+    "cropperjs": "^1.5.12",
     "@ant-design/colors": "^6.0.0",
     "@ant-design/icons-vue": "^6.0.1",
     "@iconify/iconify": "^2.0.4",
