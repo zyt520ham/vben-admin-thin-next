@@ -53,6 +53,7 @@
   import { CropperAvatar } from '/@/components/Cropper';
   import { log } from '/@/utils/log';
   import headerImg from '/@/assets/images/header.jpg';
+  import { message } from 'ant-design-vue';
 
   export default defineComponent({
     name: 'UserProfileInfoView',
@@ -89,6 +90,10 @@
 
       const copperApiFn = (params: { file: Blob; name: string; filename: string }) => {
         return new Promise<any>((resolve) => {
+          message.warn({
+            content: '当前头像切换功能并未服务端接口并未开放，替换之后只能本地临时预览效果~~',
+            duration: 5,
+          });
           //本地预览  模拟上传逻辑
           const reader = new FileReader();
           reader.readAsDataURL(params.file);
