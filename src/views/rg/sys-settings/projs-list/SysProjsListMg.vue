@@ -41,13 +41,26 @@
               {
                 icon: 'clarity:note-edit-line',
                 onClick: tableHandleEdit.bind(null, record),
+                tooltip: '编辑',
               },
               {
-                icon: 'ant-design:delete-outlined',
+                icon: 'icon-park-outline:lock',
                 color: 'error',
+                ifShow: record.state === 0,
+                tooltip: '锁定项目',
                 popConfirm: {
-                  title: '是否确认删除',
-                  confirm: tableHandleDelete.bind(null, record),
+                  title: '是否锁定项目',
+                  confirm: tableHandleLockFn.bind(null, record),
+                },
+              },
+              {
+                icon: 'mdi:lock-open-variant-outline',
+                // color: 'error',
+                ifShow: record.state !== 0,
+                tooltip: '解锁项目',
+                popConfirm: {
+                  title: '是否解锁项目',
+                  confirm: tableHandleUnlockFn.bind(null, record),
                 },
               },
             ]"
@@ -150,8 +163,12 @@
       const tableHandleEdit = (record: any) => {
         log('tableHandleEdit', record);
       };
-      const tableHandleDelete = (record: any) => {
-        log('tableHandleDelete', record);
+
+      const tableHandleLockFn = (record: any) => {
+        log('tableHandleLockFn', record);
+      };
+      const tableHandleUnlockFn = (record: any) => {
+        log('tableHandleUnlockFn', record);
       };
       const tableRowFormatFn = (record: any, column: BasicColumn) => {
         if (column.dataIndex === 'created_at') {
@@ -187,8 +204,9 @@
         useSearchBtnEventFn,
         addBtnClickFn,
         tableHandleEdit,
-        tableHandleDelete,
         tableRowFormatFn,
+        tableHandleLockFn,
+        tableHandleUnlockFn,
       };
     },
   });

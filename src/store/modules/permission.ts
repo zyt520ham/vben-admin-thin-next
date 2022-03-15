@@ -24,7 +24,6 @@ import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
 import { IMenuListDataItem } from '/@/api/sys/model/menuModel';
 import { transformMenuDataToAppRouteRecord } from '/@/store/utils/MenuDataHelper';
-import testMenus from '/@/router/routes/modules/demo/testmenus';
 import { resetRouter, router } from '/@/router';
 import { RouteRecordRaw } from 'vue-router';
 import { routesListChanged } from '/@/layouts/iframe/useFrameKeepAlive';
@@ -219,8 +218,8 @@ export const usePermissionStore = defineStore({
             // this.changePermissionCode();
             const menuDataList: IMenuListDataItem = await getMenuList();
 
-            //添加多级测试路由
-            menuDataList.list.push(...(testMenus as any));
+            // //添加多级测试路由
+            // menuDataList.list.push(...(testMenus as any));
             routeList = transformMenuDataToAppRouteRecord(menuDataList || { list: [] });
             console.log('转换后的AppRouteRecord:', routeList);
           } catch (error) {
@@ -291,8 +290,8 @@ export const usePermissionStore = defineStore({
 
         const menuDataList: IMenuListDataItem = await getMenuList();
 
-        //TODO:: 添加多级测试路由
-        menuDataList.list.push(...(testMenus as any));
+        // //TODO:: 添加多级测试路由
+        // menuDataList.list.push(...(testMenus as any));
 
         routeList = transformMenuDataToAppRouteRecord(menuDataList || { list: [] });
         console.log('转换后的AppRouteRecord:', routeList);
