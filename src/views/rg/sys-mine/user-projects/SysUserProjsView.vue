@@ -67,6 +67,7 @@
   import { log } from '/@/utils/log';
   import { arrSortFn } from '/@/utils/arrayUtils';
   import { projectsList } from '/@/views/rg/sys-mine/user-projects/inner/userProjs.data';
+  import { useDesign } from '/@/hooks/web/useDesign';
 
   export default defineComponent({
     name: 'SysUserProjsView',
@@ -75,6 +76,8 @@
       TableAction,
     },
     setup() {
+      const { prefixCls } = useDesign('sys-user-projs');
+
       const tableRowFormatFn = (record, column) => {
         return record[column.dataIndex];
       };
@@ -108,6 +111,7 @@
         // },
       });
       return {
+        prefixCls,
         registerTableFn,
         tableRowFormatFn,
       };
