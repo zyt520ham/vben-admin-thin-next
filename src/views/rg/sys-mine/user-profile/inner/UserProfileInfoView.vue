@@ -2,9 +2,10 @@
   <div class="w-full h-full">
     <div class="change-avatar">
       <CropperAvatar
-        :uploadApi="uploadApiFn"
+        :uploadApi="copperApiFn"
         :value="avatar"
         btnText="更换头像"
+        :showBtn="false"
         :btnProps="{ preIcon: 'ant-design:cloud-upload-outlined' }"
         @change="updateAvatarFn"
         width="150"
@@ -51,6 +52,8 @@
   import { Icon } from '/@/components/Icon';
   import { CropperAvatar } from '/@/components/Cropper';
   import { log } from '/@/utils/log';
+  import headerImg from '/@/assets/images/header.jpg';
+
   export default defineComponent({
     name: 'UserProfileInfoView',
     components: { Icon, CropperAvatar },
@@ -71,27 +74,37 @@
         roleStr = roleStr;
         return roleStr;
       });
-
       const avatar = computed(() => {
-        return 'https://q1.qlogo.cn/g?b=qq&nk=190848757&s=640';
-        // const { avatar } = userStore.getUserInfo;
-        // return avatar || headerImg;
+        const { avatar } = user.value!;
+        return avatar || headerImg;
       });
 
-      function updateAvatarFn(src: string) {
-        log(src);
+      function updateAvatarFn(src: any) {
+        log('updateAvatarFn', src);
+        useUserStoreWithOut().setUserAvatar(src);
         // const userinfo = userStore.getUserInfo;
         // userinfo.avatar = src;
         // userStore.setUserInfo(userinfo);
       }
-      const uploadApiFn = () => {};
+
+      const copperApiFn = (params: { file: Blob; name: string; filename: string }) => {
+        return new Promise<any>((resolve) => {
+          //本地预览  模拟上传逻辑
+          const reader = new FileReader();
+          reader.readAsDataURL(params.file);
+          reader.onload = () => {
+            const url = (reader.result as string) || '';
+            resolve({ data: url });
+          };
+        });
+      };
       return {
         user,
         getSex,
         getRoles,
         avatar,
         updateAvatarFn,
-        uploadApiFn,
+        copperApiFn,
       };
     },
   });

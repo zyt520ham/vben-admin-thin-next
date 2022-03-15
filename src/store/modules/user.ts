@@ -124,6 +124,9 @@ export const useUserStore = defineStore({
       this.lastUpdateTime = new Date().getTime();
       // setAuthCache(USER_INFO_KEY, info);
     },
+    setUserAvatar(avatar: string) {
+      this.userInfo_v1!.avatar = avatar;
+    },
     setSessionTimeout(flag: boolean) {
       this.sessionTimeout = flag;
     },
