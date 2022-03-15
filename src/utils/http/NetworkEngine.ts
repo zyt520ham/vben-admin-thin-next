@@ -8,6 +8,9 @@ import { IReqErr, RequestOptions, Result } from '/#/axios';
 import { useUserStoreWithOut } from '/@/store/modules/user';
 import { isBoolean } from '/@/utils/is';
 import { logNoTrace } from '/@/utils/log';
+import { useMessage } from '/@/hooks/web/useMessage';
+const { createErrorModal } = useMessage();
+import { useI18n } from '/@/hooks/web/useI18n';
 export interface IReqCommomParams {
   /** 时间戳, 60秒内有效 长度秒级 */
   timestamp?: number;
@@ -116,6 +119,12 @@ export function doBaseApiRequest<T>(
           }
         },
         (error: AxiosError) => {
+          if (error.response?.status === 401) {
+            const { t } = useI18n();
+            createErrorModal({ title: t('sys.api.errorTip'), content: error.response.data.retMsg });
+            reject(error);
+            return;
+          }
           // debugger;
           const errData = error.response?.data;
           if (errData) {
