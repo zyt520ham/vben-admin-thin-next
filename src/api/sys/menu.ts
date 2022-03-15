@@ -1,4 +1,9 @@
-import { IMenuListDataItem, IReqAddMenuItem, IReqDelMenuItem } from './model/menuModel';
+import {
+  IMenuListDataItem,
+  IReqAddMenuItem,
+  IReqDelMenuItem,
+  IReqEditMenuItem,
+} from './model/menuModel';
 import { doBaseApiRequest } from '/@/utils/http/NetworkEngine';
 import { RequestOptions } from '/#/axios';
 
@@ -11,6 +16,8 @@ enum Api {
   rgAddMenuItem = '/rbac/menu/create',
   //删除menuItem
   rgDelMenuItem = '/rbac/menu/delete',
+  //更新menuItem
+  rgUpdateMenuItem = '/rbac/menu/update',
 }
 
 /**
@@ -34,4 +41,11 @@ export const addMenuItemApi = (params: IReqAddMenuItem, options: RequestOptions 
  */
 export const deleteMenuItemApi = (params: IReqDelMenuItem, options: RequestOptions = {}) => {
   return doBaseApiRequest<any>(Api.rgDelMenuItem, params, options);
+};
+
+/**
+ * @description: update menuItem
+ */
+export const updateMenuItemApi = (params: IReqEditMenuItem, options: RequestOptions = {}) => {
+  return doBaseApiRequest<any>(Api.rgUpdateMenuItem, params, options);
 };

@@ -63,3 +63,20 @@ export interface IReqAddMenuItem {
   openLinkUseExternal;
   externalLinkUrl;
 }
+
+export interface IReqEditMenuItem {
+  hiddenInMenu;
+  viewHiddenMenubar?;
+  id;
+  label;
+  icon;
+  compsKey;
+  useStatus;
+  menuType;
+  path;
+  menuLevel;
+  orderNum;
+  openLinkUseExternal;
+  externalLinkUrl;
+  serverId;
+}

@@ -18,11 +18,11 @@ import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { filter } from '/@/utils/helper/treeHelper';
 
-import { addMenuItemApi, getMenuList } from '/@/api/sys/menu';
+import { addMenuItemApi, getMenuList, updateMenuItemApi } from '/@/api/sys/menu';
 
 import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
-import { IMenuListDataItem } from '/@/api/sys/model/menuModel';
+import { IMenuListDataItem, IReqAddMenuItem, IReqEditMenuItem } from '/@/api/sys/model/menuModel';
 import { transformMenuDataToAppRouteRecord } from '/@/store/utils/MenuDataHelper';
 import { resetRouter, router } from '/@/router';
 import { RouteRecordRaw } from 'vue-router';
@@ -306,10 +306,20 @@ export const usePermissionStore = defineStore({
     },
 
     //新增菜单逻辑
-    async addMenuItem(menuItem) {
+    async addMenuItem(menuItem: IReqAddMenuItem) {
       console.log('addMenuItem', menuItem);
       try {
         const resp = await addMenuItemApi(menuItem);
+        logNoTrace(resp);
+        await this.refreshLoadServerMenus();
+      } catch (e: any) {
+        error(e.retMsg!);
+      }
+    },
+    async updateMenuItem(menuItem: IReqEditMenuItem) {
+      console.log('updateMenuItem', menuItem);
+      try {
+        const resp = await updateMenuItemApi(menuItem);
         logNoTrace(resp);
         await this.refreshLoadServerMenus();
       } catch (e: any) {

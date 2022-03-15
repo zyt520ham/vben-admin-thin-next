@@ -207,6 +207,7 @@
 
         menuFormItem.value.path = treeSelectedItem.value?.meta?.currentPath;
         menuFormItem.value.icon = treeSelectedItem.value?.icon;
+        menuFormItem.value.serverId = treeSelectedItem.value?.meta?.serverId || '';
         if (treeSelectedItem.value?.meta?.frameSrc) {
           menuFormItem.value.compType = 'iframeComp';
           menuFormItem.value.iframeSrc = treeSelectedItem.value?.meta?.frameSrc;
@@ -286,11 +287,61 @@
           menuRawData.compsKey = nMenuItem.compsKey;
         }
         console.log('tranform menu', menuRawData);
-        usePermissionStoreWithOut().addMenuItem(menuRawData);
+        usePermissionStoreWithOut().addMenuItem(menuRawData as any);
         emit('editItemFinish', menuRawData);
       };
       const doEditMenuItem = () => {
         log('doEditMenuItem', menuFormItem);
+        const menuRawData: IMenuRawData = {} as IMenuRawData;
+        const nMenuItem = Object.assign({}, unref(menuFormItem));
+        menuRawData.serverId = nMenuItem.serverId;
+        if (nMenuItem.menuLevel === 0) {
+          menuRawData.parentId = '';
+          if (nMenuItem.menuType === 'leaf') {
+            //  选择了叶子
+            menuRawData.menuType = 'endPoint';
+            menuRawData.path = nMenuItem.path;
+          } else {
+            //选择了节点
+            menuRawData.menuType = 'rootpath';
+            menuRawData.path = '/' + nMenuItem.path;
+          }
+        } else {
+          if (nMenuItem.menuType === 'leaf') {
+            menuRawData.menuType = 'endPoint';
+          } else {
+            menuRawData.menuType = 'middlepath';
+          }
+          menuRawData.menuLevel = nMenuItem.menuLevel;
+          menuRawData.parentId = nMenuItem.parentId;
+          menuRawData.path = nMenuItem.path;
+        }
+        menuRawData.id = menuRawData.parentId + menuRawData.path;
+        menuRawData.label = nMenuItem.name;
+        menuRawData.icon = nMenuItem.icon;
+        if (menuRawData.icon?.endsWith('|svg')) {
+          menuRawData.icon = menuRawData.icon?.replace('|svg', '');
+        }
+        menuRawData.orderNum = nMenuItem.orderNo;
+        menuRawData.useCache = nMenuItem.useCache;
+        menuRawData.hiddenInMenu = !nMenuItem.menuListShow;
+        if (nMenuItem.compType === 'iframeComp') {
+          // iframe
+
+          menuRawData.externalLinkUrl = nMenuItem.iframeSrc;
+          menuRawData.openLinkUseExternal = false;
+          menuRawData.useStatus = true;
+          if (menuRawData.menuLevel == 0) {
+            menuRawData.compsKey = 'layout';
+          } else {
+            menuRawData.compsKey = 'iframe';
+          }
+        } else {
+          // menuRawData.compsKey = treeSelectedItem.value.meta.compsKey;
+          // menuRawData.compsKey = nMenuItem.compsKey;
+        }
+        console.log('tranform edit menu', menuRawData);
+        usePermissionStoreWithOut().updateMenuItem(menuRawData as any);
         // usePermissionStoreWithOut().addMenuItem(menuFormItem);
       };
       //#region public =================================
