@@ -2,7 +2,7 @@ import { IMenuListDataItem, IMenuRawData } from '/@/api/sys/model/menuModel';
 import { AppRouteRecordRaw } from '/@/router/types';
 
 import { RouteMeta } from 'vue-router';
-import { compNameEnum, compPathMap } from '/@/enums/CompPathEnum';
+import { compNameEnum, compPathMap, compsList } from '/@/enums/CompPathEnum';
 
 export function transformMenuDataToAppRouteRecord(
   menuListData: IMenuListDataItem,
@@ -190,6 +190,11 @@ export function compentPathReplace(item: IMenuRawData): string {
   // else {
   //   return 'Test';
   // }
+  //新的修正过的keyname，不用走老的映射方式获取了
+  if (compsList.includes(item.compsKey as any)) {
+    compPath = compPathMap[item.compsKey];
+    return compPath;
+  }
   switch (item.compsKey) {
     case eCompsKeyEnum.kLayoutIndex:
       compPath = 'layout';
