@@ -62,7 +62,7 @@
   //   GoogleCircleFilled,
   //   TwitterCircleFilled,
   // } from '@ant-design/icons-vue';
-  // import LoginFormTitle from './LoginFormTitle.vue';
+  import LoginFormTitle from './LoginFormTitle.vue';
 
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useMessage } from '/@/hooks/web/useMessage';
