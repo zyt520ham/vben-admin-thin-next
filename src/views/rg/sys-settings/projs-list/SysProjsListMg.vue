@@ -32,6 +32,9 @@
             :prop-toggle-show-state="useSearchBtnEventFn"
           />
         </template>
+        <template #colCreateTime="{ record, column }">
+          <span>{{ tableRowFormatFn(record, column) }}</span>
+        </template>
         <template #colAction="{ record }">
           <TableAction
             :actions="[
@@ -60,7 +63,13 @@
   import { PageWrapper } from '/@/components/Page';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { BasicForm, useForm } from '/@/components/Form';
-  import { BasicTable, SorterResult, TableAction, useTable } from '/@/components/Table';
+  import {
+    BasicColumn,
+    BasicTable,
+    SorterResult,
+    TableAction,
+    useTable,
+  } from '/@/components/Table';
   import {
     getProjsColumnsCfg,
     getSearchFormCfg,
@@ -69,6 +78,7 @@
   import GzShowSearchFormBtn from '/@/components/GzShowSearchFormBtn';
   import { log } from '/@/utils/log';
   import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
+  import { formatToDate } from '/@/utils/dateUtil';
 
   export default defineComponent({
     name: 'SysProjsListMg',
@@ -143,6 +153,13 @@
       const tableHandleDelete = (record: any) => {
         log('tableHandleDelete', record);
       };
+      const tableRowFormatFn = (record: any, column: BasicColumn) => {
+        if (column.dataIndex === 'created_at') {
+          return formatToDate(record[column.dataIndex] * 1000);
+        }
+        return record[column.dataIndex || ''];
+      };
+
       const [registerTableFn, tableMethods] = useTable({
         title: '用户列表',
         api: getProjectsListApi,
@@ -171,6 +188,7 @@
         addBtnClickFn,
         tableHandleEdit,
         tableHandleDelete,
+        tableRowFormatFn,
       };
     },
   });
