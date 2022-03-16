@@ -97,10 +97,13 @@ export function transformToAppRouteRecordItem(item: IMenuRawData): AppRouteRecor
   metaItem.menuLevel = item.menuLevel;
 
   if (item.externalLinkUrl) {
-    if (item.useExternalLink) {
-      metaItem.isLink = true;
-      metaItem.currentPath = item.externalLinkUrl;
-      // metaItem.paramPath = item.externalLinkUrl;
+    if (item.openLinkUseExternal) {
+      metaItem.openLinkUseExternal = item.openLinkUseExternal;
+      metaItem.isLink = item.openLinkUseExternal;
+      // metaItem.currentPath = item.externalLinkUrl;
+
+      metaItem.frameSrc = item.externalLinkUrl;
+      metaItem.paramPath = item.externalLinkUrl;
     } else {
       metaItem.frameSrc = item.externalLinkUrl;
       // metaItem.paramPath = item.externalLinkUrl;

@@ -85,6 +85,17 @@
             :disabled="getEditingState === false"
           />
         </a-form-item>
+
+        <a-form-item label="是否外链">
+          <a-radio-group
+            v-model:value="menuFormItem.openLinkUseExternal"
+            size="small"
+            button-style="solid"
+          >
+            <a-radio-button :value="true">外链</a-radio-button>
+            <a-radio-button :value="false">内嵌</a-radio-button>
+          </a-radio-group>
+        </a-form-item>
       </template>
 
       <a-form-item label="Menu显示">
@@ -220,6 +231,7 @@
         if (treeSelectedItem.value?.meta?.frameSrc) {
           menuFormItem.value.compType = 'iframeComp';
           menuFormItem.value.iframeSrc = treeSelectedItem.value?.meta?.frameSrc;
+          menuFormItem.value.openLinkUseExternal = treeSelectedItem.value.meta.openLinkUseExternal;
           menuFormItem.value.compsKey = '';
           let patt = /###\w+###$/;
           if (patt.test(menuFormItem.value.iframeSrc)) {
@@ -296,7 +308,7 @@
           // iframe
 
           menuRawData.externalLinkUrl = nMenuItem.iframeSrc;
-          menuRawData.openLinkUseExternal = false;
+          menuRawData.openLinkUseExternal = nMenuItem.openLinkUseExternal;
           menuRawData.useStatus = true;
           if (menuRawData.menuLevel == 0) {
             menuRawData.compsKey = 'layout';
@@ -349,7 +361,7 @@
           // iframe
 
           menuRawData.externalLinkUrl = nMenuItem.iframeSrc;
-          menuRawData.openLinkUseExternal = false;
+          menuRawData.openLinkUseExternal = nMenuItem.openLinkUseExternal;
           menuRawData.useStatus = true;
           if (menuRawData.menuLevel == 0) {
             menuRawData.compsKey = 'layout';
