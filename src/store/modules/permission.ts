@@ -215,12 +215,13 @@ export const usePermissionStore = defineStore({
           let routeList: AppRouteRecordRaw[] = [];
           try {
             //TODO:: 还不知道此接口作用  看文档说是按钮权限相关
+
             // this.changePermissionCode();
-            const menuDataList: IMenuListDataItem = await getMenuList();
+            // const menuDataList: IMenuListDataItem =  await getMenuList();
 
             // //添加多级测试路由
             // menuDataList.list.push(...(testMenus as any));
-            routeList = transformMenuDataToAppRouteRecord(menuDataList || { list: [] });
+            routeList = (await this.loadServerMenusData()) || []; //transformMenuDataToAppRouteRecord(menuDataList || { list: [] });
             console.log('转换后的AppRouteRecord:', routeList);
           } catch (error) {
             console.error(error);

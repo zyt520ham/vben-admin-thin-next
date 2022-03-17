@@ -298,7 +298,9 @@
           menuRawData.parentId = nMenuItem.parentId;
           menuRawData.path = nMenuItem.path;
         }
-        menuRawData.id = menuRawData.parentId + menuRawData.path;
+        menuRawData.id =
+          menuRawData.parentId +
+          (menuRawData.path.startsWith('/') ? menuRawData.path : '/' + menuRawData.path);
         menuRawData.label = nMenuItem.name;
         menuRawData.icon = nMenuItem.icon;
         menuRawData.orderNum = nMenuItem.orderNo;
@@ -348,7 +350,9 @@
           menuRawData.parentId = nMenuItem.parentId;
           menuRawData.path = nMenuItem.path;
         }
-        menuRawData.id = menuRawData.parentId + menuRawData.path;
+        menuRawData.id =
+          menuRawData.parentId +
+          (menuRawData.path.startsWith('/') ? menuRawData.path : '/' + menuRawData.path);
         menuRawData.label = nMenuItem.name;
         menuRawData.icon = nMenuItem.icon;
         if (menuRawData.icon?.endsWith('|svg')) {
