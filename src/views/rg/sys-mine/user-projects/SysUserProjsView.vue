@@ -66,8 +66,8 @@
   import { getProjsColumnsCfg } from '/@/views/rg/sys-settings/projs-list/inner/projs.data';
   import { log } from '/@/utils/log';
   import { arrSortFn } from '/@/utils/arrayUtils';
-  import { projectsList } from '/@/views/rg/sys-mine/user-projects/inner/userProjs.data';
   import { useDesign } from '/@/hooks/web/useDesign';
+  import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
 
   export default defineComponent({
     name: 'SysUserProjsView',
@@ -89,7 +89,8 @@
       };
       const getMyProjsApi = () => {
         return new Promise((resolve) => {
-          resolve(projectsList);
+          const list = useProjsStoreWithOut().getMyProjects;
+          resolve(list);
         });
       };
       const [registerTableFn, tableMethods] = useTable({

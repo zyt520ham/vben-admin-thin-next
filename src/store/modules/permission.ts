@@ -316,7 +316,7 @@ export const usePermissionStore = defineStore({
           });
           menuDataList.list = tempList;
           // const permissionsMenus: string[] = flattenFn(permissionsList.menu);
-          debugger;
+
           // //TODO:: 添加多级测试路由
           // menuDataList.list.push(...(testMenus as any));
 

@@ -139,7 +139,8 @@
               isSorting = false;
               resolve(tableDatas);
             } else {
-              const list = useProjsStoreWithOut().getAllProjs;
+              let list = useProjsStoreWithOut().getAllProjs;
+
               resolve(list);
             }
           } else {

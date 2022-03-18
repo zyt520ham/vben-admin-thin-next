@@ -35,6 +35,16 @@ export const useProjsStore = defineStore({
     getAllProjs(): IProjectInfo[] {
       return this.projectsList.slice();
     },
+    getMyProjects(): IProjectInfo[] {
+      const userProjs: string[] = useUserStoreWithOut().getUserInfoV1?.projects || [];
+      const myProjs = this.getAllProjs.filter((ele) => {
+        if (userProjs.includes(ele.project_id)) {
+          return true;
+        }
+        return false;
+      });
+      return myProjs;
+    },
     getAllProjectsMap(): { [key: string]: IProjectInfo } {
       return this.projectsMap;
     },
