@@ -142,6 +142,7 @@
       const projUsersAddCompGetSelectedUserList = () => {
         return checkedUsersList.value.slice();
       };
+
       expose({
         projUsersAddCompGetSelectedUserList,
       });

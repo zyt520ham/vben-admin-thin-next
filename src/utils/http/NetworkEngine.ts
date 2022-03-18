@@ -60,7 +60,6 @@ function apiReqHelper() {
     md5String = md5String.toLowerCase();
     console.log('md5string', md5String);
     params.sign = md5String;
-    // params.token = 'token';
     return params;
   }
 
@@ -106,7 +105,7 @@ export function doBaseApiRequest<T>(
       .post<Result<T>>(cfg, requestOption)
       .then(
         (resp) => {
-          logNoTrace('[url]:' + cfg.url, '\n', '[resp]:', resp);
+          logNoTrace('[url]:' + cfg.url, '\n', '[params]:', cfg.data, '\n', '[resp]:', resp);
           // console.log('resp', resp);
           if (resp.retCode === 0) {
             resolve(resp.data);

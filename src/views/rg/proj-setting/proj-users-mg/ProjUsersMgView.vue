@@ -144,7 +144,11 @@
   import { BasicModal, useModal } from '/@/components/Modal';
   import ProjectUsersAddComp from './inner/ProjectUsersAddComp.vue';
   import { log, logNoTrace } from '/@/utils/log';
-  import { getProjUsersV1Api } from '/@/api/sys/projectApi';
+  import {
+    addUsersFromProjApi,
+    deleteUserFromProjApi,
+    getProjUsersV1Api,
+  } from '/@/api/sys/projectApi';
   import { IReqGetProjUser } from '/@/api/sys/model/projectModel';
   import { IReqErr } from '/#/axios';
   import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
@@ -153,6 +157,8 @@
   import { useDrawer } from '/@/components/Drawer';
   import UserResetPsdModal from './inner/UserResetPsdModal.vue';
   import { formatToDate } from '/@/utils/dateUtil';
+  import { message } from 'ant-design-vue';
+  import { useUserStoreWithOut } from '/@/store/modules/user';
 
   export default defineComponent({
     name: 'ProjUsersMgView',
@@ -358,8 +364,17 @@
       };
       const tableActionLeaveProjsFn = (record) => {
         log('tableActionleaveProjsFn', record);
-        //TODO::添加移除项目的网络请求
-        tableMethods.deleteTableDataRecord(record.key);
+        deleteUserFromProjApi({
+          user_id: record.user_id,
+        }).then(
+          (resp) => {
+            log(resp);
+            tableMethods.deleteTableDataRecord(record.key);
+          },
+          (err: IReqErr) => {
+            message.error(err.retMsg!);
+          },
+        );
       };
       const [registerTableFn, tableMethods] = useTable({
         title: '用户列表',
@@ -385,9 +400,31 @@
       const projUsersAddComp = ref<any>(null);
       const addUsersModalOkBtnEventFn = () => {
         log('addUsersModalOkBtnEventFn');
-        const list = projUsersAddComp.value.projUsersAddCompGetSelectedUserList();
+        const list: IUserInfo[] = projUsersAddComp.value.projUsersAddCompGetSelectedUserList();
         console.log(list);
-        addUsersModalMethods.closeModal();
+        const userIdList: string[] = [];
+        list.map((ele) => {
+          userIdList.push(ele.user_id + '');
+        });
+        addUsersModalMethods.setModalProps({
+          loading: true,
+        });
+        addUsersFromProjApi({
+          user_id: userIdList.join('##'),
+          project_id: useUserStoreWithOut().getChooseProjectId!,
+        }).then(
+          (resp) => {
+            console.log(resp);
+            tableMethods.reload();
+            addUsersModalMethods.setModalProps({
+              loading: false,
+            });
+            addUsersModalMethods.closeModal();
+          },
+          (err: IReqErr) => {
+            message.error(err.retMsg!);
+          },
+        );
       };
 
       const addUsersModalCancalBtnEventFn = () => {

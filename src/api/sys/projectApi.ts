@@ -2,6 +2,8 @@ import { doBaseApiRequest } from '/@/utils/http/NetworkEngine';
 import {
   IProjectListReq,
   IReqGetProjUser,
+  IReqProjAddUsers,
+  IReqProjDelUser,
   IReqProjIncludeUsers,
   IRespProjectsData,
   IRespProjsIncludeUsers,
@@ -18,6 +20,10 @@ enum Api {
   rgGetProjUsers = '/project/users',
 
   rgGetProjUsers_v1 = '/user/list',
+  //添加用户到项目
+  rgAddUsersFromProj = '/project/authorization',
+  //删除用户从项目
+  rgDelUserFromProj = '/user/project-authorization',
 }
 
 /**
@@ -37,3 +43,11 @@ export const getProjUsersApi = (params: IReqProjIncludeUsers, options: RequestOp
 //获取用户列表新接口
 export const getProjUsersV1Api = (params: IReqGetProjUser, options: RequestOptions = {}) =>
   doBaseApiRequest<IRespProjUsers>(Api.rgGetProjUsers_v1, params, options);
+//从项目移除用户
+export const deleteUserFromProjApi = (params: IReqProjDelUser, options: RequestOptions = {}) => {
+  params.cancel = 'yes'; // 项目删除用户必传字段
+  return doBaseApiRequest<IRespProjUsers>(Api.rgDelUserFromProj, params, options);
+};
+//项目邀请用户
+export const addUsersFromProjApi = (params: IReqProjAddUsers, options: RequestOptions = {}) =>
+  doBaseApiRequest<any>(Api.rgAddUsersFromProj, params, options);
