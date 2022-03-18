@@ -178,18 +178,7 @@
       const projsTreeSelectFn = (selectedKey) => {
         log(selectedKey);
         selectedItemKey.value = selectedKey;
-        const list = tableMethods.getRawDataSource();
-        const filterList = list.filter((ele: IUserInfo) => {
-          if (!selectedItemKey.value) {
-            return true;
-          } else {
-            if (ele.project_roles.includes(selectedItemKey.value)) {
-              return true;
-            }
-            return false;
-          }
-        });
-        tableMethods.setTableData(filterList);
+        doRoleFilterTableListFn();
       };
 
       //#endregion
@@ -273,8 +262,6 @@
       });
       //#endregion
       //#region table data =================================
-      let tableDatas: IUserInfo[] = [];
-      let isSorting = false;
       const edittingInfo = ref<IUserInfo>({} as any);
       //获取当前项目角色map
       const getProjRolesMapComputed = computed(() => {
@@ -291,54 +278,53 @@
         console.log('tableToolsAddUsersEventFn');
         addUsersModalMethods.openModal();
       };
-      let rawDataSource: any = [];
       //拉取人员信息列表
       const loadUserFromServerApi = () => {
         logNoTrace('loadUserFromServerApi');
         return new Promise<any[]>((resolve, reject) => {
-          if (isSorting) {
-            isSorting = false;
-            resolve(rawDataSource);
-            tableMethods.setTableData(tableDatas);
-          } else {
-            // const params: IReqProjIncludeUsers = {
-            //   page: 1,
-            //   page_size: 1000,
-            //   project_id: useUserStoreWithOut().getLoginInfo?.project || '',
-            // };
-            const params: IReqGetProjUser = { page: 1, page_size: 1000 };
-            getProjUsersV1Api(params).then(
-              (resp) => {
-                const list = resp.list.filter((ele) => {
-                  if (!selectedItemKey.value) {
-                    return true;
-                  }
-                  if (ele.project_roles.includes(selectedItemKey.value)) {
-                    return true;
-                  } else {
-                    return false;
-                  }
-                });
-                // tableDatas = resp.list.slice();
-                resolve(list.slice());
-              },
-              (err: IReqErr) => {
-                console.error('err', err);
-                reject(err);
-              },
-            );
-          }
+          const params: IReqGetProjUser = { page: 1, page_size: 1000 };
+          getProjUsersV1Api(params).then(
+            (resp) => {
+              setTimeout(() => {
+                if (selectedItemKey.value) {
+                  // debugger;
+                  // 需要执行一次filter
+                  doRoleFilterTableListFn();
+                }
+              }, 10);
+              resolve(resp.list.slice());
+            },
+            (err: IReqErr) => {
+              console.error('err', err);
+              reject(err);
+            },
+          );
+          // }
         });
       };
-
+      /** 角色过滤 */
+      const doRoleFilterTableListFn = () => {
+        const tableList = tableMethods.getRawDataSource();
+        const filterList = tableList.filter((ele) => {
+          if (!selectedItemKey.value) {
+            return true;
+          }
+          if (ele.project_roles.includes(selectedItemKey.value)) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+        tableMethods.setTableData(filterList);
+      };
       //table fn 排序
       const tableSortFn = (sortInfo: SorterResult) => {
         logNoTrace('tableSortFn', sortInfo);
-        isSorting = true;
-        rawDataSource = tableMethods.getRawDataSource().slice();
+
+        // rawDataSource = tableMethods.getRawDataSource().slice();
+        //这里存在筛选的问题，不能直接要raw的数据
         const list: any[] = tableMethods.getDataSource().slice();
         const sortList = arrSortFn(list, sortInfo.field, sortInfo.order);
-        // tableDatas = sortList;
         tableMethods.setTableData(sortList);
       };
       const tableRowFormatFn = (record: any, column: BasicColumn) => {
