@@ -1,5 +1,6 @@
 <template>
   <BasicDrawer
+    destroyOnClose
     v-bind="$attrs"
     @register="registerDrawer"
     showFooter
@@ -29,7 +30,7 @@
   </BasicDrawer>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, unref } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
 
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
@@ -64,10 +65,10 @@
         resetFields();
         setDrawerProps({ confirmLoading: false });
         // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
-        if (unref(treeData).length === 0) {
-          const projRoles = useProjsStoreWithOut().getCurrentProjRoles.slice();
-          treeData.value = projRoles as any as TreeItem[];
-        }
+        // if (unref(treeData).length === 0) {
+        const projRoles = useProjsStoreWithOut().getCurrentProjRoles.slice();
+        treeData.value = projRoles as any as TreeItem[];
+        // }
 
         await setFieldsValue({
           account: editUserInfo.value.account,

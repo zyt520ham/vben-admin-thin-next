@@ -1,6 +1,7 @@
 import {
   ILoginParams,
   ILoginServerData,
+  IPermissionDataItem,
   IReqUpdateUserInfo,
   IReqUpdateUserPsd,
   IReqUserPsdResetByAdmin,
@@ -26,6 +27,8 @@ enum Api {
   rgResetUserPsd = '/user/reset-password',
   //个人修改密码
   rgUpdateUserPsd = '/personal/modify-password',
+
+  rgGetPermissions = '/site/permission',
 }
 
 /**
@@ -77,3 +80,7 @@ export const updateUserProfileApi = (params: IReqUpdateUserInfo, options?: Reque
 //修改个人密码
 export const updateUserPsdApi = (params: IReqUpdateUserPsd, options?: RequestOptions) =>
   doBaseApiRequest<IUserInfo>(Api.rgUpdateUserPsd, params, options);
+
+//获取个人菜单权限列表
+export const getUserPermissionsListApi = (params: any = {}, options?: RequestOptions) =>
+  doBaseApiRequest<IPermissionDataItem>(Api.rgGetPermissions, params, options);

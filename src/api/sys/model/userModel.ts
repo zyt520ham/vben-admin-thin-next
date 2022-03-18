@@ -103,3 +103,12 @@ export interface IReqUpdateUserPsd {
   old_password: string;
   new_password: string;
 }
+export type permissionMenuType = {
+  id: string;
+  children: permissionMenuType[];
+};
+export interface IPermissionDataItem {
+  is_system_admin: true;
+  list: string[];
+  menu: permissionMenuType[];
+}

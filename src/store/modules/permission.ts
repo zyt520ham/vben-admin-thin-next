@@ -29,6 +29,8 @@ import { RouteRecordRaw } from 'vue-router';
 import { routesListChanged } from '/@/layouts/iframe/useFrameKeepAlive';
 import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
 import { error, log, logNoTrace } from '/@/utils/log';
+import { getUserPermissionsListApi } from '/@/api/sys/user';
+import { IPermissionDataItem, permissionMenuType } from '/@/api/sys/model/userModel';
 
 interface PermissionState {
   // Permission code list
@@ -41,6 +43,8 @@ interface PermissionState {
   backMenuList: Menu[];
   backMenuMap: { [key: string]: Menu };
   frontMenuList: Menu[];
+  // user 权限列表
+  permMenusList: string[];
 }
 export const usePermissionStore = defineStore({
   id: 'app-permission',
@@ -55,6 +59,7 @@ export const usePermissionStore = defineStore({
     backMenuMap: {},
     // menu List
     frontMenuList: [],
+    permMenusList: [],
   }),
   getters: {
     getPermCodeList(): string[] | number[] {
@@ -75,8 +80,14 @@ export const usePermissionStore = defineStore({
     getIsDynamicAddedRoute(): boolean {
       return this.isDynamicAddedRoute;
     },
+    getPermMenusList(): string[] {
+      return this.permMenusList;
+    },
   },
   actions: {
+    setPermMenusList(menuList: string[]) {
+      this.permMenusList = menuList;
+    },
     setPermCodeList(codeList: string[]) {
       this.permCodeList = codeList;
     },
@@ -288,14 +299,32 @@ export const usePermissionStore = defineStore({
       try {
         //TODO:: 还不知道此接口作用  看文档说是按钮权限相关
         // this.changePermissionCode();
+        const p1 = getMenuList();
+        const p2 = getUserPermissionsListApi();
+        try {
+          const values = await Promise.all([p1, p2]);
+          const menuDataList: IMenuListDataItem = values[0];
+          const permissionsList: IPermissionDataItem = values[1];
+          //设置权限列表
+          this.parsePermissionsMenus(permissionsList.menu);
+          //针对服务端菜单做菜单权限过滤
+          const tempList: any[] = [];
+          menuDataList.list.map((ele) => {
+            if (this.getPermMenusList.includes(ele.id)) {
+              tempList.push(ele);
+            }
+          });
+          menuDataList.list = tempList;
+          // const permissionsMenus: string[] = flattenFn(permissionsList.menu);
+          debugger;
+          // //TODO:: 添加多级测试路由
+          // menuDataList.list.push(...(testMenus as any));
 
-        const menuDataList: IMenuListDataItem = await getMenuList();
-
-        // //TODO:: 添加多级测试路由
-        // menuDataList.list.push(...(testMenus as any));
-
-        routeList = transformMenuDataToAppRouteRecord(menuDataList || { list: [] });
-        console.log('转换后的AppRouteRecord:', routeList);
+          routeList = transformMenuDataToAppRouteRecord(menuDataList || { list: [] });
+          console.log('转换后的AppRouteRecord:', routeList);
+        } catch (e) {
+          return [];
+        }
 
         return routeList;
       } catch (error) {
@@ -326,6 +355,22 @@ export const usePermissionStore = defineStore({
       } catch (e: any) {
         error(e.retMsg!);
       }
+    },
+
+    parsePermissionsMenus(menus: permissionMenuType[]) {
+      const pathList: string[] = [];
+      const parseChildren = (childrenItem: permissionMenuType) => {
+        pathList.push(childrenItem.id);
+        if (childrenItem.children?.length > 0) {
+          childrenItem.children.map((ele) => {
+            parseChildren(ele);
+          });
+        }
+      };
+      menus.map((ele) => {
+        parseChildren(ele);
+      });
+      this.setPermMenusList(pathList);
     },
   },
 });
