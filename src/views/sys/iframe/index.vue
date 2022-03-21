@@ -58,7 +58,13 @@
             },
           );
         } else {
+          console.log('当前url 无需转换token');
+          loading.value = true;
+          iframeUrlString.value = '';
           iframeUrlString.value = props.frameSrc;
+          setTimeout(() => {
+            loading.value = false;
+          }, 100);
         }
       }
     },
