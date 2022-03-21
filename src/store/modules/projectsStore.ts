@@ -116,9 +116,12 @@ export const useProjsStore = defineStore({
       // log('roleData:', roleData.list);
     },
     async reGetCurrentProjectRoles() {
-      const roleList = await this.getProjectRoles();
-      log('reGetCurrentProjectRoles', roleList);
-      return roleList;
+      if (useUserStoreWithOut().getToken) {
+        const roleList = await this.getProjectRoles();
+        log('reGetCurrentProjectRoles', roleList);
+        return roleList;
+      }
+      return [];
     },
     resetState(): void {
       this.projectsList = [];
