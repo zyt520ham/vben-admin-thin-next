@@ -214,13 +214,16 @@ export const useUserStore = defineStore({
      * @description: logout
      */
     async logout(goLogin = false) {
-      if (this.getToken) {
-        try {
-          await doLogout();
-        } catch {
-          console.log('注销Token失败');
-        }
-      }
+      // if (this.getToken) {
+      //   try {
+      //     await doLogout();
+      //   } catch {
+      //     console.log('注销Token失败');
+      //   }
+      // }
+      console.log('注销Token失败');
+      await doLogout();
+      this.lastUpdateTime = new Date().getTime();
       this.setToken(undefined);
       this.setLoginInfo(null);
       this.setSessionTimeout(false);

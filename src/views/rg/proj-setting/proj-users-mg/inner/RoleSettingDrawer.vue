@@ -45,6 +45,8 @@
   // import { useUserStoreWithOut } from '/@/store/modules/user';
   import { log } from '/@/utils/log';
   import { IReqErr } from '/#/axios';
+  import { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
+  import { useUserStoreWithOut } from '/@/store/modules/user';
 
   export default defineComponent({
     name: 'RoleSettingDrawer',
@@ -67,7 +69,25 @@
         // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
         // if (unref(treeData).length === 0) {
         const projRoles = useProjsStoreWithOut().getCurrentProjRoles.slice();
-        treeData.value = projRoles as any as TreeItem[];
+        const isRootRole = useUserStoreWithOut().getUserInfoV1?.project_roles.includes('root_role');
+        const isTopAdmin =
+          useUserStoreWithOut().getUserInfoV1?.project_roles.includes('topmanager');
+        const newProjRoles = projRoles.map((ele) => {
+          const treeItem: TreeDataItem = Object.assign({}, ele) as any;
+          if (isRootRole) {
+          } else if (isTopAdmin) {
+            if (treeItem.role === 'topmanager' || treeItem.role === 'root_role') {
+              treeItem.disabled = true;
+            }
+          } else {
+            if (treeItem.role === 'topmanager' || treeItem.role === 'root_role') {
+              treeItem.disabled = true;
+            }
+          }
+          return treeItem;
+        });
+
+        treeData.value = newProjRoles;
         // }
 
         await setFieldsValue({

@@ -170,19 +170,24 @@
             description: formItemData.description,
             order_num: formItemData.order_num,
           };
-          updateRoleInfoApi(roleInfoParams).then(
-            (resp) => {
-              log(resp);
-              message.success('角色数据修改成功');
-              basicFlag = true;
-              if (basicFlag && permissionsFlag) {
+          if (editRoleInfo.value.role !== 'root_role') {
+            updateRoleInfoApi(roleInfoParams).then(
+              (resp) => {
+                log(resp);
+                message.success('角色数据修改成功');
+                basicFlag = true;
+                if (basicFlag && permissionsFlag) {
+                  setDrawerProps({ confirmLoading: false, mask: false });
+                }
+              },
+              (err: IReqErr) => {
+                message.error(err.retMsg!);
                 setDrawerProps({ confirmLoading: false, mask: false });
-              }
-            },
-            (err: IReqErr) => {
-              message.error(err.retMsg!);
-            },
-          );
+              },
+            );
+          } else {
+            basicFlag = true;
+          }
 
           const allCheckedKeys: any[] = roleEdtiDrawerTree.value.getCheckedKeys();
           log('handleSubmitFn', allCheckedKeys);

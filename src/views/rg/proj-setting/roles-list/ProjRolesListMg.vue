@@ -110,6 +110,7 @@
   import { log } from '/@/utils/log';
   import { IReqErr } from '/#/axios';
   import { message } from 'ant-design-vue';
+  import { useUserStoreWithOut } from '/@/store/modules/user';
 
   export default defineComponent({
     name: 'ProjRolesListMg',
@@ -211,7 +212,7 @@
             icon: 'clarity:note-edit-line',
             tooltip: '编辑',
             disabled: currentEditKeyRef.value ? currentEditKeyRef.value !== record.key : false,
-            ifShow: record.role !== 'root_role',
+            ifShow: rowEditStateFn.bind(null, record),
             onClick: handleEdit.bind(null, record),
           },
           {
@@ -219,7 +220,7 @@
             icon: 'ant-design:delete-outlined',
             tooltip: '删除',
             color: 'error',
-            ifShow: record.role !== 'root_role',
+            ifShow: rowEditStateFn.bind(null, record),
             popConfirm: {
               title: `是否删除角色【${record.description}】`,
               confirm: handleDelete.bind(null, record),
@@ -251,6 +252,34 @@
           },
         );
       }
+
+      const rowEditStateFn = (record: EditRecordRow): boolean => {
+        // return true;
+        // //系统根角色用户
+        // const userInfo = useUserStoreWithOut().getUserInfoV1;
+        // debugger;
+
+        if (useUserStoreWithOut().getUserInfoV1?.project_roles.includes('root_role')) {
+          return true;
+        }
+        if (record.role === 'root_role') {
+          // if (useUserStoreWithOut().getUserInfoV1?.project_roles.includes('root_role')) {
+          //   return true;
+          // }
+          return false;
+        } else if (record.role === 'topmanager') {
+          // if (useUserStoreWithOut().getUserInfoV1?.project_roles.includes('topmanager')) {
+          //   return true;
+          // }
+          return false;
+        } else {
+          if (useUserStoreWithOut().getUserInfoV1?.project_roles.includes('topmanager')) {
+            return true;
+          }
+          return false;
+        }
+        // return false;
+      };
 
       const handleSuccessDrawerFn = () => {
         console.log('handleSuccessDrawer');
