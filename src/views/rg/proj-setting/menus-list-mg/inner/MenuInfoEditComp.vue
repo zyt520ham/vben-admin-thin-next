@@ -150,6 +150,7 @@
   import { Menu } from '/@/router/types';
   import { IMenuRawData } from '/@/api/sys/model/menuModel';
   import { compDescMap, compPathMap, compsList } from '/@/enums/CompPathEnum';
+  import { message } from 'ant-design-vue';
 
   export default defineComponent({
     name: 'MenuInfoEditComp',
@@ -201,7 +202,7 @@
       });
       //#endregion
       const treeSelectedItem: any = ref(null);
-      const menuFormItem: any = ref({});
+      const menuFormItem: any = ref<IMenuRawData>({} as any);
       const formUpdatePropItemFn = () => {
         if (!treeSelectedItem.value) {
           return;
@@ -286,7 +287,9 @@
           } else {
             //选择了节点
             menuRawData.menuType = 'rootpath';
-            menuRawData.path = '/' + nMenuItem.path;
+            menuRawData.path = nMenuItem.path.startsWith('/')
+              ? nMenuItem.path
+              : '/' + nMenuItem.path;
           }
         } else {
           if (nMenuItem.menuType === 'leaf') {
@@ -311,6 +314,7 @@
 
           menuRawData.externalLinkUrl = nMenuItem.iframeSrc;
           menuRawData.openLinkUseExternal = nMenuItem.openLinkUseExternal;
+
           menuRawData.useStatus = true;
           if (menuRawData.menuLevel == 0) {
             menuRawData.compsKey = 'layout';
@@ -321,8 +325,11 @@
           menuRawData.compsKey = nMenuItem.compsKey;
         }
         console.log('tranform menu', menuRawData);
-        usePermissionStoreWithOut().addMenuItem(menuRawData as any);
-        emit('editItemFinish', menuRawData);
+        try {
+          usePermissionStoreWithOut().addMenuItem(menuRawData as any);
+          message.success('添加菜单成功');
+          emit('editItemFinish', menuRawData);
+        } catch (e) {}
       };
       const doEditMenuItem = () => {
         log('doEditMenuItem', menuFormItem);
@@ -338,7 +345,10 @@
           } else {
             //选择了节点
             menuRawData.menuType = 'rootpath';
-            menuRawData.path = '/' + nMenuItem.path;
+
+            menuRawData.path = nMenuItem.path.startsWith('/')
+              ? nMenuItem.path
+              : '/' + nMenuItem.path;
           }
         } else {
           if (nMenuItem.menuType === 'leaf') {
@@ -366,6 +376,7 @@
 
           menuRawData.externalLinkUrl = nMenuItem.iframeSrc;
           menuRawData.openLinkUseExternal = nMenuItem.openLinkUseExternal;
+          debugger;
           menuRawData.useStatus = true;
           if (menuRawData.menuLevel == 0) {
             menuRawData.compsKey = 'layout';
@@ -377,7 +388,11 @@
           // menuRawData.compsKey = nMenuItem.compsKey;
         }
         console.log('tranform edit menu', menuRawData);
-        usePermissionStoreWithOut().updateMenuItem(menuRawData as any);
+        try {
+          usePermissionStoreWithOut().updateMenuItem(menuRawData as any);
+          message.success('修改成功');
+        } catch (e) {}
+
         // usePermissionStoreWithOut().addMenuItem(menuFormItem);
       };
       //#region public =================================

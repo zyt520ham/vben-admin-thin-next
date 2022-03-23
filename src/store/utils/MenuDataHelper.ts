@@ -267,7 +267,7 @@ export function compentPathReplace(item: IMenuRawData): string {
 
     /////////////////////////////
     case 'Home':
-      compPath = 'Test';
+      compPath = 'rg/home/Home.vue';
     default:
   }
   return compPath;

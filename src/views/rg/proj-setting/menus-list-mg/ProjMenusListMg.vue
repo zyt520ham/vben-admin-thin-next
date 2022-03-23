@@ -86,7 +86,7 @@
     },
     setup() {
       //#region MenuList =================================
-      const menusListTreeRef = ref<any>(null);
+      const menusListTreeRef = ref<InstanceType<typeof MenusListTree>>();
       const addRootNodeFn = () => {
         log('addRootNodeFn');
         menusListTreeRef.value!.menuTreeClearSelectedItem();
@@ -115,7 +115,7 @@
               usePermissionStoreWithOut()
                 .refreshLoadServerMenus()
                 .then(() => {
-                  menusListTreeRef.value.menuTreeToSelectedFirstItem();
+                  menusListTreeRef.value!.menuTreeToSelectedFirstItem();
                 });
             },
             (err: IReqErr) => {
@@ -146,7 +146,7 @@
       const getFormEditingState = ref<boolean>(false);
       const editFormMenuItem = ref<Menu & Record<any, any>>();
       const editCompEditFinishFn = (editItem: Menu) => {
-        menusListTreeRef.value.menuTreeToSelectedItemByKey(editItem.path);
+        menusListTreeRef.value!.menuTreeToSelectedItemByKey(editItem.path);
         getFormEditingState.value = false;
       };
       //#endregion ---------------------
