@@ -22,6 +22,7 @@
   import { getTokenExchangedUrlApi } from '/@/api/sys/urlTokenApi';
   import { IReqErr } from '/#/axios';
   import { useMultipleTabWithOutStore } from '/@/store/modules/multipleTab';
+  import { useUserStoreWithOut } from '/@/store/modules/user';
 
   const props = defineProps({
     frameSrc: propTypes.string.def(''),
@@ -45,10 +46,14 @@
     (nV: string[]) => {
       if (props.isShowing && !nV.includes(props.routeFullPath)) {
         console.log('routeCachePathList changed', nV, props.routeFullPath);
+        if (!useUserStoreWithOut().getToken) {
+          console.log('登录态失效');
+          return;
+        }
         iframeUrlString.value = '';
         loading.value = true;
         let patt = /###(\w+)###/;
-        debugger;
+
         if (patt.test(props.frameSrc)) {
           getTokenExchangedUrlApi({ url: props.frameSrc }).then(
             (resp) => {

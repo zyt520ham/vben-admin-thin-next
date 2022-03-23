@@ -70,6 +70,7 @@
   import { useUserStore } from '/@/store/modules/user';
   import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
+  import { isDevMode } from '/@/utils/env';
   //import { onKeyStroke } from '@vueuse/core';
 
   const ACol = Col;
@@ -87,11 +88,16 @@
   const formRef = ref();
   const loading = ref(false);
   const rememberMe = ref(false);
-
-  const formData = reactive({
-    account: 'biadmin9527',
-    password: 'rg1234567',
-  });
+  const formOri = {
+    account: '',
+    password: '',
+  };
+  if (isDevMode()) {
+    // formOri.account = 'biadmin9527';
+    formOri.account = 'ceshi';
+    formOri.password = 'rg1234567';
+  }
+  const formData = reactive(formOri);
 
   const { validForm } = useFormValid(formRef);
 

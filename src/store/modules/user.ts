@@ -94,6 +94,7 @@ export const useUserStore = defineStore({
     setLoginInfo(vLoginInfo: ILoginServerData | null) {
       if (!vLoginInfo) {
         setAuthCache(TOKEN_KEY, '');
+        this.setToken(undefined);
         this.loginInfo = null;
       } else {
         this.loginInfo = Object.assign({}, vLoginInfo);
@@ -166,7 +167,7 @@ export const useUserStore = defineStore({
       }
     },
     async afterLoginAction(goHome?: boolean): Promise<IUserInfo | null> {
-      if (!this.getToken) return null;
+      if (!this.getToken || !this.getLoginInfo) return null;
       // get user info
       const userInfo = await this.getUserInfoAction();
 
@@ -196,6 +197,7 @@ export const useUserStore = defineStore({
     },
     async getUserInfoAction(): Promise<IUserInfo | null> {
       if (!this.getToken) return null;
+
       const userInfo = await getUserInfo({ user_id: this.getLoginInfo!.user_id });
       this.setUserInfoV1(userInfo as any);
       // debugger;
@@ -214,24 +216,32 @@ export const useUserStore = defineStore({
      * @description: logout
      */
     async logout(goLogin = false) {
-      // if (this.getToken) {
-      //   try {
-      //     await doLogout();
-      //   } catch {
-      //     console.log('注销Token失败');
-      //   }
-      // }
-      console.log('注销Token失败');
-      await doLogout();
+      console.log('注销登录');
+      try {
+        await doLogout();
+      } catch {
+        console.log('注销Token失败');
+      }
+
       this.lastUpdateTime = new Date().getTime();
-      this.setToken(undefined);
       this.setLoginInfo(null);
       this.setSessionTimeout(false);
       this.setUserInfo(null);
       this.setUserInfoV1(null);
+      useMultipleTabWithOutStore().resetState();
       useProjsStoreWithOut().resetState();
       usePermissionStoreWithOut().resetState();
-      goLogin && router.push(PageEnum.BASE_LOGIN);
+      if (goLogin) {
+        try {
+          await router.push({
+            path: PageEnum.BASE_LOGIN,
+          });
+          // useProjsStoreWithOut().resetState();
+          // usePermissionStoreWithOut().resetState();
+        } catch (e) {
+          window.location.reload();
+        }
+      }
     },
 
     /**
@@ -244,8 +254,8 @@ export const useUserStore = defineStore({
         iconType: 'warning',
         title: () => h('span', t('sys.app.logoutTip')),
         content: () => h('span', t('sys.app.logoutMessage')),
-        onOk: async () => {
-          await this.logout(true);
+        onOk: () => {
+          this.logout(true);
         },
       });
     },
