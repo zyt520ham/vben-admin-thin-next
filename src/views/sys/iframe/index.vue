@@ -47,7 +47,8 @@
         console.log('routeCachePathList changed', nV, props.routeFullPath);
         iframeUrlString.value = '';
         loading.value = true;
-        let patt = /###\w+###$/;
+        let patt = /###(\w+)###/;
+        debugger;
         if (patt.test(props.frameSrc)) {
           getTokenExchangedUrlApi({ url: props.frameSrc }).then(
             (resp) => {
@@ -72,7 +73,8 @@
   onMounted(() => {
     log('iframe index mounted');
 
-    let patt = /###\w+###$/;
+    let patt = /###(\w+)###/;
+
     if (patt.test(props.frameSrc)) {
       getTokenExchangedUrlApi({ url: props.frameSrc }).then(
         (resp) => {

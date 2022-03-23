@@ -234,12 +234,14 @@
           menuFormItem.value.iframeSrc = treeSelectedItem.value?.meta?.frameSrc;
           menuFormItem.value.openLinkUseExternal = treeSelectedItem.value.meta.openLinkUseExternal;
           menuFormItem.value.compsKey = '';
-          let patt = /###\w+###$/;
+          let patt = /###(\w+)###/;
           if (patt.test(menuFormItem.value.iframeSrc)) {
             if (menuFormItem.value.iframeSrc.indexOf('###QuickBiToken###') >= 0) {
               menuFormItem.value.iframeTokenType = 'QuickBiToken';
             } else if (menuFormItem.value.iframeSrc.indexOf('###PRestWebApiToken###') >= 0) {
               menuFormItem.value.iframeTokenType = 'PRestWebApiToken';
+            } else if (menuFormItem.value.iframeSrc.indexOf('###tableauToken###') >= 0) {
+              menuFormItem.value.iframeTokenType = 'TableauToken';
             } else {
             }
           }
