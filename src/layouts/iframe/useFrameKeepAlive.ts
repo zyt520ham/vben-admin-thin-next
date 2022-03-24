@@ -74,6 +74,10 @@ export function useFrameKeepAlive() {
   return { hasRenderFrame, getFramePages, showIframe, getAllFramePages, reloadIFrameRoutes };
 }
 export function routesListChanged() {
+  iframeRoutesReset();
   const { reloadIFrameRoutes } = useFrameKeepAlive();
   reloadIFrameRoutes();
+}
+export function iframeRoutesReset() {
+  iframeRoutes.length = 0;
 }

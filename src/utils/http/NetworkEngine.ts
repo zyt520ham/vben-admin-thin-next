@@ -53,12 +53,13 @@ function apiReqHelper() {
         }
       }
     });
+
+    logNoTrace('params-ori:', JSON.stringify(params));
+    logNoTrace('signString', queryString);
     queryString = queryString + `&key=${ConstDefs.ServerApi.stringSignKey}`;
-    console.log('params-ori:', JSON.stringify(params));
-    console.log('signString', queryString);
     let md5String = md5(queryString);
     md5String = md5String.toLowerCase();
-    console.log('md5string', md5String);
+    logNoTrace('md5string', md5String);
     params.sign = md5String;
     return params;
   }
@@ -118,12 +119,18 @@ export function doBaseApiRequest<T>(
           }
         },
         (error: AxiosError) => {
-          if (error.response?.status === 401) {
-            const { t } = useI18n();
-            createErrorModal({ title: t('sys.api.errorTip'), content: error.response.data.retMsg });
-            reject(error);
-            return;
+          if (options?.errorMessageMode !== 'none') {
+            if (error.response?.status === 401) {
+              const { t } = useI18n();
+              createErrorModal({
+                title: t('sys.api.errorTip'),
+                content: error.response.data.retMsg,
+              });
+              reject(error);
+              return;
+            }
           }
+
           // debugger;
           const errData = error.response?.data;
           if (errData) {

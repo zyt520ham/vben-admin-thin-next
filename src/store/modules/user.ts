@@ -24,6 +24,8 @@ import { updateCurrentChooseProjApi } from '/@/api/sys/projectApi';
 import { useMultipleTabWithOutStore } from '/@/store/modules/multipleTab';
 import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
 import { log } from '/@/utils/log';
+import { iframeRoutesReset, routesListChanged } from '/@/layouts/iframe/useFrameKeepAlive';
+import { usePermission } from '/@/hooks/web/usePermission';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
@@ -186,6 +188,7 @@ export const useUserStore = defineStore({
             });
             router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
             permissionStore.setDynamicAddedRoute(true);
+            iframeRoutesReset();
           } catch (e) {
             debugger;
           }
@@ -230,6 +233,7 @@ export const useUserStore = defineStore({
       useMultipleTabWithOutStore().resetState();
       useProjsStoreWithOut().resetState();
       usePermissionStoreWithOut().resetState();
+      iframeRoutesReset();
       if (goLogin) {
         try {
           await router.push({
@@ -237,6 +241,8 @@ export const useUserStore = defineStore({
           });
           this.setUserInfo(null);
           this.setUserInfoV1(null);
+          //
+
           // useProjsStoreWithOut().resetState();
           // usePermissionStoreWithOut().resetState();
         } catch (e) {
@@ -262,13 +268,20 @@ export const useUserStore = defineStore({
     },
     //切换项目
     async doChangeProject(changedProj: string) {
-      const tempLoginInfo = Object.assign({}, this.getLoginInfo);
-      tempLoginInfo.project = changedProj;
-      this.setLoginInfo(tempLoginInfo);
-      usePermissionStoreWithOut().resetState();
-      useMultipleTabWithOutStore().resetState();
-      await updateCurrentChooseProjApi();
-      return this.afterLoginAction();
+      return new Promise<void>(async (resolve) => {
+        const tempLoginInfo = Object.assign({}, this.getLoginInfo);
+        tempLoginInfo.project = changedProj;
+        this.setLoginInfo(tempLoginInfo);
+        await usePermission().refreshMenu();
+
+        // usePermissionStoreWithOut().resetState();
+        // useMultipleTabWithOutStore().resetState();
+        routesListChanged();
+        await updateCurrentChooseProjApi();
+
+        // await this.afterLoginAction();
+        resolve();
+      });
     },
 
     async modifyUserInfo(changedUserInfo: IReqUpdateUserInfo) {
