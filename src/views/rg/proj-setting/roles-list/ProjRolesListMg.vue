@@ -107,7 +107,7 @@
   import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
   import { IReqDelRole } from '/@/api/sys/model/roleModel';
   import { delRoleInfoApi } from '/@/api/sys/roleApi';
-  import { log } from '/@/utils/log';
+  import { log, logNoTrace } from '/@/utils/log';
   import { IReqErr } from '/#/axios';
   import { message } from 'ant-design-vue';
   import { useUserStoreWithOut } from '/@/store/modules/user';
@@ -154,8 +154,6 @@
         formData.value = getFieldsValue();
       };
 
-      const tableDatas = ref([]);
-      let isSorting = false;
       const actionColumn: BasicColumn = {
         width: '120px',
         title: '操作',
@@ -166,7 +164,7 @@
       const currentEditKeyRef = ref('');
       const tableSortFn = (sortInfo: SorterResult) => {
         console.log('tableSortFn', sortInfo);
-        isSorting = true;
+
         const list = projRolesMgTableComp.value.getDataSource();
         list.sort((a, b) => {
           if (sortInfo.order === 'ascend') {
@@ -176,25 +174,21 @@
             return b[sortInfo.field] - a[sortInfo.field];
           }
         });
-        tableDatas.value = list;
+        projRolesMgTableComp.value.setTableData(list);
       };
 
       const loadRolesDataFromServerFn = (...params) => {
         console.log('loadRolesDataFromServerFn', ...params);
         return new Promise(async (resolve) => {
-          if (isSorting) {
-            isSorting = false;
-            resolve(tableDatas.value);
-            return;
+          let list: any[] = useProjsStoreWithOut().getCurrentProjRoles;
+
+          if (!list || list.length === 0) {
+            list = (await useProjsStoreWithOut().reGetCurrentProjectRoles()) as any;
+            logNoTrace('loadRolesDataFromServerFn', list);
           } else {
-            // debugger;
-            let list: any[] = useProjsStoreWithOut().getCurrentProjRoles;
-            if (!list || list.length === 0) {
-              list = (await useProjsStoreWithOut().reGetCurrentProjectRoles()) as any;
-              log('loadRolesDataFromServerFn', list);
-            }
-            resolve(list);
+            logNoTrace('loadRolesDataFromServerFn 有缓存', list);
           }
+          resolve(list);
         });
       };
       // <a-icon type="edit" />
