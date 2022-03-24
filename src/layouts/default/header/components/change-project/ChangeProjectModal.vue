@@ -47,7 +47,7 @@
         return '';
       });
       const getProjsListComputed = computed(() => {
-        return useProjsStoreWithOut().getAllProjs.slice();
+        return useProjsStoreWithOut().getMyProjects.slice();
       });
       const radioStyle = reactive({
         display: 'block',
