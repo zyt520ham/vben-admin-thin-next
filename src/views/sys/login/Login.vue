@@ -24,7 +24,9 @@
             <div class="mt-10 font-medium text-white -enter-x">
               <span class="inline-block mt-4 text-3xl"> {{ t('sys.login.signInTitle') }}</span>
             </div>
-            <div class="mt-5 font-normal text-white text-md dark:text-gray-500 -enter-x">
+            <div
+              class="mt-5 break-normal font-normal text-white text-md dark:text-gray-500 -enter-x"
+            >
               {{ t('sys.login.signInDesc') }}
             </div>
           </div>
@@ -47,8 +49,9 @@
 </template>
 <script lang="ts" setup>
   import { computed } from 'vue';
-  import { AppLogo } from '/@/components/Application';
-  import { AppLocalePicker, AppDarkModeToggle } from '/@/components/Application';
+  // @ts-ignore
+  import { AppLocalePicker, AppLogo, AppDarkModeToggle } from '/@/components/Application';
+
   import LoginForm from './LoginForm.vue';
   import ForgetPasswordForm from './ForgetPasswordForm.vue';
   import RegisterForm from './RegisterForm.vue';
@@ -83,7 +86,8 @@
       background-color: @dark-bg;
 
       &::before {
-        background-image: url(/@/assets/svg/login-bg-dark.svg);
+        // @ts-ignore
+        background-image: url('/@/assets/svg/login-bg-dark.svg');
       }
 
       .ant-input,
@@ -129,7 +133,6 @@
       width: 100%;
       height: 100%;
       margin-left: -48%;
-      background-image: url(/@/assets/svg/login-bg.svg);
       background-position: 100%;
       background-repeat: no-repeat;
       background-size: auto 100%;
@@ -137,6 +140,11 @@
       @media (max-width: @screen-xl) {
         display: none;
       }
+    }
+
+    &::before {
+      // @ts-ignore
+      background-image: url('/@/assets/svg/login-bg.svg');
     }
 
     .@{logo-prefix-cls} {

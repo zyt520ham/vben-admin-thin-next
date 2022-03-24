@@ -65,8 +65,9 @@ export default {
     signUpFormTitle: '注册',
     forgetFormTitle: '重置密码',
 
-    signInTitle: '逐步完善中的BI中台管理系统',
-    signInDesc: '不断完善中，感谢同学们的支持！',
+    signInTitle: 'BI中台管理系统',
+    signInDesc: '有需求或者使用问题，请直接call BI的小伙伴！ ',
+
     policy: '我同意xxx隐私政策',
     scanSign: `扫码后点击"确认"，即可完成登录`,
 
