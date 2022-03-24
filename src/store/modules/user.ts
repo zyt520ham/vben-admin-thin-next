@@ -226,8 +226,7 @@ export const useUserStore = defineStore({
       this.lastUpdateTime = new Date().getTime();
       this.setLoginInfo(null);
       this.setSessionTimeout(false);
-      this.setUserInfo(null);
-      this.setUserInfoV1(null);
+
       useMultipleTabWithOutStore().resetState();
       useProjsStoreWithOut().resetState();
       usePermissionStoreWithOut().resetState();
@@ -236,6 +235,8 @@ export const useUserStore = defineStore({
           await router.push({
             path: PageEnum.BASE_LOGIN,
           });
+          this.setUserInfo(null);
+          this.setUserInfoV1(null);
           // useProjsStoreWithOut().resetState();
           // usePermissionStoreWithOut().resetState();
         } catch (e) {
