@@ -50,6 +50,7 @@ export interface Menu extends IMenuRawData {
 
   hideMenu?: boolean;
 }
+export type MenuType = Menu;
 
 export interface MenuModule {
   orderNo?: number;

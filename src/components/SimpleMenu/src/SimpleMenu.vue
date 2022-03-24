@@ -33,6 +33,7 @@
   import { openWindow } from '/@/utils';
 
   import { useOpenKeys } from './useOpenKeys';
+
   export default defineComponent({
     name: 'SimpleMenu',
     components: {
@@ -127,11 +128,17 @@
         setOpenKeys(path);
       }
 
-      async function handleSelect(key: string) {
-        if (isUrl(key)) {
-          openWindow(key);
-          return;
+      async function handleSelect(key: string, menu: MenuType) {
+        if (menu && menu.meta?.isLink) {
+          if (isUrl(menu.meta?.frameSrc || '')) {
+            openWindow(menu.meta!.frameSrc!);
+            return;
+          }
         }
+        // if (isUrl(key)) {
+        //   openWindow(key);
+        // return;
+        // }
         const { beforeClickFn } = props;
         if (beforeClickFn && isFunction(beforeClickFn)) {
           const flag = await beforeClickFn(key);
