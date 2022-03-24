@@ -26,7 +26,7 @@
       </template>
       <template #slotMenu>
         <BasicTree
-          ref="roleEdtiDrawerTree"
+          ref="roleEditDrawerTree"
           :treeData="treeData"
           :replaceFields="{ title: 'name', key: 'path' }"
           checkable
@@ -93,11 +93,12 @@
             role: data.record.role,
           };
           treeData.value = usePermissionStoreWithOut().getBackMenuList.slice() as any;
+          debugger;
           if (data.isUpdateRole) {
             const permissionsRoleMap: any = await getPermissionsByRoleApi(params);
             log('获取到的权限列表', permissionsRoleMap);
 
-            roleEdtiDrawerTree.value.setCheckedKeys(permissionsRoleMap[data.record.role]);
+            roleEditDrawerTree.value.setCheckedKeys(permissionsRoleMap[data.record.role]);
           }
         },
       );
@@ -137,7 +138,7 @@
 
           log(result);
           if (result) {
-            const allCheckedKeys: any[] = roleEdtiDrawerTree.value.getCheckedKeys();
+            const allCheckedKeys: any[] = roleEditDrawerTree.value!.getCheckedKeys();
             if (allCheckedKeys.length > 0) {
               const params1: IReqUpdateRolePermissions = {
                 role: result.role,
@@ -189,7 +190,7 @@
             basicFlag = true;
           }
 
-          const allCheckedKeys: any[] = roleEdtiDrawerTree.value.getCheckedKeys();
+          const allCheckedKeys: any[] = roleEditDrawerTree.value.getCheckedKeys();
           log('handleSubmitFn', allCheckedKeys);
           const params: IReqUpdateRolePermissions = {
             role: editRoleInfo.value.role,
@@ -219,7 +220,7 @@
         //   closeDrawer();
         // }, 3000);
       };
-      const roleEdtiDrawerTree = ref<any>(null);
+      const roleEditDrawerTree = ref<any>();
       const treeCheckEventFn = (...args) => {
         log('treeCheckEventFn', args);
       };
@@ -232,7 +233,7 @@
         treeData,
         checkedList,
         treeCheckEventFn,
-        roleEdtiDrawerTree,
+        roleEditDrawerTree,
       };
     },
   });
