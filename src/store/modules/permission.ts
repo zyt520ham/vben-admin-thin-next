@@ -233,7 +233,6 @@ export const usePermissionStore = defineStore({
             // //添加多级测试路由
             // menuDataList.list.push(...(testMenus as any));
             routeList = (await this.loadServerMenusData()) || []; //transformMenuDataToAppRouteRecord(menuDataList || { list: [] });
-            console.log('转换后的AppRouteRecord:', routeList);
           } catch (error) {
             console.error(error);
           }
@@ -293,7 +292,7 @@ export const usePermissionStore = defineStore({
         resolve();
       });
     },
-    //从服务器拉去menulist
+    //从服务器拉去menuList
     async loadServerMenusData() {
       let routeList: AppRouteRecordRaw[] = [];
       try {
