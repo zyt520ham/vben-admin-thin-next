@@ -7,7 +7,38 @@
       <template #tableTitle>
         <span class="flex space-x-3">
           <span class="font-bold">已上传花费列表</span>
-          <a-button size="small">上传新花费</a-button>
+          <TableAction
+            :divider="false"
+            :actions="[
+              {
+                tooltip: {
+                  title: '上传新花费',
+                  placement: 'top',
+                },
+                type: 'primary',
+                size: 'small',
+                shape: 'circle',
+                icon: 'tabler:book-upload',
+                onClick: tableToolsAddUpload.bind(null),
+              },
+            ]"
+          />
+          <TableAction
+            :divider="false"
+            :actions="[
+              {
+                tooltip: {
+                  title: '配置微信账户',
+                  placement: 'top',
+                },
+                type: 'primary',
+                size: 'small',
+                shape: 'circle',
+                icon: 'carbon:task-settings',
+                onClick: tableToolsSettingWxAccount.bind(null),
+              },
+            ]"
+          />
         </span>
       </template>
       <template #toolbar>
@@ -24,6 +55,7 @@
         </a-space>
       </template>
     </BasicTable>
+    <WxUploadDrawerComp @register="registerDrawerFn" />
   </PageWrapper>
 </template>
 
@@ -35,9 +67,10 @@
 <script lang="ts" setup>
   import { PageWrapper } from '/@/components/Page';
   import { BasicForm, useForm } from '/@/components/Form';
-  import { BasicTable, SorterResult, useTable } from '/@/components/Table';
+  import { BasicTable, SorterResult, TableAction, useTable } from '/@/components/Table';
   import { useDesign } from '/@/hooks/web/useDesign';
   import GzShowSearchFormBtn from '/@/components/GzShowSearchFormBtn';
+  import WxUploadDrawerComp from './inner/WxUploadDrawerComp.vue';
   import { ref } from 'vue';
   import {
     getformSchemas,
@@ -50,6 +83,7 @@
   import { arrSortFn } from '/@/utils/arrayUtils';
   import { formatToDate } from '/@/utils/dateUtil';
   import moment from 'moment';
+  import { useDrawer } from '/@/components/Drawer';
 
   const { prefixCls } = useDesign('upload-cost-wx');
 
@@ -175,6 +209,14 @@
     const name = wxAccountNameMaps[accountId] || '';
     return `${name}[${accountId}]`;
   };
+  const tableToolsAddUpload = () => {
+    openDrawer();
+  };
+  const tableToolsSettingWxAccount = () => {};
+  //#endregion ---------------------------------------------
+
+  //#region drawer ========================================
+  const [registerDrawerFn, { openDrawer }] = useDrawer();
   //#endregion ---------------------------------------------
 </script>
 

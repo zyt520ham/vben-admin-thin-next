@@ -529,3 +529,30 @@ export const wxAccountNameMaps = {
   '23054122': '口袋奇兵TOPWAR',
   '19161124': '精品游戏榜',
 };
+
+export const wxUploadFormSchemas = (): FormSchema[] => {
+  return [
+    {
+      field: 'file_type',
+      component: 'RadioGroup',
+      componentProps: {
+        options: ['csv'],
+      },
+      label: '上传文件类型',
+      // slot: 'slotField1',
+    },
+
+    {
+      field: 'wx_account',
+      component: 'Input',
+      label: '角色',
+      // slot: 'slotField3',
+    },
+    {
+      field: 'choose_file',
+      component: 'Upload',
+      label: '选择文件',
+      slot: 'slotChooseFile',
+    },
+  ];
+};
