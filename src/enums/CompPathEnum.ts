@@ -8,6 +8,9 @@ export enum compNameEnum {
   kSysUserProjsView = 'SysUserProjsView',
   kSysProjsListMgView = 'SysProjsListMg',
   kSysUsersListMgView = 'SysUsersListMg',
+
+  kUploadWxCost = 'WxCostUpload',
+  kUploadLineCost = 'LineCostUpload',
 }
 export const compsList = [
   compNameEnum.kProjDetailView,
@@ -19,6 +22,8 @@ export const compsList = [
   compNameEnum.kSysUserProjsView,
   compNameEnum.kSysProjsListMgView,
   compNameEnum.kSysUsersListMgView,
+  compNameEnum.kUploadWxCost,
+  compNameEnum.kUploadLineCost,
 ];
 export const compPathMap = {
   [compNameEnum.kProjDetailView]: 'rg/proj-setting/ProjDetailView.vue',
@@ -30,6 +35,8 @@ export const compPathMap = {
   [compNameEnum.kSysUserProjsView]: 'rg/sys-mine/user-projects/SysUserProjsView.vue',
   [compNameEnum.kSysProjsListMgView]: 'rg/sys-settings/projs-list/SysProjsListMg.vue',
   [compNameEnum.kSysUsersListMgView]: 'rg/sys-settings/account-list/SysUsersListMg.vue',
+  [compNameEnum.kUploadWxCost]: 'rg/cost-upload/wx-cost-upload/WxCostUpload.vue',
+  [compNameEnum.kUploadLineCost]: 'rg/cost-upload/line-cost-upload/LineCostUpload.vue',
 };
 
 export const compDescMap = {
@@ -42,4 +49,6 @@ export const compDescMap = {
   [compNameEnum.kSysUserProjsView]: '个人项目页面',
   [compNameEnum.kSysProjsListMgView]: '系统项目列表管理页面',
   [compNameEnum.kSysUsersListMgView]: '系统人员管理页面',
+  [compNameEnum.kUploadWxCost]: '微信花费上传页面',
+  [compNameEnum.kUploadLineCost]: 'Line花费上传页面',
 };

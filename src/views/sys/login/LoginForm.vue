@@ -93,8 +93,8 @@
     password: '',
   };
   if (isDevMode()) {
-    // formOri.account = 'biadmin9527';
-    formOri.account = 'ceshi';
+    formOri.account = 'biadmin9527';
+    // formOri.account = 'ceshi';
     formOri.password = 'rg1234567';
   }
   const formData = reactive(formOri);
