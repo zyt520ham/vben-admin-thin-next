@@ -488,8 +488,11 @@ export const testUploadWxAccountListData = {
 export const getformSchemas = (): FormSchema[] => {
   return [
     {
-      field: 'uploadDate',
+      field: wxCostTableColumnsEnum.kUploadDate,
       component: 'DatePicker',
+      componentProps: {
+        format: 'YYYY-MM-DD',
+      },
       label: '上传日期',
       // slot: 'slotField1',
       colProps: {

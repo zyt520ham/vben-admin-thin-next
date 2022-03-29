@@ -48,6 +48,8 @@
   } from './inner/wxcost.data';
   import { log } from '/@/utils/log';
   import { arrSortFn } from '/@/utils/arrayUtils';
+  import { formatToDate } from '/@/utils/dateUtil';
+  import moment from 'moment';
 
   const { prefixCls } = useDesign('upload-cost-wx');
 
@@ -55,9 +57,62 @@
   const showSearchFormState = ref<boolean>(true);
   const useSearchBtnEventFn = (isShow: boolean) => {
     showSearchFormState.value = isShow;
+    tableMethods.redoHeight();
   };
   const formData = ref();
-  const [formRegister] = useForm({
+  const resetFormEventFn = () =>
+    new Promise<void>((resolve) => {
+      let rowDataList = tableMethods.getRawDataSource();
+
+      tableMethods.setTableData(rowDataList.slice());
+      resolve();
+    });
+  const searchFormEventFn = () => {
+    return new Promise<void>((resolve) => {
+      const formData = formMethods.getFieldsValue();
+      const dateString = formData[wxCostTableColumnsEnum.kUploadDate];
+      const dateForDay = formatToDate(moment(dateString, 'YYYY-MM-DD hh:mm:ss'), 'YYYYMMDD');
+      // debugger;
+      console.log('searchFormEventFn', formData);
+      const searchItem: any = {};
+      // for (const formDataKey in formData) {
+      //   if (formData[formDataKey]) {
+      //     searchItem[formDataKey] = formData[formDataKey];
+      //   }
+      // }
+      searchItem[wxCostTableColumnsEnum.kUploadDate] = dateForDay;
+      const allSearchKeys = Object.keys(searchItem);
+
+      let rowDataList = tableMethods.getRawDataSource();
+
+      const filterList = rowDataList.filter((ele) => {
+        let oldSearchResult: Nullable<boolean> = null;
+        let index = 0;
+        while (index < allSearchKeys.length) {
+          const key = allSearchKeys[index];
+          if (index === 0) {
+            if (ele[key].indexOf(searchItem[key]) >= 0) {
+              oldSearchResult = true;
+            } else {
+              oldSearchResult = false;
+            }
+          } else {
+            if (ele[key].indexOf(searchItem[key]) >= 0) {
+              oldSearchResult = oldSearchResult && true;
+            } else {
+              oldSearchResult = oldSearchResult && false;
+            }
+          }
+          index++;
+        }
+
+        return oldSearchResult;
+      });
+      tableMethods.setTableData(filterList);
+      resolve();
+    });
+  };
+  const [formRegister, formMethods] = useForm({
     labelWidth: '120px',
     size: 'small',
     showAdvancedButton: true,
@@ -65,6 +120,17 @@
     actionColOptions: {
       span: 24,
     },
+    advancedBtnEventFunc: () => {
+      tableMethods.redoHeight();
+    },
+    resetButtonOptions: {
+      size: 'small',
+    },
+    submitButtonOptions: {
+      size: 'small',
+    },
+    resetFunc: resetFormEventFn,
+    submitFunc: searchFormEventFn,
   });
   //#endregion
 
