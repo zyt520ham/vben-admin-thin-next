@@ -534,22 +534,42 @@ export const wxUploadFormSchemas = (): FormSchema[] => {
   return [
     {
       field: 'file_type',
+      required: true,
       component: 'RadioGroup',
       componentProps: {
-        options: ['csv'],
+        options: [
+          {
+            value: 'csv',
+            label: 'CSV格式文件',
+          },
+        ],
       },
       label: '上传文件类型',
-      // slot: 'slotField1',
+      // slot: 'slotFileType',
     },
 
     {
       field: 'wx_account',
-      component: 'Input',
-      label: '角色',
+      required: true,
+      component: 'Select',
+      label: 'wx账号',
+      componentProps: {
+        options: [
+          {
+            value: '19160499',
+            label: '口袋奇兵小游戏[19160499]',
+          },
+          {
+            value: '19247225',
+            label: '口袋奇兵公众号[19247225]',
+          },
+        ],
+      },
       // slot: 'slotField3',
     },
     {
       field: 'choose_file',
+      required: true,
       component: 'Upload',
       label: '选择文件',
       slot: 'slotChooseFile',

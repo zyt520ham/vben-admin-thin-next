@@ -57,7 +57,17 @@
     file: string | Blob;
   }
 
+  //#region form ========================================
+  const [registerForm, formMethods] = useForm({
+    labelWidth: 90,
+    schemas: wxUploadFormSchemas(),
+    showActionButtonGroup: false,
+  });
+  //#endregion ---------------------------------------------
+
+  //#region drawer =================================
   const [registerDrawer, drawInnerMethods] = useDrawerInner(async (propData) => {
+    console.log('useDrawerInner', formMethods);
     drawInnerMethods.setDrawerProps({ confirmLoading: false });
     await formMethods.resetFields();
     await formMethods.setFieldsValue({
@@ -66,12 +76,6 @@
   });
   const handleSubmitFn = () => {};
 
-  //#region form ========================================
-  const [registerForm, formMethods] = useForm({
-    labelWidth: 90,
-    schemas: wxUploadFormSchemas(),
-    showActionButtonGroup: false,
-  });
   //#endregion ---------------------------------------------
 
   //#region upload ========================================

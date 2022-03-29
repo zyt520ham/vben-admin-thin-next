@@ -210,7 +210,7 @@
     return `${name}[${accountId}]`;
   };
   const tableToolsAddUpload = () => {
-    openDrawer();
+    openDrawer(true, {});
   };
   const tableToolsSettingWxAccount = () => {};
   //#endregion ---------------------------------------------
