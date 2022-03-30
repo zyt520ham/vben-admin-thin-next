@@ -1,5 +1,7 @@
 import { FormSchema } from '/@/components/Form';
 import { BasicColumn } from '/@/components/Table';
+import { formatToDate } from '/@/utils/dateUtil';
+import moment from 'moment';
 
 export const testUploadWxAccountListData = {
   '20201014': ['9543031', '9996321'],
@@ -507,11 +509,14 @@ export enum wxCostTableColumnsEnum {
 }
 export const getWxCostColumnsCfg: BasicColumn[] = [
   {
-    title: '项目id',
+    title: '上传日期',
     dataIndex: wxCostTableColumnsEnum.kUploadDate,
     width: '150px',
     slots: { customRender: 'colProjectsId' },
     sorter: true,
+    format: (text: string) => {
+      return formatToDate(moment(text, 'YYYYMMDD'));
+    },
   },
   {
     title: '已上传的WX账户id',
@@ -529,7 +534,18 @@ export const wxAccountNameMaps = {
   '23054122': '口袋奇兵TOPWAR',
   '19161124': '精品游戏榜',
 };
+const getAccountListOptions = () => {
+  const resultList: { label: string; value: string }[] = [];
+  const keyList = Object.keys(wxAccountNameMaps);
+  keyList.map((key) => {
+    resultList.push({
+      value: key,
+      label: `${wxAccountNameMaps[key]}[${key}]`,
+    });
+  });
 
+  return resultList;
+};
 export const wxUploadFormSchemas = (): FormSchema[] => {
   return [
     {
@@ -547,23 +563,22 @@ export const wxUploadFormSchemas = (): FormSchema[] => {
       label: '上传文件类型',
       // slot: 'slotFileType',
     },
-
+    {
+      field: 'update_date',
+      required: true,
+      component: 'DatePicker',
+      label: '上传日期',
+      componentProps: {
+        format: 'YYYY-MM-DD',
+      },
+    },
     {
       field: 'wx_account',
       required: true,
       component: 'Select',
       label: 'wx账号',
       componentProps: {
-        options: [
-          {
-            value: '19160499',
-            label: '口袋奇兵小游戏[19160499]',
-          },
-          {
-            value: '19247225',
-            label: '口袋奇兵公众号[19247225]',
-          },
-        ],
+        options: getAccountListOptions(),
       },
       // slot: 'slotField3',
     },

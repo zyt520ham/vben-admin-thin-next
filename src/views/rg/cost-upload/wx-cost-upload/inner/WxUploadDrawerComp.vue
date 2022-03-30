@@ -7,6 +7,7 @@
 <template>
   <BasicDrawer
     :destroyOnClose="true"
+    :maskClosable="false"
     v-bind="$attrs"
     @register="registerDrawer"
     showFooter
@@ -148,7 +149,6 @@
   };
   //根据form data 返回选择文件的类型
   const getChooseFileTypeFn = (value: any) => {
-    console.log(value);
     if (value['file_type'] === 'csv') {
       return '.csv';
     }
