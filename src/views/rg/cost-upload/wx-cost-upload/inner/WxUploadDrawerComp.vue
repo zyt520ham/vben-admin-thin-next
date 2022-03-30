@@ -6,7 +6,7 @@
 -->
 <template>
   <BasicDrawer
-    destroyOnClose
+    :destroyOnClose="true"
     v-bind="$attrs"
     @register="registerDrawer"
     showFooter
@@ -61,11 +61,11 @@
   }
   //#region emit ========================================
   // 基于类型
-
+  //
   const emit = defineEmits<{
+    (e: 'register', value: any): any;
     (e: 'update_cost_table_list', value: any): void;
   }>();
-
   //#endregion ---------------------------------------------
   //#region form ========================================
   const [registerForm, formMethods] = useForm({
@@ -95,7 +95,7 @@
         console.log('success');
         //  TODO:: 文件上传逻辑
         emit('update_cost_table_list', [1, 2, 3]);
-        drawInnerMethods.closeDrawer();
+        // drawInnerMethods.closeDrawer();
       })
       .catch((e) => {
         if (e.errorFields?.length > 0) {

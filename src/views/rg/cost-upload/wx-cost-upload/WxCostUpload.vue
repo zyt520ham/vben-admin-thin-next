@@ -213,15 +213,16 @@
     return `${name}[${accountId}]`;
   };
   const tableToolsAddUpload = () => {
-    openDrawer(true, {});
+    drawerMethods.openDrawer(true, {});
   };
   const tableToolsSettingWxAccount = () => {};
   //#endregion ---------------------------------------------
 
   //#region drawer ========================================
-  const [registerDrawerFn, { openDrawer }] = useDrawer();
+  const [registerDrawerFn, drawerMethods] = useDrawer();
   const updateCostTableListFn = (list: any) => {
     console.log('upateCostTableListFn', list);
+    drawerMethods.closeDrawer();
   };
   //#endregion ---------------------------------------------
 </script>
