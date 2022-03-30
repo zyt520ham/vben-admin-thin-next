@@ -55,7 +55,10 @@
         </a-space>
       </template>
     </BasicTable>
-    <WxUploadDrawerComp @register="registerDrawerFn" />
+    <WxUploadDrawerComp
+      @register="registerDrawerFn"
+      @update_cost_table_list="updateCostTableListFn"
+    />
   </PageWrapper>
 </template>
 
@@ -88,7 +91,7 @@
   const { prefixCls } = useDesign('upload-cost-wx');
 
   //#region search form =================================
-  const showSearchFormState = ref<boolean>(true);
+  const showSearchFormState = ref<boolean>(false);
   const useSearchBtnEventFn = (isShow: boolean) => {
     showSearchFormState.value = isShow;
     tableMethods.redoHeight();
@@ -217,6 +220,9 @@
 
   //#region drawer ========================================
   const [registerDrawerFn, { openDrawer }] = useDrawer();
+  const updateCostTableListFn = (list: any) => {
+    console.log('upateCostTableListFn', list);
+  };
   //#endregion ---------------------------------------------
 </script>
 

@@ -573,6 +573,7 @@ export const wxUploadFormSchemas = (): FormSchema[] => {
       component: 'Upload',
       label: '选择文件',
       slot: 'slotChooseFile',
+      // colSlot: 'slotFormItemChooseFile',
     },
   ];
 };
