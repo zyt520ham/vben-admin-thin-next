@@ -564,7 +564,7 @@ export const wxUploadFormSchemas = (): FormSchema[] => {
       // slot: 'slotFileType',
     },
     {
-      field: 'update_date',
+      field: 'upload_date',
       required: true,
       component: 'DatePicker',
       label: '上传日期',

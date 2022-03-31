@@ -157,9 +157,32 @@ export class VAxios {
     });
   }
 
+  /**
+   * @description:  File Upload 自定义
+   */
+  uploadFileCustom<T = any>(config: AxiosRequestConfig, params: UploadFileParams) {
+    const formData = new FormData();
+    Object.keys(params).forEach((key) => {
+      const value = params[key];
+      formData.append(key, value);
+    });
+    // const formHeader = formData.getHeaders();
+    const headers = config.headers!;
+    // Object.assign(headers, options || {});
+    headers['Content-Type'] = ContentTypeEnum.FORM_DATA;
+    config.headers = headers;
+    config.method = 'post';
+    config.data = formData;
+    const { requestOptions } = this.options;
+    config.url = `${requestOptions?.apiUrl}${config.url}`;
+    console.log('uploadfile', config);
+    return this.axiosInstance.request<T>(config);
+  }
   // support form-data
   supportFormData(config: AxiosRequestConfig) {
+    debugger;
     const headers = config.headers || this.options.headers;
+
     const contentType = headers?.['Content-Type'] || headers?.['content-type'];
 
     if (
@@ -206,7 +229,7 @@ export class VAxios {
     const { requestOptions } = this.options;
 
     const opt: RequestOptions = Object.assign({}, requestOptions, options);
-
+    debugger;
     const { beforeRequestHook, requestCatchHook, transformRequestHook } = transform || {};
     if (beforeRequestHook && isFunction(beforeRequestHook)) {
       conf = beforeRequestHook(conf, opt);

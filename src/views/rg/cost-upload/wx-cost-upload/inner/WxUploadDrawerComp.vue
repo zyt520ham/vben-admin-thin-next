@@ -49,6 +49,11 @@
   import { wxUploadFormSchemas } from './wxcost.data';
   import { UploadOutlined } from '@ant-design/icons-vue';
   import { message } from 'ant-design-vue';
+  import { uploadWxCostApi } from '/@/api/sys/costUploadApi';
+  import { IReqUploadWxCost } from '/@/api/sys/model/uploadCostModel';
+  import { IReqErr } from '/#/axios';
+  import { formatToDate } from '/@/utils/dateUtil';
+  import moment from 'moment';
 
   interface FileItem {
     uid: string;
@@ -59,6 +64,12 @@
     preview?: string;
     originFileObj?: any;
     file: string | Blob;
+  }
+  interface IFormDataItem {
+    file_type: string;
+    upload_date: string;
+    wx_account: string;
+    choose_file: FileItem[];
   }
   //#region emit ========================================
   // 基于类型
@@ -85,17 +96,39 @@
   const [registerDrawer, drawInnerMethods] = useDrawerInner(async (propData) => {
     drawInnerMethods.setDrawerProps({ confirmLoading: false });
     await formMethods.resetFields();
-    await formMethods.setFieldsValue({
+    const startFormItem: IFormDataItem = {
       file_type: 'csv',
-    });
+      upload_date: moment(new Date()).format('YYYYMMDD'),
+      // wx_account: '',
+      // choose_file: [],
+    } as any;
+    await formMethods.setFieldsValue(startFormItem);
   });
   const handleSubmitFn = () => {
     formMethods
       .validate()
       .then(() => {
         console.log('success');
+        const formData: IFormDataItem = formMethods.getFieldsValue() as IFormDataItem;
         //  TODO:: 文件上传逻辑
-        emit('update_cost_table_list', [1, 2, 3]);
+        console.log(formData);
+        const params: IReqUploadWxCost = {
+          file: formData.choose_file[0] as any,
+          app: '102',
+          account: formData.wx_account,
+          day: formatToDate(moment(formData.upload_date, 'YYYYMMDD')),
+        };
+
+        uploadWxCostApi(params)
+          .then((resp) => {
+            console.log(resp);
+            emit('update_cost_table_list', [1, 2, 3]);
+          })
+          .catch((e: IReqErr) => {
+            console.log(e);
+            message.error(e.retMsg!);
+          });
+        // emit('update_cost_table_list', [1, 2, 3]);
         // drawInnerMethods.closeDrawer();
       })
       .catch((e) => {

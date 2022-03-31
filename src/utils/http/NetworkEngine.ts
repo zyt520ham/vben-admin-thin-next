@@ -3,7 +3,7 @@ import { getSecondTimestampNow } from '/@/utils/dateUtil';
 import { md5 } from '/@/utils/stringUtils';
 // import { getAppEnvConfig } from '/@/utils/env';
 import { defHttp } from '/@/utils/http/axios';
-import { AxiosError, AxiosRequestConfig } from 'axios';
+import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { IReqErr, RequestOptions, Result } from '/#/axios';
 import { useUserStoreWithOut } from '/@/store/modules/user';
 import { isBoolean } from '/@/utils/is';
@@ -42,7 +42,10 @@ function apiReqHelper() {
     keyList.forEach((key) => {
       const value = params[key];
       // console.log(value);
+      //过滤文件上传，多文件上传
       if (
+        key != 'file' &&
+        key != 'files' &&
         key !== 'sign' &&
         ((value !== undefined && value !== null && value !== '') || isBoolean(value))
       ) {
@@ -74,6 +77,88 @@ function apiReqHelper() {
     computedParamsSign,
     serverBaseUrl,
   };
+}
+
+export function doBaseUploadApi<T>(
+  uriPath: string,
+  params: any,
+  onUploadProgress: (progressEvent: ProgressEvent) => void,
+) {
+  const uri = apiReqHelper().serverBaseUrl(uriPath);
+  const reqHeader = apiReqHelper().getCommomHeader();
+  const signdParams = apiReqHelper().computedParamsSign(params);
+
+  const cfg: AxiosRequestConfig = {} as any;
+  cfg.url = uri;
+
+  if (reqHeader && Object.keys(reqHeader).length > 0) {
+    cfg.headers = reqHeader;
+  }
+  if (onUploadProgress) {
+    cfg.onUploadProgress = onUploadProgress;
+  }
+  // const requestOption: RequestOptions = {
+  //   isReturnNativeResponse: false, //关闭使用axiosresponse返回
+  //   ignoreCancelToken: true,
+  //   withToken: false,
+  // };
+  const promise = new Promise<T>((resolve, reject) => {
+    defHttp
+      .uploadFileCustom<AxiosResponse<Result<T>>>(cfg, signdParams as any)
+      .then(
+        (resp) => {
+          const res: Result<T> = resp.data as any;
+          logNoTrace('[url]:' + cfg.url, '\n', '[params]:', cfg.data, '\n', '[resp]:', res);
+          // console.log('resp', resp);
+          if (res.retCode === 0) {
+            resolve(res.data);
+          } else {
+            const err: IReqErr = new Error(res.retMsg);
+            err.retCode = res.retCode;
+            err.retMsg = res.retMsg;
+            err.respData = res.data;
+            reject(err);
+          }
+        },
+        (error: AxiosError) => {
+          // if (options?.errorMessageMode !== 'none') {
+          //   if (error.response?.status === 401) {
+          //     const { t } = useI18n();
+          //     createErrorModal({
+          //       title: t('sys.api.errorTip'),
+          //       content: error.response.data.retMsg,
+          //     });
+          //     reject(error);
+          //     return;
+          //   }
+          // }
+
+          // debugger;
+          const errData = error.response?.data;
+          if (errData) {
+            const err: IReqErr = new Error(errData.retMsg);
+            err.retCode = errData.retCode;
+            // err.status = error.response?.status;
+            err.retMsg = errData.retMsg;
+            err.respData = errData.data;
+            reject(err);
+            return;
+            // debugger;
+          }
+          // const err: IReqErr = new Error(resp.retMsg);
+          // err.retCode = resp.retCode;
+          // err.retMsg = resp.retMsg;
+          // err.respData = resp.data;
+          reject(error);
+        },
+      )
+      .catch((err: IReqErr) => {
+        console.error(err);
+        debugger;
+        reject(err);
+      });
+  });
+  return promise;
 }
 
 export function doBaseApiRequest<T>(
