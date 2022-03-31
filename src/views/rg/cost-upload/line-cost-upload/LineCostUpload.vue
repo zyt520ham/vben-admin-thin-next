@@ -6,7 +6,6 @@
 -->
 <template>
   <PageWrapper :class="`${prefixCls}`" contentFullHeight dense>
-    LineCostUpload
     <a-card v-if="showSearchFormState" class="w-full rg-antd-cart">
       <BasicForm @register="formRegister" v-model:value="formData" />
     </a-card>
@@ -39,6 +38,10 @@
         />
       </template>
     </BasicTable>
+    <LineUploadDrawerComp
+      @register="registerDrawerFn"
+      @update_cost_table_list="updateCostTableListFn"
+    />
   </PageWrapper>
 </template>
 
@@ -52,11 +55,10 @@
   import { useDesign } from '/@/hooks/web/useDesign';
   import { ref } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form';
-  import { BasicTable, SorterResult, useTable } from '/@/components/Table';
+  import { BasicTable, SorterResult, TableAction, useTable } from '/@/components/Table';
   import GzShowSearchFormBtn from '/@/components/GzShowSearchFormBtn';
   import { log } from '/@/utils/log';
   import { arrSortFn } from '/@/utils/arrayUtils';
-
   import { formatToDate } from '/@/utils/dateUtil';
   import moment from 'moment';
   import {
@@ -65,6 +67,8 @@
     LineCostTableColumnsEnum,
     lineUploadDatesList,
   } from '/@/views/rg/cost-upload/line-cost-upload/inner/linecost.data';
+  import LineUploadDrawerComp from './inner/LineUploadDrawerComp.vue';
+  import { useDrawer } from '/@/components/Drawer';
   const { prefixCls } = useDesign('upload-cost-line');
 
   //#region search ========================================
@@ -159,6 +163,7 @@
     tableMethods.setTableData(sortList);
   };
   const getUploadedCostListApi = () => {
+    console.log('getUploadedCostListApi');
     return new Promise((resolve, reject) => {
       const allDateList = lineUploadDatesList.slice();
       allDateList.sort((a, b) => {
@@ -185,7 +190,17 @@
     showIndexColumn: false,
     sortFn: tableSortFn,
   });
-  const tableToolsAddUpload = () => {};
+  const tableToolsAddUpload = () => {
+    drawerMethods.openDrawer(true, {});
+  };
+  //#endregion ---------------------------------------------
+  //#region drawer ========================================
+  const [registerDrawerFn, drawerMethods] = useDrawer();
+  const updateCostTableListFn = (list: any) => {
+    console.log('updateCostTableListFn line', list);
+    tableMethods.reload();
+    drawerMethods.closeDrawer();
+  };
   //#endregion ---------------------------------------------
 </script>
 

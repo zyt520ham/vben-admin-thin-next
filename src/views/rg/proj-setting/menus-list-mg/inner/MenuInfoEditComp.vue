@@ -378,7 +378,7 @@
 
           menuRawData.externalLinkUrl = nMenuItem.iframeSrc;
           menuRawData.openLinkUseExternal = nMenuItem.openLinkUseExternal;
-          debugger;
+
           menuRawData.useStatus = true;
           if (menuRawData.menuLevel == 0) {
             menuRawData.compsKey = 'layout';
@@ -431,7 +431,6 @@
             menuFormItem.value.parentName = menuItem?.meta?.title || '';
             menuFormItem.value.menuLevel = menuItem!.meta!.menuLevel! + 1;
           }
-          // debugger;
         } else {
           menuFormItem.value.parentId = selectedMenuItem.path;
           menuFormItem.value.parentName = selectedMenuItem.meta?.title || '';
