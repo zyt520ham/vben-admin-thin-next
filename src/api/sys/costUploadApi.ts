@@ -1,14 +1,10 @@
 import { doBaseUploadApi } from '/@/utils/http/NetworkEngine';
 
 import { IReqUploadWxCost } from '/@/api/sys/model/uploadCostModel';
-
-enum Api {
-  UploadWxCost = '/tripartite/wx/upwxcost',
-}
+import { ApiEnum } from '/@/api/ApiPath';
 
 /**
- * @description: 获取项目列表
+ * @description: 微信花费上传
  */
-
 export const uploadWxCostApi = (params: IReqUploadWxCost) =>
-  doBaseUploadApi<any>(Api.UploadWxCost, params, () => {});
+  doBaseUploadApi<any>(ApiEnum.UploadWxCost, params, () => {});

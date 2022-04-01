@@ -12,30 +12,19 @@ import {
 import { ErrorMessageMode, RequestOptions } from '/#/axios';
 import { doBaseApiRequest } from '/@/utils/http/NetworkEngine';
 import { IUserInfo } from '/#/store';
-
-enum Api {
-  Login = '/login',
-  Logout = '/logout',
-  GetUserInfo = '/getUserInfo',
-  // GetPermCode = '/getPermCode',
-  rgUpdateUserInfo = '/personal/update',
-  rgLogin = '/site/login',
-  rgLogout = '/site/logout',
-  rgUserInfo = '/user/info',
-
-  //管理员重置用户密码
-  rgResetUserPsd = '/user/reset-password',
-  //个人修改密码
-  rgUpdateUserPsd = '/personal/modify-password',
-
-  rgGetPermissions = '/site/permission',
-}
-
+import { ApiEnum } from '/@/api/ApiPath';
+//
+// enum Api {
+// // Login = '/login',
+// // Logout = '/logout',
+// // GetUserInfo = '/getUserInfo',
+// // // GetPermCode = '/getPermCode',
+// }
 /**
  * @description: user login api
  */
 export function loginApi(params: ILoginParams, mode: ErrorMessageMode = 'modal') {
-  const promise = doBaseApiRequest<ILoginServerData>(Api.rgLogin, params, {
+  const promise = doBaseApiRequest<ILoginServerData>(ApiEnum.rgLogin, params, {
     errorMessageMode: mode,
   });
   return promise;
@@ -45,42 +34,42 @@ export function loginApi(params: ILoginParams, mode: ErrorMessageMode = 'modal')
  * @description: getUserInfo
  */
 export function getUserInfo(params: IUserInfoParams) {
-  const promise = doBaseApiRequest<IUserItemServerData>(Api.rgUserInfo, params, {
+  const promise = doBaseApiRequest<IUserItemServerData>(ApiEnum.rgGetUserInfo, params, {
     errorMessageMode: 'none',
   });
   return promise;
-  // return defHttp.get<GetUserInfoModel>({ url: Api.GetUserInfo }, { errorMessageMode: 'none' });
+  // return defHttp.get<GetUserInfoModel>({ url: ApiEnum.GetUserInfo }, { errorMessageMode: 'none' });
 }
 
 export function getPermCode() {
   return '';
-  // return defHttp.get<string[]>({ url: Api.GetPermCode });
+  // return defHttp.get<string[]>({ url: ApiEnum.GetPermCode });
 }
 
 export function doLogout() {
   const promise = doBaseApiRequest<ILoginServerData>(
-    Api.rgLogout,
+    ApiEnum.rgLogout,
     {},
     {
       errorMessageMode: 'none',
     },
   );
   return promise;
-  // return defHttp.get({ url: Api.Logout });
+  // return defHttp.get({ url: ApiEnum.Logout });
 }
 
 //管理员重置用户密码
 export const resetUserPsdByAdminApi = (params: IReqUserPsdResetByAdmin, options?: RequestOptions) =>
-  doBaseApiRequest<any>(Api.rgResetUserPsd, params, options);
+  doBaseApiRequest<any>(ApiEnum.rgResetUserPsd, params, options);
 
 //修改用户信息
 export const updateUserProfileApi = (params: IReqUpdateUserInfo, options?: RequestOptions) =>
-  doBaseApiRequest<IUserInfo>(Api.rgUpdateUserInfo, params, options);
+  doBaseApiRequest<IUserInfo>(ApiEnum.rgUpdateUserInfo, params, options);
 
 //修改个人密码
 export const updateUserPsdApi = (params: IReqUpdateUserPsd, options?: RequestOptions) =>
-  doBaseApiRequest<IUserInfo>(Api.rgUpdateUserPsd, params, options);
+  doBaseApiRequest<IUserInfo>(ApiEnum.rgUpdateUserPsd, params, options);
 
 //获取个人菜单权限列表
 export const getUserPermissionsListApi = (params: any = {}, options?: RequestOptions) =>
-  doBaseApiRequest<IPermissionDataItem>(Api.rgGetPermissions, params, options);
+  doBaseApiRequest<IPermissionDataItem>(ApiEnum.rgGetPermissions, params, options);
