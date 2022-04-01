@@ -11,7 +11,7 @@ import {
   ILoginServerData,
   IReqUpdateUserInfo,
   LoginParams,
-} from '/@/api/sys/model/userModel';
+} from '/@/api/model/userModel';
 import { doLogout, getUserInfo, loginApi, updateUserProfileApi } from '/@/api/sys/user';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';

@@ -50,7 +50,7 @@
   import { UploadOutlined } from '@ant-design/icons-vue';
   import { message } from 'ant-design-vue';
   import { uploadWxCostApi } from '/@/api/sys/costUploadApi';
-  import { IReqUploadWxCost } from '/@/api/sys/model/uploadCostModel';
+  import { IReqUploadWxCost } from '/@/api/model/uploadCostModel';
   import { IReqErr } from '/#/axios';
   import { formatToDate } from '/@/utils/dateUtil';
   import moment from 'moment';

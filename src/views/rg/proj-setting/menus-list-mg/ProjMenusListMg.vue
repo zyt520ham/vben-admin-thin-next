@@ -72,7 +72,7 @@
   import { message } from 'ant-design-vue';
   import { isDevMode } from '/@/utils/env';
   import { deleteMenuItemApi } from '/@/api/sys/menu';
-  import { IReqDelMenuItem } from '/@/api/sys/model/menuModel';
+  import { IReqDelMenuItem } from '/@/api/model/menuModel';
   import { IReqErr } from '/#/axios';
   import { usePermissionStoreWithOut } from '/@/store/modules/permission';
   export default defineComponent({

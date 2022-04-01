@@ -1,4 +1,4 @@
-import { IMenuListDataItem, IMenuRawData } from '/@/api/sys/model/menuModel';
+import { IMenuListDataItem, IMenuRawData } from '/@/api/model/menuModel';
 import { AppRouteRecordRaw } from '/@/router/types';
 
 import { RouteMeta } from 'vue-router';

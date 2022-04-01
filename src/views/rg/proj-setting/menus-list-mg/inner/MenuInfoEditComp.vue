@@ -148,7 +148,7 @@
   import { menuFormClearItem } from './menu.data';
 
   import { Menu } from '/@/router/types';
-  import { IMenuRawData } from '/@/api/sys/model/menuModel';
+  import { IMenuRawData } from '/@/api/model/menuModel';
   import { compDescMap, compPathMap, compsList } from '/@/enums/CompPathEnum';
   import { message } from 'ant-design-vue';
 

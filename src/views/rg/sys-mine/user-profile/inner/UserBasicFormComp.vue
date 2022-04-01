@@ -13,7 +13,7 @@
   import { BasicForm, useForm } from '/@/components/Form';
   import { userInfoEditSchema } from '/@/views/rg/sys-mine/user-profile/inner/userProfile.data';
   import { useUserStoreWithOut } from '/@/store/modules/user';
-  import { IReqUpdateUserInfo } from '/@/api/sys/model/userModel';
+  import { IReqUpdateUserInfo } from '/@/api/model/userModel';
   import { message } from 'ant-design-vue';
   export default defineComponent({
     name: 'UserBasicFormComp',

@@ -1,6 +1,6 @@
 import { doBaseUploadApi } from '/@/utils/http/NetworkEngine';
 
-import { IReqUploadLineCost, IReqUploadWxCost } from '/@/api/sys/model/uploadCostModel';
+import { IReqUploadLineCost, IReqUploadWxCost } from '/@/api/model/uploadCostModel';
 import { ApiEnum } from '/@/api/ApiPath';
 
 /**

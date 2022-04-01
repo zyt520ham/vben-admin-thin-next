@@ -47,7 +47,7 @@
   import { arrSortFn } from '/@/utils/arrayUtils';
   import { onUnmounted } from '@vue/runtime-core';
   import { getProjUsersV1Api } from '/@/api/sys/projectApi';
-  import { IReqGetProjUser } from '/@/api/sys/model/projectModel';
+  import { IReqGetProjUser } from '/@/api/model/projectModel';
   import { IReqErr } from '/#/axios';
 
   export default defineComponent({

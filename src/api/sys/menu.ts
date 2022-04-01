@@ -3,7 +3,7 @@ import {
   IReqAddMenuItem,
   IReqDelMenuItem,
   IReqEditMenuItem,
-} from './model/menuModel';
+} from '../model/menuModel';
 import { doBaseApiRequest } from '/@/utils/http/NetworkEngine';
 import { RequestOptions } from '/#/axios';
 import { ApiEnum } from '/@/api/ApiPath';

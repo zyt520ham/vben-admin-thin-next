@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia';
 import { IProjectInfo, IProjRoles, IRoleInfo } from '/#/store';
 import { getProjsListApi } from '/@/api/sys/projectApi';
-import { IProjectListReq, IRespProjectsData } from '/@/api/sys/model/projectModel';
+import { IProjectListReq, IRespProjectsData } from '/@/api/model/projectModel';
 import { store } from '/@/store';
 import { getRoleListApi } from '/@/api/sys/roleApi';
-import { IReqGetRoles } from '/@/api/sys/model/roleModel';
+import { IReqGetRoles } from '/@/api/model/roleModel';
 import { useUserStoreWithOut } from '/@/store/modules/user';
 import { log } from '/@/utils/log';
 // interface IProjectModel {

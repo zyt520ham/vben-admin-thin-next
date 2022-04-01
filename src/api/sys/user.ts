@@ -7,7 +7,7 @@ import {
   IReqUserPsdResetByAdmin,
   IUserInfoParams,
   IUserItemServerData,
-} from './model/userModel';
+} from '../model/userModel';
 
 import { ErrorMessageMode, RequestOptions } from '/#/axios';
 import { doBaseApiRequest } from '/@/utils/http/NetworkEngine';

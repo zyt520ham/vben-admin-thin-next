@@ -16,7 +16,7 @@
 
   import { formSchema } from './pwd.data';
   import { message } from 'ant-design-vue';
-  import { IReqUpdateUserPsd } from '/@/api/sys/model/userModel';
+  import { IReqUpdateUserPsd } from '/@/api/model/userModel';
   import { updateUserPsdApi } from '/@/api/sys/user';
   import { useUserStoreWithOut } from '/@/store/modules/user';
   export default defineComponent({

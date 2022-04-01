@@ -41,7 +41,7 @@
   import { IUserInfo } from '/#/store';
   import { message } from 'ant-design-vue';
   import { updateUserRolesApi } from '/@/api/sys/roleApi';
-  import { IReqUserRolesUpdate } from '/@/api/sys/model/roleModel';
+  import { IReqUserRolesUpdate } from '/@/api/model/roleModel';
   // import { useUserStoreWithOut } from '/@/store/modules/user';
   import { log } from '/@/utils/log';
   import { IReqErr } from '/#/axios';

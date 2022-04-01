@@ -22,7 +22,7 @@ import { addMenuItemApi, getMenuList, updateMenuItemApi } from '/@/api/sys/menu'
 
 import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
-import { IMenuListDataItem, IReqAddMenuItem, IReqEditMenuItem } from '/@/api/sys/model/menuModel';
+import { IMenuListDataItem, IReqAddMenuItem, IReqEditMenuItem } from '/@/api/model/menuModel';
 import { transformMenuDataToAppRouteRecord } from '/@/store/utils/MenuDataHelper';
 import { resetRouter, router } from '/@/router';
 import { RouteRecordRaw } from 'vue-router';
@@ -30,7 +30,7 @@ import { routesListChanged } from '/@/layouts/iframe/useFrameKeepAlive';
 import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
 import { error, log, logNoTrace } from '/@/utils/log';
 import { getUserPermissionsListApi } from '/@/api/sys/user';
-import { IPermissionDataItem, permissionMenuType } from '/@/api/sys/model/userModel';
+import { IPermissionDataItem, permissionMenuType } from '/@/api/model/userModel';
 
 interface PermissionState {
   // Permission code list

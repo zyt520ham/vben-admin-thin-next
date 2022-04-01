@@ -10,7 +10,7 @@ import {
   IRespCreateRole,
   IRespRolesListData,
   IRespUserRolesData,
-} from '/@/api/sys/model/roleModel';
+} from '/@/api/model/roleModel';
 import { RequestOptions } from '/#/axios';
 import { ApiEnum } from '/@/api/ApiPath';
 //

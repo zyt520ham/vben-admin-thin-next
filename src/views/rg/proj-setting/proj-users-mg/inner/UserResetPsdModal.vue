@@ -25,7 +25,7 @@
   import { log } from '/@/utils/log';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { resetUserPsdByAdminApi } from '/@/api/sys/user';
-  import { IReqUserPsdResetByAdmin } from '/@/api/sys/model/userModel';
+  import { IReqUserPsdResetByAdmin } from '/@/api/model/userModel';
   import { IUserInfo } from '/#/store';
   import { IReqErr } from '/#/axios';
   import { message } from 'ant-design-vue';

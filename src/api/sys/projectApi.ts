@@ -8,7 +8,7 @@ import {
   IRespProjectsData,
   IRespProjsIncludeUsers,
   IRespProjUsers,
-} from '/@/api/sys/model/projectModel';
+} from '/@/api/model/projectModel';
 import { RequestOptions } from '/#/axios';
 import { ApiEnum } from '/@/api/ApiPath';
 

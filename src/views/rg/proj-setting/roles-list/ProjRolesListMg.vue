@@ -105,7 +105,7 @@
   import { useDrawer } from '/@/components/Drawer';
   import { Icon } from '/@/components/Icon';
   import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
-  import { IReqDelRole } from '/@/api/sys/model/roleModel';
+  import { IReqDelRole } from '/@/api/model/roleModel';
   import { delRoleInfoApi } from '/@/api/sys/roleApi';
   import { log, logNoTrace } from '/@/utils/log';
   import { IReqErr } from '/#/axios';

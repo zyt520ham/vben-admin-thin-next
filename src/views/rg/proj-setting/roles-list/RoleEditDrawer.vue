@@ -66,7 +66,7 @@
     IReqUpdateRoleInfo,
     IReqUpdateRolePermissions,
     IRespCreateRole,
-  } from '/@/api/sys/model/roleModel';
+  } from '/@/api/model/roleModel';
   import { IRoleInfo } from '/#/store';
   import { IReqErr } from '/#/axios';
   import { message } from 'ant-design-vue';

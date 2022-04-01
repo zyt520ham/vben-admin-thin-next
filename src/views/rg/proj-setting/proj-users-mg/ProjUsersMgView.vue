@@ -149,7 +149,7 @@
     deleteUserFromProjApi,
     getProjUsersV1Api,
   } from '/@/api/sys/projectApi';
-  import { IReqGetProjUser } from '/@/api/sys/model/projectModel';
+  import { IReqGetProjUser } from '/@/api/model/projectModel';
   import { IReqErr } from '/#/axios';
   import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
   import { IRoleInfo, IUserInfo } from '/#/store';

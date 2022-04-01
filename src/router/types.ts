@@ -1,7 +1,7 @@
 import type { RouteRecordRaw, RouteMeta } from 'vue-router';
 import { RoleEnum } from '/@/enums/roleEnum';
 import { defineComponent } from 'vue';
-import { IMenuRawData } from '/@/api/sys/model/menuModel';
+import { IMenuRawData } from '/@/api/model/menuModel';
 
 export type Component<T = any> =
   | ReturnType<typeof defineComponent>
