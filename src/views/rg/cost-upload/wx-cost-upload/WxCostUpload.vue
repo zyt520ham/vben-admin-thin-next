@@ -78,7 +78,6 @@
   import {
     getformSchemas,
     getWxCostColumnsCfg,
-    testUploadWxAccountListData,
     wxAccountNameMaps,
     wxCostTableColumnsEnum,
   } from './inner/wxcost.data';
@@ -87,6 +86,10 @@
   import { formatToDate } from '/@/utils/dateUtil';
   import moment from 'moment';
   import { useDrawer } from '/@/components/Drawer';
+  import { getCostForWxApi } from '/@/api/sys/costApi';
+  import { IReqGetWxCost } from '/@/api/model/costModel';
+  import { IReqErr } from '/#/axios';
+  import { message } from 'ant-design-vue';
 
   const { prefixCls } = useDesign('upload-cost-wx');
 
@@ -180,22 +183,33 @@
   };
   const getUploadedCostList = () => {
     return new Promise((resolve, reject) => {
-      const allDateKeys = Object.keys(testUploadWxAccountListData);
-      allDateKeys.sort((a, b) => {
-        return b.localeCompare(a);
-      });
-      const tableRawDatasList: any[] = [];
-      allDateKeys.map((ele) => {
-        if (testUploadWxAccountListData[ele]) {
-          tableRawDatasList.push({
-            [wxCostTableColumnsEnum.kUploadDate as string]: ele,
-            [wxCostTableColumnsEnum.kWxAccount as string]: testUploadWxAccountListData[
-              ele
-            ] as string[],
+      const params: IReqGetWxCost = {
+        app: '102',
+      };
+      getCostForWxApi(params).then(
+        (resp) => {
+          // console.log('getCostForWxApi', resp);
+          const allDateKeys = Object.keys(resp);
+          allDateKeys.sort((a, b) => {
+            return b.localeCompare(a);
           });
-        }
-      });
-      resolve(tableRawDatasList);
+          const tableRawDatasList: any[] = [];
+          allDateKeys.map((ele) => {
+            if (resp[ele]) {
+              tableRawDatasList.push({
+                [wxCostTableColumnsEnum.kUploadDate as string]: ele,
+                [wxCostTableColumnsEnum.kWxAccount as string]: resp[ele] as string[],
+              });
+            }
+          });
+          resolve(tableRawDatasList);
+        },
+        (err: IReqErr) => {
+          console.log('getCostForWxApi', err);
+          reject();
+          message.error(err.retMsg!);
+        },
+      );
     });
   };
   const [registerTable, tableMethods] = useTable({
@@ -222,6 +236,7 @@
   const [registerDrawerFn, drawerMethods] = useDrawer();
   const updateCostTableListFn = (list: any) => {
     console.log('upateCostTableListFn', list);
+    tableMethods.reload();
     drawerMethods.closeDrawer();
   };
   //#endregion ---------------------------------------------

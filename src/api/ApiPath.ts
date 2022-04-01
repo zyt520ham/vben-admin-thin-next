@@ -53,4 +53,8 @@ export enum ApiEnum {
   rgDelMenuItem = '/rbac/menu/delete',
   //更新menuItem
   rgUpdateMenuItem = '/rbac/menu/update',
+
+  //  cost.ts
+  rgGetWxCost = '/tripartite/wx/getcostname',
+  rgGetLineCost = '/tripartite/wx/linelistcost',
 }

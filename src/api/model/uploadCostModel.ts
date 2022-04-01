@@ -1,13 +1,5 @@
-/** 上传请求参数base*/
+import { IReqUploadBase } from '/@/api/model/base/baseModel';
 
-export interface IReqUploadBase {
-  /** 文件 */
-  file: File | Blob;
-  /** 多文件*/
-  files?: File[] | Blob[];
-  /** 文件名 */
-  filename?: string;
-}
 /** 微信上传请求参数 */
 export interface IReqUploadWxCost extends IReqUploadBase {
   /** 项目APPID */

@@ -65,10 +65,13 @@
     getLineCostColumnsCfg,
     getLineCostSearchFormSchemas,
     LineCostTableColumnsEnum,
-    lineUploadDatesList,
   } from '/@/views/rg/cost-upload/line-cost-upload/inner/linecost.data';
   import LineUploadDrawerComp from './inner/LineUploadDrawerComp.vue';
   import { useDrawer } from '/@/components/Drawer';
+  import { IReqGetLineCost } from '/@/api/model/costModel';
+  import { getCostForLineApi } from '/@/api/sys/costApi';
+  import { IReqErr } from '/#/axios';
+  import { message } from 'ant-design-vue';
   const { prefixCls } = useDesign('upload-cost-line');
 
   //#region search ========================================
@@ -165,19 +168,30 @@
   const getUploadedCostListApi = () => {
     console.log('getUploadedCostListApi');
     return new Promise((resolve, reject) => {
-      const allDateList = lineUploadDatesList.slice();
-      allDateList.sort((a, b) => {
-        return b.localeCompare(a);
-      });
-      const tableRawDatasList: any[] = [];
-      allDateList.map((ele) => {
-        if (ele) {
-          tableRawDatasList.push({
-            [LineCostTableColumnsEnum.kUploadDate as string]: ele,
+      const params: IReqGetLineCost = {
+        app: '102',
+      };
+      getCostForLineApi(params).then(
+        (resp) => {
+          const allDateList = resp.slice();
+          allDateList.sort((a, b) => {
+            return b.localeCompare(a);
           });
-        }
-      });
-      resolve(tableRawDatasList);
+          const tableRawDatasList: any[] = [];
+          allDateList.map((ele) => {
+            if (ele) {
+              tableRawDatasList.push({
+                [LineCostTableColumnsEnum.kUploadDate as string]: ele,
+              });
+            }
+          });
+          resolve(tableRawDatasList);
+        },
+        (err: IReqErr) => {
+          reject();
+          message.error(err.retMsg!);
+        },
+      );
     });
   };
   const [tableRegister, tableMethods] = useTable({

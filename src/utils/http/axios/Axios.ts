@@ -180,7 +180,6 @@ export class VAxios {
   }
   // support form-data
   supportFormData(config: AxiosRequestConfig) {
-    debugger;
     const headers = config.headers || this.options.headers;
 
     const contentType = headers?.['Content-Type'] || headers?.['content-type'];
@@ -229,7 +228,7 @@ export class VAxios {
     const { requestOptions } = this.options;
 
     const opt: RequestOptions = Object.assign({}, requestOptions, options);
-    debugger;
+
     const { beforeRequestHook, requestCatchHook, transformRequestHook } = transform || {};
     if (beforeRequestHook && isFunction(beforeRequestHook)) {
       conf = beforeRequestHook(conf, opt);

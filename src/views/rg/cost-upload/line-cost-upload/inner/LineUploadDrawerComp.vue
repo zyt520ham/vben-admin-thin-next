@@ -50,6 +50,11 @@
   import { UploadOutlined } from '@ant-design/icons-vue';
   import { message } from 'ant-design-vue';
   import { isDevMode } from '/@/utils/env';
+  import { IReqUploadLineCost } from '/@/api/model/uploadCostModel';
+  import { formatToDate } from '/@/utils/dateUtil';
+  import moment from 'moment';
+  import { uploadLineCostApi } from '/@/api/sys/costUploadApi';
+  import { IReqErr } from '/#/axios';
 
   interface FileItem {
     uid: string;
@@ -60,6 +65,11 @@
     preview?: string;
     originFileObj?: any;
     file: string | Blob;
+  }
+  interface IFormDataItem {
+    file_type: string;
+    upload_date: string;
+    choose_file: FileItem[];
   }
   //#region emit ========================================
   // 基于类型
@@ -94,18 +104,30 @@
       .validate()
       .then(() => {
         console.log('success');
-        //  TODO:: 文件上传逻辑
-        drawInnerMethods.setDrawerProps({
-          loading: true,
-          confirmLoading: true,
-        });
-        setTimeout(() => {
-          drawInnerMethods.setDrawerProps({
-            loading: false,
-            confirmLoading: false,
-          });
-          emit('update_cost_table_list', formMethods.getFieldsValue());
-        }, 1000);
+        const formObj: IFormDataItem = formMethods.getFieldsValue() as any;
+        const params: IReqUploadLineCost = {
+          day: formatToDate(moment(formObj.upload_date, 'YYYYMMDD')),
+          file: formObj.choose_file[0] as any,
+          app: '102',
+        };
+        uploadLineCostApi(params).then(
+          (resp) => {
+            drawInnerMethods.setDrawerProps({
+              loading: true,
+              confirmLoading: true,
+            });
+            setTimeout(() => {
+              drawInnerMethods.setDrawerProps({
+                loading: false,
+                confirmLoading: false,
+              });
+              emit('update_cost_table_list', formMethods.getFieldsValue());
+            }, 1000);
+          },
+          (err: IReqErr) => {
+            message.error(err.retMsg!);
+          },
+        );
 
         // drawInnerMethods.closeDrawer();
       })
