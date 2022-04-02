@@ -51,7 +51,7 @@
   import { message } from 'ant-design-vue';
   import { isDevMode } from '/@/utils/env';
   import { IReqUploadLineCost } from '/@/api/model/uploadCostModel';
-  import { formatToDate } from '/@/utils/dateUtil';
+  import { formatToDate, formatToDateTime } from '/@/utils/dateUtil';
   import moment from 'moment';
   import { uploadLineCostApi } from '/@/api/sys/costUploadApi';
   import { IReqErr } from '/#/axios';
@@ -97,6 +97,7 @@
     await formMethods.resetFields();
     await formMethods.setFieldsValue({
       file_type: 'csv',
+      upload_date: formatToDateTime(new Date(), 'YYYYMMDD'),
     });
   });
   const handleSubmitFn = () => {
@@ -105,6 +106,7 @@
       .then(() => {
         console.log('success');
         const formObj: IFormDataItem = formMethods.getFieldsValue() as any;
+
         const params: IReqUploadLineCost = {
           day: formatToDate(moment(formObj.upload_date, 'YYYYMMDD')),
           file: formObj.choose_file[0] as any,

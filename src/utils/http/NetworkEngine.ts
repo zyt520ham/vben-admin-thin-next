@@ -108,7 +108,7 @@ export function doBaseUploadApi<T>(
       .then(
         (resp) => {
           const res: Result<T> = resp.data as any;
-          logNoTrace('[url]:' + cfg.url, '\n', '[params]:', cfg.data, '\n', '[resp]:', res);
+          logNoTrace('[url]:' + cfg.url, '\n', '[params]:', signdParams, '\n', '[resp]:', res);
           // console.log('resp', resp);
           if (res.retCode === 0) {
             resolve(res.data);

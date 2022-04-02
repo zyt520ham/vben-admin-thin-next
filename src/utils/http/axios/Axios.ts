@@ -8,6 +8,7 @@ import { isFunction } from '/@/utils/is';
 import { cloneDeep } from 'lodash-es';
 import { ContentTypeEnum } from '/@/enums/httpEnum';
 import { RequestEnum } from '/@/enums/httpEnum';
+import { isDevMode } from '/@/utils/env';
 
 export * from './axiosTransform';
 
@@ -175,7 +176,12 @@ export class VAxios {
     config.data = formData;
     const { requestOptions } = this.options;
     config.url = `${requestOptions?.apiUrl}${config.url}`;
-    console.log('uploadfile', config);
+    // console.log('uploadfile', config);
+    if (isDevMode()) {
+      formData.forEach((value: FormDataEntryValue, key: string) => {
+        console.log(`【${key}】`, value);
+      });
+    }
     return this.axiosInstance.request<T>(config);
   }
   // support form-data
