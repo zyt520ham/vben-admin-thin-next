@@ -23,22 +23,22 @@
               },
             ]"
           />
-          <TableAction
-            :divider="false"
-            :actions="[
-              {
-                tooltip: {
-                  title: '配置微信账户',
-                  placement: 'top',
-                },
-                type: 'primary',
-                size: 'small',
-                shape: 'circle',
-                icon: 'carbon:task-settings',
-                onClick: tableToolsSettingWxAccount.bind(null),
-              },
-            ]"
-          />
+          <!--          <TableAction-->
+          <!--            :divider="false"-->
+          <!--            :actions="[-->
+          <!--              {-->
+          <!--                tooltip: {-->
+          <!--                  title: '配置微信账户',-->
+          <!--                  placement: 'top',-->
+          <!--                },-->
+          <!--                type: 'primary',-->
+          <!--                size: 'small',-->
+          <!--                shape: 'circle',-->
+          <!--                icon: 'carbon:task-settings',-->
+          <!--                onClick: tableToolsSettingWxAccount.bind(null),-->
+          <!--              },-->
+          <!--            ]"-->
+          <!--          />-->
         </span>
       </template>
       <template #toolbar>
@@ -229,7 +229,7 @@
   const tableToolsAddUpload = () => {
     drawerMethods.openDrawer(true, {});
   };
-  const tableToolsSettingWxAccount = () => {};
+  // const tableToolsSettingWxAccount = () => {};
   //#endregion ---------------------------------------------
 
   //#region drawer ========================================
