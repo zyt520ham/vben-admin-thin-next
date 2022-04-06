@@ -33,6 +33,7 @@
 
     <!-- action  -->
     <div :class="`${prefixCls}-action`">
+      <UserProject :class="`${prefixCls}-action__item`" />
       <AppSearch :class="`${prefixCls}-action__item `" v-if="getShowSearch" />
 
       <ErrorAction v-if="getUseErrorHandle" :class="`${prefixCls}-action__item error-action`" />
@@ -80,6 +81,7 @@
 
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
   import { useLocale } from '/@/locales/useLocale';
+  import UserProject from '/@/layouts/default/header/components/user-project/UserProject.vue';
 
   export default defineComponent({
     name: 'LayoutHeader',
@@ -98,6 +100,7 @@
       SettingDrawer: createAsyncComponent(() => import('/@/layouts/default/setting/index.vue'), {
         loading: true,
       }),
+      UserProject,
     },
     props: {
       fixed: propTypes.bool,

@@ -1,22 +1,24 @@
 <template>
-  <BasicModal
-    destroyOnClose
-    :title="t('layout.header.changeProject')"
-    v-bind="$attrs"
-    :class="prefixCls"
-    @register="register"
-    @visible-change="handleShowFn"
-    @ok="okBtnEventFn"
-  >
-    <template #default>
-      <h3 class="text-center py-5px">当前登录项目 {{ currentProjsNameComputed }}</h3>
-      <a-radio-group v-model:value="selectedProjId">
-        <template v-for="proj in getProjsListComputed" :key="proj.project_id">
-          <a-radio :style="radioStyle" :value="proj.project_id">{{ proj.project_name }}</a-radio>
-        </template>
-      </a-radio-group>
-    </template>
-  </BasicModal>
+  <Teleport to="body">
+    <BasicModal
+      destroyOnClose
+      :title="t('layout.header.changeProject')"
+      v-bind="$attrs"
+      :class="prefixCls"
+      @register="register"
+      @visible-change="handleShowFn"
+      @ok="okBtnEventFn"
+    >
+      <template #default>
+        <h3 class="text-center py-5px">当前登录项目 {{ currentProjsNameComputed }}</h3>
+        <a-radio-group v-model:value="selectedProjId">
+          <template v-for="proj in getProjsListComputed" :key="proj.project_id">
+            <a-radio :style="radioStyle" :value="proj.project_id">{{ proj.project_name }}</a-radio>
+          </template>
+        </a-radio-group>
+      </template>
+    </BasicModal>
+  </Teleport>
 </template>
 
 <script lang="ts">
