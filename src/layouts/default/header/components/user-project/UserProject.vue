@@ -51,5 +51,6 @@
   @prefix-cls: ~'@{namespace}-user-project';
   @ns-prefix: ~'@{namespace}';
   .@{prefix-cls} {
+    font-size: 14px;
   }
 </style>
