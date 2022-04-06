@@ -19,6 +19,13 @@
         />
         <MenuDivider v-if="getShowDoc" />
         <MenuItem
+          v-if="getShowHeaderUserInfoPage"
+          key="goto-userinfo-page"
+          :text="t('layout.header.showUserInfo')"
+          icon="ooui:user-contributions-ltr"
+        />
+        <MenuDivider v-if="getShowHeaderUserInfoPage" />
+        <MenuItem
           v-if="getShowChangedProject"
           key="changeproject"
           :text="t('layout.header.changeProject')"
@@ -61,8 +68,10 @@
 
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
   import ChangeProjectModal from '/@/layouts/default/header/components/change-project/ChangeProjectModal.vue';
+  import { logNoTrace } from '/@/utils/log';
+  import { useRouter } from 'vue-router';
 
-  type MenuEvent = 'logout' | 'doc' | 'lock' | 'changeproject';
+  type MenuEvent = 'logout' | 'doc' | 'lock' | 'changeproject' | 'goto-userinfo-page';
 
   export default defineComponent({
     name: 'UserDropdown',
@@ -80,14 +89,15 @@
     setup() {
       const { prefixCls } = useDesign('header-user-dropdown');
       const { t } = useI18n();
-      const { getShowDoc, getUseLockPage, getShowChangedProject } = useHeaderSetting();
+      const { getShowDoc, getUseLockPage, getShowChangedProject, getShowHeaderUserInfoPage } =
+        useHeaderSetting();
       const userStore = useUserStore();
 
       const getUserInfo = computed(() => {
         const { nickname = '', avatar } = userStore.getUserInfoV1 || {};
         return { realName: nickname, avatar: avatar || headerImg, desc: '' };
       });
-
+      const router = useRouter();
       const [register, { openModal }] = useModal();
       const [registerChangeProjectModal, changeProjMethods] = useModal();
       function handleLock() {
@@ -107,6 +117,11 @@
         console.log('changedProject');
         changeProjMethods.openModal(true);
       }
+      function openUserInfoPageView() {
+        logNoTrace('gotoUserInfoPage');
+
+        router.push('/sys.mine/myuserinfo');
+      }
       function handleMenuClick(e: { key: MenuEvent }) {
         switch (e.key) {
           case 'logout':
@@ -121,6 +136,9 @@
           case 'changeproject':
             changedProject();
             break;
+          case 'goto-userinfo-page':
+            openUserInfoPageView();
+            break;
         }
       }
 
@@ -133,6 +151,7 @@
         register,
         getUseLockPage,
         getShowChangedProject,
+        getShowHeaderUserInfoPage,
         registerChangeProjectModal,
       };
     },

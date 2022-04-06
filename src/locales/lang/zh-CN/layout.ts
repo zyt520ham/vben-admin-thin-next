@@ -19,7 +19,7 @@ export default {
     lockScreenBtn: '锁定',
 
     changeProject: '切换项目',
-
+    showUserInfo: '用户信息',
     home: '首页',
   },
   multipleTab: {

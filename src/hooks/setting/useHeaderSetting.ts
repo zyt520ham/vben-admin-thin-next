@@ -80,6 +80,11 @@ export function useHeaderSetting() {
   const getShowChangedProject = computed(() => {
     return computed(() => appStore.getHeaderSetting.showChangeProject);
   });
+
+  const getShowHeaderUserInfoPage = computed(() => {
+    return computed(() => appStore.getHeaderSetting.showUserInfoPage);
+  });
+
   // Set header configuration
   function setHeaderSetting(headerSetting: Partial<HeaderSetting>) {
     appStore.setProjectConfig({ headerSetting });
@@ -104,5 +109,6 @@ export function useHeaderSetting() {
     getUnFixedAndFull,
     getHeaderBgColor,
     getShowChangedProject,
+    getShowHeaderUserInfoPage,
   };
 }

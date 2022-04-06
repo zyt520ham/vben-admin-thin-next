@@ -75,6 +75,8 @@ const setting: ProjectConfig = {
     showSearch: true,
     //配置显示切换项目开关
     showChangeProject: true,
+    //配置是否显示用户信息页面
+    showUserInfoPage: true,
   },
 
   // Menu configuration

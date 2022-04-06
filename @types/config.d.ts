@@ -70,6 +70,8 @@ export interface HeaderSetting {
   showSearch: boolean;
   // 显示是否切换项目
   showChangeProject: boolean;
+  // 是否显示用户信息页面
+  showUserInfoPage: boolean;
 }
 // 多语言配置
 export interface LocaleSetting {
