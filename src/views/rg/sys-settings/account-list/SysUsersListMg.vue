@@ -73,7 +73,7 @@
                   tooltip: '锁定当前用户',
                   popConfirm: {
                     title: `是否锁定用户【${record.nickname}】`,
-                    confirm: tableRowHandleDeleteFn.bind(null, record),
+                    confirm: tableRowHandleLockFn.bind(null, record),
                   },
                   ifShow: () => {
                     if (record.status === 0) {
@@ -89,7 +89,7 @@
                   tooltip: '解锁当前用户',
                   popConfirm: {
                     title: `是否解锁用户【${record.nickname}】`,
-                    confirm: tableRowHandleDeleteFn.bind(null, record),
+                    confirm: tableRowHandleUnlockFn.bind(null, record),
                   },
                   ifShow: () => {
                     if (record.status !== 0) {
@@ -115,6 +115,7 @@
         </BasicTable>
       </div>
     </div>
+    <AddUserDrawerComp @register="addUserDrawerRegFn" @update_user_list="addUserDrawerUpdateFn" />
   </PageWrapper>
 </template>
 
@@ -130,16 +131,19 @@
     useTable,
   } from '/@/components/Table';
   import { BasicForm, useForm } from '/@/components/Form';
-  import {
-    getAccountColumnsCfg,
-    getProjsList,
-    getSearchFormCfg,
-    testDataList,
-  } from '/@/views/rg/sys-settings/account-list/inner/account.data';
+  import { getAccountColumnsCfg, getProjsList, getSearchFormCfg } from './inner/account.data';
   import GzShowSearchFormBtn from '/@/components/GzShowSearchFormBtn';
   import { arrSortFn } from '/@/utils/arrayUtils';
-  import { log } from '/@/utils/log';
-  import ProjectsTreeComp from '/@/views/rg/sys-settings/account-list/inner/ProjectsTreeComp.vue';
+  import { log, logNoTrace } from '/@/utils/log';
+  import ProjectsTreeComp from './inner/ProjectsTreeComp.vue';
+  import AddUserDrawerComp from './inner/AddUserDrawerComp.vue';
+  import { useDrawer } from '/@/components/Drawer';
+  import { delUserApi } from '/@/api/sys/user';
+  import { IReqErr } from '/#/axios';
+  import { getProjUsersV1Api } from '/@/api/sys/projectApi';
+  import { IReqGetProjUser } from '/@/api/model/projectModel';
+  import { IUserInfo } from '/#/store';
+  import { message } from 'ant-design-vue';
 
   export default defineComponent({
     name: 'SysUsersListMg',
@@ -150,6 +154,7 @@
       GzShowSearchFormBtn,
       TableAction,
       ProjectsTreeComp,
+      AddUserDrawerComp,
     },
     setup() {
       //样式表当前页面根元素
@@ -160,46 +165,76 @@
       // });
       //#endregion ----------------------------------------
       //#region table data =================================
-      let tableDatas: any[] = [];
-      let isSorting = false;
+
       //#endregion -----------------------------------------
       //#region table func =================================
       //拉取人员信息列表
       const loadUserFromServerApi = () => {
         return new Promise<any[]>((resolve) => {
-          if (isSorting) {
-            isSorting = false;
-            resolve(tableDatas);
-          } else {
-            const list = testDataList;
-            resolve(list);
-          }
+          const params: IReqGetProjUser = {
+            all: 'yes',
+            page: 1,
+            page_size: 1000,
+          };
+          getProjUsersV1Api(params).then(
+            (resp) => {
+              logNoTrace(resp);
+              const userList: IUserInfo[] = resp.list.slice();
+              userList.sort((a, b) => {
+                return a.user_id - b.user_id;
+              });
+
+              resolve(userList);
+            },
+            (err: IReqErr) => {
+              message.error(err.retMsg!);
+            },
+          );
+
+          // if (isSorting) {
+          //   isSorting = false;
+          //   resolve(tableDatas);
+          // } else {
+          //   const list = testDataList;
+          //   resolve(list);
+          // }
         });
       };
       //table fn 排序
       const tableSortFn = (sortInfo: SorterResult) => {
         console.log('tableSortFn', sortInfo);
-        isSorting = true;
-        const list = tableMethods.getDataSource().slice();
+
+        const list = tableMethods.getRawDataSource().slice();
         const sortList = arrSortFn(list, sortInfo.field, sortInfo.order);
-        tableDatas = sortList;
+        tableMethods.setTableData(sortList);
       };
       const tableColumnValueFormatFn = (record: any, column: BasicColumn) => {
-        // if (column.dataIndex === 'status') {
-        //   if (record.status * 1 === 0) {
-        //     return '正常';
-        //   } else {
-        //     return '锁定';
-        //   }
-        // }
         return record[column.dataIndex!];
       };
       //添加人员按钮实现
       const addBtnClickFn = () => {
         log('addBtnClickFn');
+        addUserDrawerMethods.openDrawer(true);
+      };
+      const tableRowHandleLockFn = (record) => {
+        logNoTrace('tableRowHandleLockFn', record);
+      };
+      const tableRowHandleUnlockFn = (record) => {
+        logNoTrace('tableRowHandleUnlockFn', record);
       };
       const tableRowHandleDeleteFn = (record) => {
         log('tableRowHandleDelete', record);
+        delUserApi({
+          user_id: record.user_id,
+        }).then(
+          (resp) => {
+            logNoTrace(resp);
+            tableMethods.deleteTableDataRecord(record.rowKey);
+          },
+          (err: IReqErr) => {
+            message.error(err.retMsg!);
+          },
+        );
       };
       //#endregion
       //table 注册
@@ -262,7 +297,12 @@
         log('projsTreeSelectFn', selectedKey);
       };
       //#endregion
-
+      //#region add user Drawer ========================================
+      const [addUserDrawerRegFn, addUserDrawerMethods] = useDrawer();
+      const addUserDrawerUpdateFn = () => {
+        tableMethods.reload();
+      };
+      //#endregion ---------------------------------------------
       return {
         prefixCls,
         useSearchState,
@@ -272,8 +312,12 @@
         tableColumnValueFormatFn,
         addBtnClickFn,
         tableRowHandleDeleteFn,
+        tableRowHandleLockFn,
+        tableRowHandleUnlockFn,
         projsTreeData,
         projsTreeSelectFn,
+        addUserDrawerRegFn,
+        addUserDrawerUpdateFn,
       };
     },
   });

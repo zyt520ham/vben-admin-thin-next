@@ -2,6 +2,7 @@ import {
   ILoginParams,
   ILoginServerData,
   IPermissionDataItem,
+  IReqCreateUser,
   IReqUpdateUserInfo,
   IReqUpdateUserPsd,
   IReqUserPsdResetByAdmin,
@@ -73,3 +74,9 @@ export const updateUserPsdApi = (params: IReqUpdateUserPsd, options?: RequestOpt
 //获取个人菜单权限列表
 export const getUserPermissionsListApi = (params: any = {}, options?: RequestOptions) =>
   doBaseApiRequest<IPermissionDataItem>(ApiEnum.rgGetPermissions, params, options);
+
+//新建用户
+export const getCreateUserApi = (params: IReqCreateUser, options?: RequestOptions) =>
+  doBaseApiRequest<IPermissionDataItem>(ApiEnum.rgCreateUser, params, options);
+export const delUserApi = (params: { user_id: string | number }, options?: RequestOptions) =>
+  doBaseApiRequest<IPermissionDataItem>(ApiEnum.rgDelUser, params, options);

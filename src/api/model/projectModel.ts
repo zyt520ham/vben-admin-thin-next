@@ -40,6 +40,8 @@ export interface IReqGetProjUser {
   status?: number;
   /** 获取非当前项目用户 */
   not_auth_project?: 'yes';
+  /** 拉取所有项目用户 */
+  all?: 'yes';
 }
 export interface IRespProjUsers {
   total: number;

@@ -298,7 +298,11 @@
                   doRoleFilterTableListFn();
                 }
               }, 10);
-              resolve(resp.list.slice());
+              const userList: IUserInfo[] = resp.list.slice();
+              userList.sort((a, b) => {
+                return a.user_id - b.user_id;
+              });
+              resolve(userList);
             },
             (err: IReqErr) => {
               console.error('err', err);

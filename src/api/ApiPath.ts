@@ -1,10 +1,13 @@
 export enum ApiEnum {
-  //user
+  //user.ts
   rgUpdateUserInfo = '/personal/update',
   rgLogin = '/site/login',
   rgLogout = '/site/logout',
   rgGetUserInfo = '/user/info',
-
+  //创建用户
+  rgCreateUser = '/user/create',
+  //删除用户
+  rgDelUser = '/user/delete',
   //管理员重置用户密码
   rgResetUserPsd = '/user/reset-password',
   //个人修改密码

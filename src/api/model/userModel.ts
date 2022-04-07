@@ -107,8 +107,16 @@ export type permissionMenuType = {
   id: string;
   children: permissionMenuType[];
 };
+/** 权限列表*/
 export interface IPermissionDataItem {
   is_system_admin: true;
   list: string[];
   menu: permissionMenuType[];
+}
+/** 创建用户 */
+export interface IReqCreateUser {
+  account: string;
+  nickname: string;
+  phone?: string;
+  email?: string;
 }
