@@ -168,3 +168,39 @@ export const getSearchFormCfg: FormSchema[] = [
     colProps: { span: 8 },
   },
 ];
+
+export const getEditProjFormCfg: FormSchema[] = [
+  {
+    field: 'project_id',
+    label: '项目Id',
+    dynamicDisabled: true,
+    component: 'Input',
+    // colProps: { span: 8 },
+  },
+  {
+    field: 'project_name',
+    label: '项目名称',
+    component: 'Input',
+    // colProps: { span: 8 },
+  },
+  {
+    field: 'status',
+    label: '项目状态',
+    dynamicDisabled: true,
+    component: 'Input',
+    // colProps: { span: 8 },
+  },
+  {
+    field: 'order_num',
+    label: '项目顺序',
+    component: 'InputNumber',
+    // colProps: { span: 8 },
+  },
+];
+
+export enum editProjFormColEnum {
+  kProjId = 'project_id',
+  kProjName = 'project_name',
+  kProjOrder = 'order_num',
+  kProjStatus = 'state',
+}

@@ -59,3 +59,16 @@ export interface IReqProjAddUsers {
   user_id: string;
   project_id: string;
 }
+/** 修改项目info */
+export interface IReqUpdateProjData {
+  project_id: string;
+  project_name?: string;
+  game_name?: string;
+  order_num?: number;
+  state?: number;
+}
+/** 修改项目状态 0-有效 1-无效*/
+export interface IReqUpdateProjState {
+  project_id: string;
+  state?: number;
+}

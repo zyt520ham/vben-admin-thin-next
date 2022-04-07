@@ -5,6 +5,8 @@ import {
   IReqProjAddUsers,
   IReqProjDelUser,
   IReqProjIncludeUsers,
+  IReqUpdateProjData,
+  IReqUpdateProjState,
   IRespProjectsData,
   IRespProjsIncludeUsers,
   IRespProjUsers,
@@ -52,3 +54,12 @@ export const deleteUserFromProjApi = (params: IReqProjDelUser, options: RequestO
 //项目邀请用户
 export const addUsersFromProjApi = (params: IReqProjAddUsers, options: RequestOptions = {}) =>
   doBaseApiRequest<any>(ApiEnum.rgAddUsersFromProj, params, options);
+
+//项目数据修改接口
+export const updateProjDataApi = (params: IReqUpdateProjData, options: RequestOptions = {}) =>
+  doBaseApiRequest<any>(ApiEnum.rgUpdateProjectData, params, options);
+
+//项目状态修改
+export const updateProjStateApi = (params: IReqUpdateProjState, options: RequestOptions = {}) =>
+  doBaseApiRequest<any>(ApiEnum.rgUpdateProjectState, params, options);
+//

@@ -68,6 +68,10 @@
         </template>
       </BasicTable>
     </div>
+    <EditProjDrawerComp
+      @register="editProjDrawerRegister"
+      @update_Proj_list="editDrawUpdateProjListFn"
+    />
   </PageWrapper>
 </template>
 
@@ -84,14 +88,21 @@
     useTable,
   } from '/@/components/Table';
   import {
+    editProjFormColEnum,
     getProjsColumnsCfg,
     getSearchFormCfg,
   } from '/@/views/rg/sys-settings/projs-list/inner/projs.data';
   import { arrSortFn } from '/@/utils/arrayUtils';
   import GzShowSearchFormBtn from '/@/components/GzShowSearchFormBtn';
-  import { log } from '/@/utils/log';
+  import { log, logNoTrace } from '/@/utils/log';
   import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
   import { formatToDate } from '/@/utils/dateUtil';
+  import EditProjDrawerComp from '/@/views/rg/sys-settings/projs-list/inner/EditProjDrawerComp.vue';
+  import { useDrawer } from '/@/components/Drawer';
+  import { IReqUpdateProjState } from '/@/api/model/projectModel';
+  import { updateProjStateApi } from '/@/api/sys/projectApi';
+  import { IReqErr } from '/#/axios';
+  import { message } from 'ant-design-vue';
 
   export default defineComponent({
     name: 'SysProjsListMg',
@@ -101,6 +112,7 @@
       GzShowSearchFormBtn,
       BasicForm,
       TableAction,
+      EditProjDrawerComp,
     },
     setup() {
       //样式表当前页面根元素
@@ -150,10 +162,10 @@
       };
       const tableSortFn = (sortInfo: SorterResult) => {
         log('tableSortFn', sortInfo);
-        isSorting = true;
-        const list = tableMethods.getDataSource().slice();
+        const list = tableMethods.getRawDataSource().slice();
         const sortList = arrSortFn(list, sortInfo.field, sortInfo.order);
-        tableDatas = sortList;
+        tableMethods.setTableData(sortList);
+        // tableDatas = sortList;
       };
       const useSearchBtnEventFn = () => {
         useSearchState.value = !useSearchState.value;
@@ -163,13 +175,42 @@
 
       const tableHandleEdit = (record: any) => {
         log('tableHandleEdit', record);
+        editDrawerMethods.openDrawer(true, record);
       };
 
       const tableHandleLockFn = (record: any) => {
+        const updateRecord: IReqUpdateProjState = {
+          [editProjFormColEnum.kProjId]: record[editProjFormColEnum.kProjId],
+          [editProjFormColEnum.kProjStatus]: 1,
+        };
+        updateProjStateApi(updateRecord).then(
+          (resp) => {
+            logNoTrace('', resp);
+            record[editProjFormColEnum.kProjStatus] = 1;
+            useProjsStoreWithOut().doSomethingConcurrent();
+          },
+          (err: IReqErr) => {
+            message.error(err.retMsg!);
+          },
+        );
         log('tableHandleLockFn', record);
       };
       const tableHandleUnlockFn = (record: any) => {
         log('tableHandleUnlockFn', record);
+        const updateRecord: IReqUpdateProjState = {
+          [editProjFormColEnum.kProjId]: record[editProjFormColEnum.kProjId],
+          [editProjFormColEnum.kProjStatus]: 0,
+        };
+        updateProjStateApi(updateRecord).then(
+          (resp) => {
+            logNoTrace('', resp);
+            record[editProjFormColEnum.kProjStatus] = 0;
+            useProjsStoreWithOut().doSomethingConcurrent();
+          },
+          (err: IReqErr) => {
+            message.error(err.retMsg!);
+          },
+        );
       };
       const tableRowFormatFn = (record: any, column: BasicColumn) => {
         if (column.dataIndex === 'created_at') {
@@ -197,6 +238,13 @@
         },
       });
       //#endregion ----------------------------------
+
+      //#region drawer ========================================
+      const [editProjDrawerRegister, editDrawerMethods] = useDrawer();
+      const editDrawUpdateProjListFn = () => {
+        tableMethods.reload();
+      };
+      //#endregion ---------------------------------------------
       return {
         prefixCls,
         useSearchState,
@@ -208,6 +256,8 @@
         tableRowFormatFn,
         tableHandleLockFn,
         tableHandleUnlockFn,
+        editProjDrawerRegister,
+        editDrawUpdateProjListFn,
       };
     },
   });

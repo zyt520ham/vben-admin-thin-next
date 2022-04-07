@@ -67,24 +67,28 @@ export const useProjsStore = defineStore({
     },
   },
   actions: {
-    async checkAllProjects() {
+    async checkAllProjects(reload = false) {
+      if (reload) {
+        return await this.doSomethingConcurrent();
+      }
       if (this.getAllProjs.length === 0) {
         //当前还没有拉取到projs
-        await this.doSomethingConcurrent();
+        return await this.doSomethingConcurrent();
       } else {
       }
     },
-    async doSomethingConcurrent() {
+    doSomethingConcurrent() {
       const p1 = this.getUsedProjectData();
       const p2 = this.getProjectRoles();
-      await Promise.all([p1, p2]);
+      return Promise.all([p1, p2]);
     },
     async getUsedProjectData() {
-      return new Promise<any>(async () => {
+      return new Promise<IProjectInfo[]>(async (resolve) => {
         const params: IProjectListReq = {};
         const promise: Promise<IRespProjectsData> = getProjsListApi(params);
         const projects = await promise;
         this.setProjects(projects.list);
+        resolve(projects.list);
         // log('projs:', projects.list);
       });
     },

@@ -131,7 +131,7 @@
     useTable,
   } from '/@/components/Table';
   import { BasicForm, useForm } from '/@/components/Form';
-  import { getAccountColumnsCfg, getProjsList, getSearchFormCfg } from './inner/account.data';
+  import { getAccountColumnsCfg, getSearchFormCfg } from './inner/account.data';
   import GzShowSearchFormBtn from '/@/components/GzShowSearchFormBtn';
   import { arrSortFn } from '/@/utils/arrayUtils';
   import { log, logNoTrace } from '/@/utils/log';
@@ -144,6 +144,7 @@
   import { IReqGetProjUser } from '/@/api/model/projectModel';
   import { IUserInfo } from '/#/store';
   import { message } from 'ant-design-vue';
+  import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
 
   export default defineComponent({
     name: 'SysUsersListMg',
@@ -229,7 +230,7 @@
         }).then(
           (resp) => {
             logNoTrace(resp);
-            tableMethods.deleteTableDataRecord(record.rowKey);
+            tableMethods.deleteTableDataRecord(record.key);
           },
           (err: IReqErr) => {
             message.error(err.retMsg!);
@@ -292,7 +293,7 @@
       };
       //#endregion --------------------------------------
       //#region projsTreeData =================================
-      const projsTreeData = ref(getProjsList);
+      const projsTreeData = ref(useProjsStoreWithOut().getAllProjs);
       const projsTreeSelectFn = (selectedKey: string) => {
         log('projsTreeSelectFn', selectedKey);
       };

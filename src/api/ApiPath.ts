@@ -47,7 +47,10 @@ export enum ApiEnum {
   rgAddUsersFromProj = '/project/authorization',
   //删除用户从项目
   rgDelUserFromProj = '/user/project-authorization',
-
+  //修改项目信息
+  rgUpdateProjectData = '/project/update',
+  //修改项目状态
+  rgUpdateProjectState = '/project/state',
   //menu.ts
   rgGetMenuList = '/rbac/menu/list',
   //add menuItem

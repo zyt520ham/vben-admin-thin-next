@@ -1,7 +1,7 @@
 <template>
   <BasicDrawer
     :destroy-on-close="true"
-    :mask-closable="false"
+    :mask-closable="true"
     v-bind="$attrs"
     @register="registerDrawer"
     show-footer
@@ -15,7 +15,7 @@
 
 <script lang="ts">
   export default {
-    name: 'AddUserDrawerComp',
+    name: 'EditProjDrawerComp',
   };
 </script>
 <script lang="ts" setup>
@@ -25,17 +25,17 @@
   import BasicForm from '/@/components/Form/src/BasicForm.vue';
   import { useForm } from '/@/components/Form';
 
-  import { AddUserFormColEnum, getAddUserFormCfg } from './account.data';
   import { message } from 'ant-design-vue';
-  import { getCreateUserApi } from '/@/api/sys/user';
-  import { IReqCreateUser } from '/@/api/model/userModel';
   import { IReqErr } from '/#/axios';
+  import { getEditProjFormCfg, editProjFormColEnum } from './projs.data';
+  import { updateProjDataApi } from '/@/api/sys/projectApi';
+  import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
   // const { prefixCls } = useDesign('adduser-drawer-comp');
 
   //#region emit ========================================
   const emit = defineEmits<{
     (e: 'register', value: any): any;
-    (e: 'update_user_list', value?: any): void;
+    (e: 'update_Proj_list', value?: any): void;
   }>();
   //#endregion ---------------------------------------------
 
@@ -46,7 +46,7 @@
     wrapperCol: { span: 14 },
     size: 'small',
     labelAlign: 'left',
-    schemas: getAddUserFormCfg,
+    schemas: getEditProjFormCfg,
     showActionButtonGroup: false,
   });
 
@@ -54,7 +54,14 @@
 
   //#region  drawer ========================================
   const [registerDrawer, drawInnerMethods] = useDrawerInner(async (propData) => {
-    logNoTrace('useDrawerInner');
+    logNoTrace('useDrawerInner', propData);
+    const oriForm = {
+      [editProjFormColEnum.kProjId]: propData[editProjFormColEnum.kProjId],
+      [editProjFormColEnum.kProjName]: propData[editProjFormColEnum.kProjName],
+      [editProjFormColEnum.kProjOrder]: propData[editProjFormColEnum.kProjOrder],
+      [editProjFormColEnum.kProjStatus]: propData[editProjFormColEnum.kProjStatus],
+    };
+    await formMethods.setFieldsValue(oriForm);
     drawInnerMethods.setDrawerProps({ confirmLoading: false });
   });
   const handleEnterFn = () => {
@@ -64,25 +71,15 @@
       .then(() => {
         logNoTrace(':success');
         const formData: any = formMethods.getFieldsValue() as any;
-        //  TODO:: 文件上传逻辑
-        const params: IReqCreateUser = {
-          account: formData[AddUserFormColEnum.kAccount],
-          nickname: formData[AddUserFormColEnum.kNickName],
-        } as any;
-        if (formData[AddUserFormColEnum.kEmail]) {
-          params['email'] = formData[AddUserFormColEnum.kEmail];
-        }
-        if (formData[AddUserFormColEnum.kPhone]) {
-          params['phone'] = formData[AddUserFormColEnum.kPhone];
-        }
-        getCreateUserApi(params).then(
-          (resp) => {
-            emit('update_user_list');
+        drawInnerMethods.setDrawerProps({ confirmLoading: true });
+        updateProjDataApi(formData).then(
+          async (resp) => {
+            const data = await useProjsStoreWithOut().checkAllProjects(true);
+            drawInnerMethods.setDrawerProps({ confirmLoading: false });
+            emit('update_Proj_list');
             drawInnerMethods.closeDrawer();
           },
-          (err: IReqErr) => {
-            message.error(err.retMsg!);
-          },
+          (err: IReqErr) => {},
         );
         console.log(formData);
       })
@@ -91,7 +88,7 @@
           const errObj = e.errorFields[0];
           const errMsg = errObj.errors || '';
           if (errMsg) {
-            message.error(errMsg);
+            message.error(errMsg!);
           }
         }
         console.log(e);
