@@ -120,3 +120,8 @@ export interface IReqCreateUser {
   phone?: string;
   email?: string;
 }
+/** 锁定/解锁 用户*/
+export interface IReqUserBanChange {
+  user_id: string;
+  ban: 'yes' | 'no';
+}

@@ -1,4 +1,6 @@
 import { BasicColumn, FormSchema } from '/@/components/Table';
+import { formatToDate } from '/@/utils/dateUtil';
+import moment from 'moment';
 
 export const getAccountColumnsCfg: BasicColumn[] = [
   {
@@ -45,12 +47,21 @@ export const getAccountColumnsCfg: BasicColumn[] = [
     dataIndex: 'created_at',
     width: 120,
     sorter: true,
+    format: (text: any) => {
+      return formatToDate(moment(text * 1000));
+    },
   },
   {
     title: '修改时间',
     dataIndex: 'updated_at',
     width: 120,
     sorter: true,
+    format: (text: any) => {
+      if (text * 1 === 0) {
+        return '';
+      }
+      return formatToDate(moment(text * 1000));
+    },
   },
 ];
 

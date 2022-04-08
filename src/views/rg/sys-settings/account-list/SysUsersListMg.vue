@@ -66,6 +66,7 @@
                 {
                   icon: 'codicon:key',
                   tooltip: '重置密码',
+                  onClick: tableRowHandleResetPsdFn.bind(null, record),
                 },
                 {
                   icon: 'la:user-lock',
@@ -116,6 +117,7 @@
       </div>
     </div>
     <AddUserDrawerComp @register="addUserDrawerRegFn" @update_user_list="addUserDrawerUpdateFn" />
+    <UserResetPsdModal @register="registerResetPsdModalFn" />
   </PageWrapper>
 </template>
 
@@ -138,13 +140,16 @@
   import ProjectsTreeComp from './inner/ProjectsTreeComp.vue';
   import AddUserDrawerComp from './inner/AddUserDrawerComp.vue';
   import { useDrawer } from '/@/components/Drawer';
-  import { delUserApi } from '/@/api/sys/user';
+  import { delUserApi, updateUserBanStateApi } from '/@/api/sys/user';
   import { IReqErr } from '/#/axios';
   import { getProjUsersV1Api } from '/@/api/sys/projectApi';
   import { IReqGetProjUser } from '/@/api/model/projectModel';
   import { IUserInfo } from '/#/store';
   import { message } from 'ant-design-vue';
   import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
+  import { useModal } from '/@/components/Modal';
+  import UserResetPsdModal from '/@/views/rg/proj-setting/proj-users-mg/inner/UserResetPsdModal.vue';
+  import { IReqUserBanChange } from '/@/api/model/userModel';
 
   export default defineComponent({
     name: 'SysUsersListMg',
@@ -156,6 +161,7 @@
       TableAction,
       ProjectsTreeComp,
       AddUserDrawerComp,
+      UserResetPsdModal,
     },
     setup() {
       //样式表当前页面根元素
@@ -191,14 +197,6 @@
               message.error(err.retMsg!);
             },
           );
-
-          // if (isSorting) {
-          //   isSorting = false;
-          //   resolve(tableDatas);
-          // } else {
-          //   const list = testDataList;
-          //   resolve(list);
-          // }
         });
       };
       //table fn 排序
@@ -217,11 +215,43 @@
         log('addBtnClickFn');
         addUserDrawerMethods.openDrawer(true);
       };
+      const tableRowHandleResetPsdFn = (record) => {
+        logNoTrace('tableRowHandleResetPsdFn');
+        openModal(true, record);
+      };
       const tableRowHandleLockFn = (record) => {
         logNoTrace('tableRowHandleLockFn', record);
+        const params: IReqUserBanChange = {
+          user_id: record.user_id,
+          ban: 'yes',
+        };
+        updateUserBanStateApi(params).then(
+          (resp) => {
+            logNoTrace(resp);
+            record.status = 1;
+            message.success(`已锁定用户【${record.nickname}】`);
+          },
+          (err: IReqErr) => {
+            message.error(err.retMsg!);
+          },
+        );
       };
       const tableRowHandleUnlockFn = (record) => {
         logNoTrace('tableRowHandleUnlockFn', record);
+        const params: IReqUserBanChange = {
+          user_id: record.user_id,
+          ban: 'no',
+        };
+        updateUserBanStateApi(params).then(
+          (resp) => {
+            logNoTrace(resp);
+            record.status = 0;
+            message.success(`已解锁用户【${record.nickname}】`);
+          },
+          (err: IReqErr) => {
+            message.error(err.retMsg!);
+          },
+        );
       };
       const tableRowHandleDeleteFn = (record) => {
         log('tableRowHandleDelete', record);
@@ -304,6 +334,9 @@
         tableMethods.reload();
       };
       //#endregion ---------------------------------------------
+      //#region resetPsdModal ========================================
+      const [registerResetPsdModalFn, { openModal }] = useModal();
+      //#endregion ---------------------------------------------
       return {
         prefixCls,
         useSearchState,
@@ -319,6 +352,8 @@
         projsTreeSelectFn,
         addUserDrawerRegFn,
         addUserDrawerUpdateFn,
+        registerResetPsdModalFn,
+        tableRowHandleResetPsdFn,
       };
     },
   });

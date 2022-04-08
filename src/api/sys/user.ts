@@ -5,6 +5,7 @@ import {
   IReqCreateUser,
   IReqUpdateUserInfo,
   IReqUpdateUserPsd,
+  IReqUserBanChange,
   IReqUserPsdResetByAdmin,
   IUserInfoParams,
   IUserItemServerData,
@@ -78,5 +79,9 @@ export const getUserPermissionsListApi = (params: any = {}, options?: RequestOpt
 //新建用户
 export const getCreateUserApi = (params: IReqCreateUser, options?: RequestOptions) =>
   doBaseApiRequest<IPermissionDataItem>(ApiEnum.rgCreateUser, params, options);
+//删除用户
 export const delUserApi = (params: { user_id: string | number }, options?: RequestOptions) =>
   doBaseApiRequest<IPermissionDataItem>(ApiEnum.rgDelUser, params, options);
+// 用户锁定解锁
+export const updateUserBanStateApi = (params: IReqUserBanChange, options?: RequestOptions) =>
+  doBaseApiRequest<any>(ApiEnum.rgUpdateUserBanState, params, options);

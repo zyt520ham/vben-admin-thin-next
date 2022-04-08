@@ -1,5 +1,5 @@
 export enum ApiEnum {
-  //user.ts
+  //#region user.ts ========================================
   rgUpdateUserInfo = '/personal/update',
   rgLogin = '/site/login',
   rgLogout = '/site/logout',
@@ -14,14 +14,18 @@ export enum ApiEnum {
   rgUpdateUserPsd = '/personal/modify-password',
   //获取权限菜单列表
   rgGetPermissions = '/site/permission',
+  //更新用户账户状态
+  rgUpdateUserBanState = '/user/ban',
+  //#endregion ---------------------------------------------
 
-  //costUploadApi
+  //#region costUploadApi.ts ========================================
   UploadWxCost = '/tripartite/wx/upwxcost',
   UploadLineCost = '/tripartite/wx/uplinecost',
   //urlTokenApi.ts
   getTokenExchangedUrl = '/tripartite/exchangeurl',
+  //#endregion ---------------------------------------------
 
-  //roleApi.ts
+  //#region roleApi.ts ========================================
   rgGetRoleList = '/rbac/role/list',
   rgUpdateUserRole = '/rbac/association/role-user',
   //获取相应角色对应的菜单权限
@@ -35,7 +39,9 @@ export enum ApiEnum {
 
   rgDelRole = '/rbac/role/delete',
 
-  //projectApi.ts
+  //#endregion ---------------------------------------------
+
+  //#region projectApi.ts ========================================
   GetProjectsList = '/project/list',
 
   UpdateChooseProj = '/personal/set-default-project',
@@ -59,8 +65,9 @@ export enum ApiEnum {
   rgDelMenuItem = '/rbac/menu/delete',
   //更新menuItem
   rgUpdateMenuItem = '/rbac/menu/update',
-
-  //  cost.ts
+  //#endregion ---------------------------------------------
+  //#region  cost.ts ========================================
   rgGetWxCost = '/tripartite/wx/getcostname',
   rgGetLineCost = '/tripartite/wx/linelistcost',
+  //#endregion ---------------------------------------------
 }
