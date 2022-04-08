@@ -5,6 +5,7 @@
     "bootstrap": "yarn install",
     "serve": "npm run dev",
     "dev": "vite",
+    "dev:online": "vite --mode devonline",
     "build": "cross-env NODE_ENV=production vite build && esno ./build/script/postBuild.ts",
     "build:test": "cross-env vite build --mode test && esno ./build/script/postBuild.ts",
     "build:no-cache": "yarn clean:cache && npm run build",
