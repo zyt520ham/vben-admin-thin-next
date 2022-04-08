@@ -5,7 +5,7 @@
     centered
     v-bind="$attrs"
     width="400px"
-    min-height="50"
+    :min-height="50"
     @register="register"
     title="重置密码"
     @ok="okBtnEventFn"
