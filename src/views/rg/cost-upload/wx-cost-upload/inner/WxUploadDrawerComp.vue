@@ -110,7 +110,6 @@
       .then(() => {
         console.log('success');
         const formData: IFormDataItem = formMethods.getFieldsValue() as IFormDataItem;
-        //  TODO:: 文件上传逻辑
         console.log(formData);
         const params: IReqUploadWxCost = {
           file: formData.choose_file[0] as any,
@@ -123,13 +122,12 @@
           .then((resp) => {
             console.log(resp);
             emit('update_cost_table_list', [1, 2, 3]);
+            drawInnerMethods.closeDrawer();
           })
           .catch((e: IReqErr) => {
             console.log(e);
             message.error(e.retMsg!);
           });
-        // emit('update_cost_table_list', [1, 2, 3]);
-        // drawInnerMethods.closeDrawer();
       })
       .catch((e) => {
         if (e.errorFields?.length > 0) {

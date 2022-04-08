@@ -64,7 +64,6 @@
       .then(() => {
         logNoTrace(':success');
         const formData: any = formMethods.getFieldsValue() as any;
-        //  TODO:: 文件上传逻辑
         const params: IReqCreateUser = {
           account: formData[AddUserFormColEnum.kAccount],
           nickname: formData[AddUserFormColEnum.kNickName],
@@ -75,13 +74,27 @@
         if (formData[AddUserFormColEnum.kPhone]) {
           params['phone'] = formData[AddUserFormColEnum.kPhone];
         }
+        drawInnerMethods.setDrawerProps({
+          loading: true,
+          confirmLoading: true,
+        });
         getCreateUserApi(params).then(
           (resp) => {
+            logNoTrace(resp);
+            message.success('创建用户成功');
             emit('update_user_list');
+            drawInnerMethods.setDrawerProps({
+              loading: false,
+              confirmLoading: false,
+            });
             drawInnerMethods.closeDrawer();
           },
           (err: IReqErr) => {
             message.error(err.retMsg!);
+            drawInnerMethods.setDrawerProps({
+              loading: false,
+              confirmLoading: false,
+            });
           },
         );
         console.log(formData);
