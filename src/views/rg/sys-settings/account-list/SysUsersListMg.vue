@@ -62,6 +62,7 @@
                   ifShow: () => {
                     return true;
                   },
+                  onClick: tableRowHandleEditUserFn.bind(null, record),
                 },
                 {
                   icon: 'codicon:key',
@@ -117,6 +118,7 @@
       </div>
     </div>
     <AddUserDrawerComp @register="addUserDrawerRegFn" @update_user_list="addUserDrawerUpdateFn" />
+    <EditUserDrawerComp @register="EditUserDrawerRegFn" @update_user_list="addUserDrawerUpdateFn" />
     <UserResetPsdModal @register="registerResetPsdModalFn" />
   </PageWrapper>
 </template>
@@ -150,6 +152,7 @@
   import { useModal } from '/@/components/Modal';
   import UserResetPsdModal from '/@/views/rg/proj-setting/proj-users-mg/inner/UserResetPsdModal.vue';
   import { IReqUserBanChange } from '/@/api/model/userModel';
+  import EditUserDrawerComp from '/@/views/rg/sys-settings/account-list/inner/EditUserDrawerComp.vue';
 
   export default defineComponent({
     name: 'SysUsersListMg',
@@ -162,6 +165,7 @@
       ProjectsTreeComp,
       AddUserDrawerComp,
       UserResetPsdModal,
+      EditUserDrawerComp,
     },
     setup() {
       //样式表当前页面根元素
@@ -214,6 +218,10 @@
       const addBtnClickFn = () => {
         log('addBtnClickFn');
         addUserDrawerMethods.openDrawer(true);
+      };
+      //editUserDrawerMethods
+      const tableRowHandleEditUserFn = (record) => {
+        editUserDrawerMethods.openDrawer(true, record);
       };
       const tableRowHandleResetPsdFn = (record) => {
         logNoTrace('tableRowHandleResetPsdFn');
@@ -330,6 +338,7 @@
       //#endregion
       //#region add user Drawer ========================================
       const [addUserDrawerRegFn, addUserDrawerMethods] = useDrawer();
+      const [EditUserDrawerRegFn, editUserDrawerMethods] = useDrawer();
       const addUserDrawerUpdateFn = () => {
         tableMethods.reload();
       };
@@ -354,6 +363,8 @@
         addUserDrawerUpdateFn,
         registerResetPsdModalFn,
         tableRowHandleResetPsdFn,
+        EditUserDrawerRegFn,
+        tableRowHandleEditUserFn,
       };
     },
   });

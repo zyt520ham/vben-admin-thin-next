@@ -98,6 +98,10 @@ export interface IReqUpdateUserInfo {
   avatar?: string;
 }
 
+export interface IReqUpdateUserInfoByAdmin extends IReqUpdateUserInfo {
+  user_id: number;
+}
+
 /** 用户修改密码接口 */
 export interface IReqUpdateUserPsd {
   old_password: string;

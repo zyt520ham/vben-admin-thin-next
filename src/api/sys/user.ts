@@ -4,6 +4,7 @@ import {
   IPermissionDataItem,
   IReqCreateUser,
   IReqUpdateUserInfo,
+  IReqUpdateUserInfoByAdmin,
   IReqUpdateUserPsd,
   IReqUserBanChange,
   IReqUserPsdResetByAdmin,
@@ -64,9 +65,15 @@ export function doLogout() {
 export const resetUserPsdByAdminApi = (params: IReqUserPsdResetByAdmin, options?: RequestOptions) =>
   doBaseApiRequest<any>(ApiEnum.rgResetUserPsd, params, options);
 
-//修改用户信息
+//个人修改用户信息
 export const updateUserProfileApi = (params: IReqUpdateUserInfo, options?: RequestOptions) =>
   doBaseApiRequest<IUserInfo>(ApiEnum.rgUpdateUserInfo, params, options);
+
+//管理员更新用户信息
+export const updateUserInfoByAdminApi = (
+  params: IReqUpdateUserInfoByAdmin,
+  options?: RequestOptions,
+) => doBaseApiRequest<IUserInfo>(ApiEnum.rgUpdateUserInfoByAdmin, params, options);
 
 //修改个人密码
 export const updateUserPsdApi = (params: IReqUpdateUserPsd, options?: RequestOptions) =>

@@ -1527,18 +1527,53 @@ export const getProjsList = [
 ];
 
 export enum AddUserFormColEnum {
+  kUserId = 'user_id',
   kAccount = 'account',
   kNickName = 'nickname',
   kPhone = 'phone',
   kEmail = 'email',
+  kSex = 'sex',
 }
 
 export const getAddUserFormCfg: FormSchema[] = [
   {
     field: AddUserFormColEnum.kAccount,
-    label: '账户',
+    label: '用户Id',
     component: 'Input',
     required: true,
+  },
+  {
+    field: AddUserFormColEnum.kNickName,
+    label: '昵称',
+    component: 'Input',
+    required: true,
+  },
+  {
+    field: AddUserFormColEnum.kPhone,
+    label: '电话',
+    component: 'Input',
+  },
+  {
+    field: AddUserFormColEnum.kEmail,
+    label: '邮箱',
+    component: 'Input',
+  },
+];
+
+export const getEditUserFormCfg: FormSchema[] = [
+  {
+    field: AddUserFormColEnum.kUserId,
+    label: '用户Id',
+    component: 'Input',
+    // required: true,
+    dynamicDisabled: true,
+  },
+  {
+    field: AddUserFormColEnum.kAccount,
+    label: '账户',
+    component: 'Input',
+    // required: true,
+    dynamicDisabled: true,
   },
   {
     field: AddUserFormColEnum.kNickName,

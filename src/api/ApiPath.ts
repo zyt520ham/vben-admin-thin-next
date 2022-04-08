@@ -16,6 +16,8 @@ export enum ApiEnum {
   rgGetPermissions = '/site/permission',
   //更新用户账户状态
   rgUpdateUserBanState = '/user/ban',
+  /** 管理员更新用户信息 */
+  rgUpdateUserInfoByAdmin = '/user/update',
   //#endregion ---------------------------------------------
 
   //#region costUploadApi.ts ========================================
