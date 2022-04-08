@@ -125,7 +125,7 @@
 
 <script lang="ts">
   import { useDesign } from '/@/hooks/web/useDesign';
-  import { defineComponent, ref } from 'vue';
+  import { computed, defineComponent, ref } from 'vue';
   import { PageWrapper } from '/@/components/Page';
   import {
     BasicColumn,
@@ -331,7 +331,10 @@
       };
       //#endregion --------------------------------------
       //#region projsTreeData =================================
-      const projsTreeData = ref(useProjsStoreWithOut().getAllProjs);
+      const projsTreeData = computed(() => {
+        return useProjsStoreWithOut().getAllProjs;
+      });
+
       const projsTreeSelectFn = (selectedKey: string) => {
         log('projsTreeSelectFn', selectedKey);
       };
