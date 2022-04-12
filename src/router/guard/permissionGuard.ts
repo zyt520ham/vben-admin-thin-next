@@ -5,7 +5,7 @@
  * @FilePath     : src/router/guard/permissionGuard.ts
  */
 
-import type { Router, RouteRecordRaw } from 'vue-router';
+import type { Router } from 'vue-router';
 
 import { usePermissionStoreWithOut } from '/@/store/modules/permission';
 
@@ -88,29 +88,29 @@ export function createPermissionGuard(router: Router) {
     }
 
     // get userinfo while last fetch time is empty
-    if (userStore.getLastUpdateTime === 0) {
-      try {
-        await userStore.getUserInfoAction();
-      } catch (err) {
-        next();
-        return;
-      }
-    }
+    // if (userStore.getLastUpdateTime === 0) {
+    //   try {
+    //     await userStore.getUserInfoAction();
+    //   } catch (err) {
+    //     next();
+    //     return;
+    //   }
+    // }
 
-    if (permissionStore.getIsDynamicAddedRoute) {
+    if (userStore.getLastUpdateTime > 0 && permissionStore.getIsDynamicAddedRoute) {
       next();
       return;
     }
-
-    const routes = await permissionStore.buildRoutesAction();
-
-    routes.forEach((route) => {
-      router.addRoute(route as unknown as RouteRecordRaw);
-    });
-
-    router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
-
-    permissionStore.setDynamicAddedRoute(true);
+    await userStore.afterLoginAction(false);
+    // const routes = await permissionStore.buildRoutesAction();
+    //
+    // routes.forEach((route) => {
+    //   router.addRoute(route as unknown as RouteRecordRaw);
+    // });
+    //
+    // router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
+    //
+    // permissionStore.setDynamicAddedRoute(true);
 
     if (to.name === PAGE_NOT_FOUND_ROUTE.name) {
       // 动态添加路由后，此处应当重定向到fullPath，否则会加载404页面内容

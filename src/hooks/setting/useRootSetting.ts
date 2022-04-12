@@ -5,6 +5,7 @@ import { computed } from 'vue';
 import { useAppStore } from '/@/store/modules/app';
 import { ContentEnum, ThemeEnum } from '/@/enums/appEnum';
 
+//声明类型一个 ProjectConfig 类型，不包括 locale ，headerSetting，menuSetting，multiTabsSetting
 type RootSetting = Omit<
   ProjectConfig,
   'locale' | 'headerSetting' | 'menuSetting' | 'multiTabsSetting'
