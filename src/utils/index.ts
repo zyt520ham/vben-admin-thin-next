@@ -32,12 +32,37 @@ export function setObjToUrlParams(baseUrl: string, obj: any): string {
   return /\?$/.test(baseUrl) ? baseUrl + parameters : baseUrl.replace(/\/?$/, '?') + parameters;
 }
 
+//深度合并
 export function deepMerge<T = any>(src: any = {}, target: any = {}): T {
   let key: string;
   for (key in target) {
     src[key] = isObject(src[key]) ? deepMerge(src[key], target[key]) : (src[key] = target[key]);
   }
   return src;
+}
+//对象深拷贝，支持嵌套
+export function deepCopy<T = any>(obj: T = {} as T): T {
+  let target: any = null;
+  if (typeof obj === 'object') {
+    if (Array.isArray(obj)) {
+      //数组
+      target = [];
+      obj.forEach((item) => {
+        target.push(deepCopy(item));
+      });
+    } else if (obj) {
+      target = {};
+      const objKeys: string[] = Object.keys(obj);
+      objKeys.forEach((key) => {
+        target[key] = deepCopy(obj[key]);
+      });
+    } else {
+      target = obj;
+    }
+  } else {
+    target = obj;
+  }
+  return target;
 }
 
 export function openWindow(

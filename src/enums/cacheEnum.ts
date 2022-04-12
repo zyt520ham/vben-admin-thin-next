@@ -22,6 +22,8 @@ export const APP_DARK_MODE_KEY_ = '__APP__DARK__MODE__';
 // base global local key
 export const APP_LOCAL_CACHE_KEY = 'COMMON__LOCAL__KEY__';
 
+export const APP_LOCAL_ProjCfg_KEY = 'APP__LOCAL__PROJCFG__KEY__';
+
 // base global session key
 export const APP_SESSION_CACHE_KEY = 'COMMON__SESSION__KEY__';
 

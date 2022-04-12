@@ -5,18 +5,19 @@ import type { RouteLocationNormalized } from 'vue-router';
 import { createLocalStorage, createSessionStorage } from '/@/utils/cache';
 import { Memory } from './memory';
 import {
+  APP_LOCAL_CACHE_KEY,
+  APP_LOCAL_ProjCfg_KEY,
+  APP_SESSION_CACHE_KEY,
+  LOCK_INFO_KEY,
+  MULTIPLE_TABS_KEY,
+  PROJ_CFG_KEY,
+  ROLES_KEY,
   TOKEN_KEY,
   USER_INFO_KEY,
-  ROLES_KEY,
-  LOCK_INFO_KEY,
-  PROJ_CFG_KEY,
-  APP_LOCAL_CACHE_KEY,
-  APP_SESSION_CACHE_KEY,
-  MULTIPLE_TABS_KEY,
 } from '/@/enums/cacheEnum';
 import { DEFAULT_CACHE_TIME } from '/@/settings/encryptionSetting';
 import { toRaw } from 'vue';
-import { pick, omit } from 'lodash-es';
+import { omit, pick } from 'lodash-es';
 
 interface BasicStore {
   [TOKEN_KEY]: string | number | null | undefined;
@@ -56,6 +57,17 @@ export class Persistent {
   static setLocal(key: LocalKeys, value: LocalStore[LocalKeys], immediate = false): void {
     localMemory.set(key, toRaw(value));
     immediate && ls.set(APP_LOCAL_CACHE_KEY, localMemory.getCache);
+  }
+
+  static getProjCfgLocal<T>(userId: string | number) {
+    // const userId = useUserStoreWithOut().getUserId + '';
+    // const localKey = PROJ_CFG_KEY + userId;
+    const cfg: T = ls.get(`${APP_LOCAL_ProjCfg_KEY}${userId}`);
+    return cfg;
+  }
+
+  static updateProjCfgLocal(userId: string | number, value: ProjectConfig) {
+    ls.set(`${APP_LOCAL_ProjCfg_KEY}${userId}`, value);
   }
 
   static removeLocal(key: LocalKeys, immediate = false): void {

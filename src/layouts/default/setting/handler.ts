@@ -12,7 +12,7 @@ import { useRootSetting } from '/@/hooks/setting/useRootSetting';
 export function baseHandler(event: HandlerEnum, value: any) {
   const appStore = useAppStore();
   const config = handler(event, value);
-  appStore.setProjectConfig(config);
+  appStore.setProjectConfig(config, true);
   if (event === HandlerEnum.CHANGE_THEME) {
     updateHeaderBgColor();
     updateSidebarBgColor();

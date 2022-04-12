@@ -11,11 +11,13 @@ import { defineStore } from 'pinia';
 import { store } from '/@/store';
 
 import { ThemeEnum } from '/@/enums/appEnum';
-import { APP_DARK_MODE_KEY_, PROJ_CFG_KEY } from '/@/enums/cacheEnum';
+import { APP_DARK_MODE_KEY_ } from '/@/enums/cacheEnum';
 import { Persistent } from '/@/utils/cache/persistent';
 import { darkMode } from '/@/settings/designSetting';
 import { resetRouter } from '/@/router';
-import { deepMerge } from '/@/utils';
+import { deepCopy, deepMerge } from '/@/utils';
+import { useUserStoreWithOut } from '/@/store/modules/user';
+import projectSetting from '/@/settings/projectSetting';
 
 interface AppState {
   darkMode?: ThemeEnum;
@@ -32,7 +34,7 @@ export const useAppStore = defineStore({
   state: (): AppState => ({
     darkMode: undefined,
     pageLoading: false,
-    projectConfig: Persistent.getLocal(PROJ_CFG_KEY),
+    projectConfig: deepCopy(projectSetting),
     beforeMiniInfo: {},
   }),
   getters: {
@@ -65,6 +67,15 @@ export const useAppStore = defineStore({
     },
   },
   actions: {
+    loadLoginUserProjCfg() {
+      console.log('-------------loadLoginUserProjCfg');
+      const userId = useUserStoreWithOut().getUserId || '';
+      const userLocal = Persistent.getProjCfgLocal<ProjectConfig>(userId);
+      console.log('xxxxxxxxx', userLocal);
+      if (userLocal) {
+        this.projectConfig = deepMerge(this.projectConfig || {}, userLocal);
+      }
+    },
     setPageLoading(loading: boolean): void {
       this.pageLoading = loading;
     },
@@ -78,14 +89,26 @@ export const useAppStore = defineStore({
       this.beforeMiniInfo = state;
     },
 
-    setProjectConfig(config: DeepPartial<ProjectConfig>): void {
+    setProjectConfig(config: DeepPartial<ProjectConfig>, useCache = false): void {
+      // debugger;
+      // debugger;
       this.projectConfig = deepMerge(this.projectConfig || {}, config);
-      Persistent.setLocal(PROJ_CFG_KEY, this.projectConfig);
+      if (useCache) {
+        // Persistent.setLocal(PROJ_CFG_KEY, this.projectConfig, useCache);
+        Persistent.updateProjCfgLocal(useUserStoreWithOut().getUserId, this.projectConfig!);
+      }
     },
 
-    async resetAllState() {
+    async resetAllState(immediate = false) {
       resetRouter();
-      Persistent.clearAll();
+      this.darkMode = undefined;
+      this.pageLoading = false;
+      const nProjSetting = deepCopy(projectSetting);
+
+      this.setProjectConfig(nProjSetting, false);
+      // this.projectConfig = Object.assign({}, projectSetting);
+      this.beforeMiniInfo = {};
+      Persistent.clearAll(immediate);
     },
     async setPageLoadingAction(loading: boolean): Promise<void> {
       if (loading) {

@@ -26,6 +26,7 @@ import { useProjsStoreWithOut } from '/@/store/modules/projectsStore';
 import { log } from '/@/utils/log';
 import { iframeRoutesReset, routesListChanged } from '/@/layouts/iframe/useFrameKeepAlive';
 import { usePermission } from '/@/hooks/web/usePermission';
+import { useAppStoreWithOut } from '/@/store/modules/app';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
@@ -55,10 +56,10 @@ export const useUserStore = defineStore({
   }),
   getters: {
     getUserId(): number {
-      return this.getLoginInfo!.user_id;
+      return this.getLoginInfo?.user_id || -1;
     },
     getChooseProjectId(): string {
-      return this.getLoginInfo!.project;
+      return this.getLoginInfo?.project || '';
     },
     getLoginInfo(): ILoginServerData | null {
       let loginInfo = null;
@@ -169,7 +170,9 @@ export const useUserStore = defineStore({
       }
     },
     async afterLoginAction(goHome?: boolean): Promise<IUserInfo | null> {
+      console.log('-------------afterLoginAction');
       if (!this.getToken || !this.getLoginInfo) return null;
+      useAppStoreWithOut().loadLoginUserProjCfg();
       // get user info
       const userInfo = await this.getUserInfoAction();
 
