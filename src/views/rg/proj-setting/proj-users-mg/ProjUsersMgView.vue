@@ -225,13 +225,13 @@
             while (index < allSearchKeys.length) {
               const key = allSearchKeys[index];
               if (index === 0) {
-                if (ele[key].indexOf(searchItem[key]) >= 0) {
+                if ((ele[key] + '').indexOf(searchItem[key]) >= 0) {
                   oldSearchResult = true;
                 } else {
                   oldSearchResult = false;
                 }
               } else {
-                if (ele[key].indexOf(searchItem[key]) >= 0) {
+                if ((ele[key] + '').indexOf(searchItem[key]) >= 0) {
                   oldSearchResult = oldSearchResult && true;
                 } else {
                   oldSearchResult = oldSearchResult && false;

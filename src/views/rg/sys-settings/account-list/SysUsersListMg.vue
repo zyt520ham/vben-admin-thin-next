@@ -299,7 +299,63 @@
 
       //#endregion -----------------------------------------
       //#region form func =================================
+      const resetFormEventFn = () =>
+        new Promise<void>((resolve) => {
+          let rowDataList = tableMethods.getRawDataSource();
+          // if (selectedItemKey.value) {
+          //   rowDataList = rowDataList.filter((ele: IUserInfo) => {
+          //     return ele.project_roles.includes(selectedItemKey.value);
+          //   });
+          // }
+          tableMethods.setTableData(rowDataList.slice());
+          resolve();
+        });
 
+      const searchFormEventFn = () => {
+        return new Promise<void>((resolve) => {
+          console.log('searchFormEventFn');
+          const formData = formMethods.getFieldsValue();
+          const searchItem: any = {};
+          for (const formDataKey in formData) {
+            if (formData[formDataKey]) {
+              searchItem[formDataKey] = formData[formDataKey];
+            }
+          }
+          const allSearchKeys = Object.keys(searchItem);
+
+          let rowDataList = tableMethods.getRawDataSource();
+          // if (selectedItemKey.value) {
+          //   rowDataList = rowDataList.filter((ele: IUserInfo) => {
+          //     return ele.project_roles.includes(selectedItemKey.value);
+          //   });
+          // }
+          const filterList = rowDataList.filter((ele) => {
+            let oldSearchResult: Nullable<boolean> = null;
+            let index = 0;
+            while (index < allSearchKeys.length) {
+              const key = allSearchKeys[index];
+              if (index === 0) {
+                if ((ele[key] + '').indexOf(searchItem[key]) >= 0) {
+                  oldSearchResult = true;
+                } else {
+                  oldSearchResult = false;
+                }
+              } else {
+                if ((ele[key] + '').indexOf(searchItem[key]) >= 0) {
+                  oldSearchResult = oldSearchResult && true;
+                } else {
+                  oldSearchResult = oldSearchResult && false;
+                }
+              }
+              index++;
+            }
+
+            return oldSearchResult;
+          });
+          tableMethods.setTableData(filterList);
+          resolve();
+        });
+      };
       const [formRegister, formMethods] = useForm({
         labelWidth: '80px',
         size: 'small',
@@ -317,6 +373,8 @@
         submitButtonOptions: {
           size: 'small',
         },
+        resetFunc: resetFormEventFn,
+        submitFunc: searchFormEventFn,
       });
       console.log(formMethods);
       // formMethods.resetFields();
@@ -378,6 +436,7 @@
   @ns-prefix: ~'@{namespace}';
   .@{prefix-cls} {
   }
+
   .box-radius {
     border-radius: 5px;
   }
