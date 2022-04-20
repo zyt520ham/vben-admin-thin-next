@@ -1,6 +1,9 @@
 declare module '*.vue' {
   import { DefineComponent } from 'vue';
   const Component: DefineComponent<{}, {}, any>;
+  interface CSSProperties {
+    [key: `--${string}`]: string;
+  }
   export default Component;
 }
 
