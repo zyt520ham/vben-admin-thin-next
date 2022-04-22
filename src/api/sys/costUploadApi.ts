@@ -1,6 +1,10 @@
 import { doBaseUploadApi } from '/@/utils/http/NetworkEngine';
 
-import { IReqUploadLineCost, IReqUploadWxCost } from '/@/api/model/uploadCostModel';
+import {
+  IReqUploadLineCost,
+  IReqUploadMileStoneCfg,
+  IReqUploadWxCost,
+} from '/@/api/model/uploadCostModel';
 import { ApiEnum } from '/@/api/ApiPath';
 
 /**
@@ -13,3 +17,8 @@ export const uploadWxCostApi = (params: IReqUploadWxCost) =>
  */
 export const uploadLineCostApi = (params: IReqUploadLineCost) =>
   doBaseUploadApi<any>(ApiEnum.UploadLineCost, params, () => {});
+/**
+ * @description: 里程碑V2版本配置上传
+ */
+export const uploadMileStoneCfgApi = (params: IReqUploadMileStoneCfg) =>
+  doBaseUploadApi<any>(ApiEnum.UploadMilestoneCfg, params, () => {});

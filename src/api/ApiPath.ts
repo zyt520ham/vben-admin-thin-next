@@ -23,6 +23,7 @@ export enum ApiEnum {
   //#region costUploadApi.ts ========================================
   UploadWxCost = '/tripartite/wx/upwxcost',
   UploadLineCost = '/tripartite/wx/uplinecost',
+  UploadMilestoneCfg = '/temp/oss-milestone-upload',
   //urlTokenApi.ts
   getTokenExchangedUrl = '/tripartite/exchangeurl',
   //#endregion ---------------------------------------------
@@ -71,5 +72,6 @@ export enum ApiEnum {
   //#region  cost.ts ========================================
   rgGetWxCost = '/tripartite/wx/getcostname',
   rgGetLineCost = '/tripartite/wx/linelistcost',
+  rgGetCfgForMilestoreUploaded = '/temp/oss-milestone-list',
   //#endregion ---------------------------------------------
 }

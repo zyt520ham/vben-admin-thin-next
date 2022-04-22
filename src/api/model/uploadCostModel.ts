@@ -15,3 +15,8 @@ export interface IReqUploadLineCost extends IReqUploadBase {
   /** 花费上传时间*/
   day: string;
 }
+
+export interface IReqUploadMileStoneCfg extends IReqUploadBase {
+  /** 里程碑类型 */
+  type: string;
+}

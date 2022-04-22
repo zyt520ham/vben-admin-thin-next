@@ -11,7 +11,9 @@ export enum compNameEnum {
 
   kUploadWxCost = 'WxCostUpload',
   kUploadLineCost = 'LineCostUpload',
+  kUploadMilestone = 'MileStoreUpload',
 }
+//src/views/rg/cost-upload/mile-store-upload/v2/MileStoneUpload.vue
 export const compsList = [
   compNameEnum.kProjDetailView,
   compNameEnum.kProjMenusListMgView,
@@ -24,6 +26,7 @@ export const compsList = [
   compNameEnum.kSysUsersListMgView,
   compNameEnum.kUploadWxCost,
   compNameEnum.kUploadLineCost,
+  compNameEnum.kUploadMilestone,
 ];
 export const compPathMap = {
   [compNameEnum.kProjDetailView]: 'rg/proj-setting/ProjDetailView.vue',
@@ -37,6 +40,7 @@ export const compPathMap = {
   [compNameEnum.kSysUsersListMgView]: 'rg/sys-settings/account-list/SysUsersListMg.vue',
   [compNameEnum.kUploadWxCost]: 'rg/cost-upload/wx-cost-upload/WxCostUpload.vue',
   [compNameEnum.kUploadLineCost]: 'rg/cost-upload/line-cost-upload/LineCostUpload.vue',
+  [compNameEnum.kUploadMilestone]: 'rg/cost-upload/mile-store-upload/v2/MileStoneUpload.vue',
 };
 
 export const compDescMap = {
@@ -51,4 +55,5 @@ export const compDescMap = {
   [compNameEnum.kSysUsersListMgView]: '系统人员管理页面',
   [compNameEnum.kUploadWxCost]: '微信花费上传页面',
   [compNameEnum.kUploadLineCost]: 'Line花费上传页面',
+  [compNameEnum.kUploadMilestone]: '里程碑V2配置上传页面',
 };

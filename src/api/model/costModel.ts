@@ -5,3 +5,7 @@ export interface IReqGetWxCost {
 export interface IReqGetLineCost {
   app: string;
 }
+
+export interface IReqGetMilestoreCfg {
+  type: 'apppackage' | 'country' | 'mediasource' | 'config';
+}
