@@ -29,7 +29,6 @@
     "gen:icon": "esno ./build/generate/icon/index.ts"
   },
   "dependencies": {
-    "cropperjs": "^1.5.12",
     "@ant-design/colors": "^6.0.0",
     "@ant-design/icons-vue": "^6.0.1",
     "@iconify/iconify": "^2.0.4",
@@ -38,6 +37,8 @@
     "@zxcvbn-ts/core": "^1.0.0-beta.0",
     "ant-design-vue": "2.2.8",
     "axios": "^0.24.0",
+    "bin-datav": "^0.2.0",
+    "cropperjs": "^1.5.12",
     "crypto-js": "^4.1.1",
     "echarts": "^5.2.2",
     "lodash-es": "^4.17.21",
