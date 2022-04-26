@@ -41,22 +41,34 @@
   const option: EChartsOption = {
     title: [
       {
-        subtext: 'alignTo: "none" (default)',
-        left: '16.67%',
-        top: '75%',
-        textAlign: 'center',
+        subtext: '饼图1',
+        left: '0',
+        top: '0',
+        textAlign: 'left',
+        subtextStyle: {
+          fontWeight: 'bolder',
+          fontSize: 16,
+        },
       },
       {
-        subtext: 'alignTo: "labelLine"',
-        left: '50%',
-        top: '75%',
-        textAlign: 'center',
+        subtext: '饼图2',
+        left: '45%',
+        top: '0',
+        textAlign: 'left',
+        subtextStyle: {
+          fontWeight: 'bolder',
+          fontSize: 16,
+        },
       },
       {
-        subtext: 'alignTo: "edge"',
-        left: '83.33%',
-        top: '75%',
+        subtext: '饼图3',
+        left: '75%',
+        top: '0',
         textAlign: 'center',
+        subtextStyle: {
+          fontWeight: 'bolder',
+          fontSize: 16,
+        },
       },
     ],
     tooltip: {
@@ -66,8 +78,8 @@
     series: [
       {
         type: 'pie',
-        radius: '75%',
-        center: ['50%', '50%'],
+        radius: '90%',
+        center: ['50%', '55%'],
         dimensions: Object.keys(data),
         roseType: undefined,
         data: data,
@@ -95,13 +107,15 @@
       },
       {
         type: 'pie',
-        radius: '25%',
-        center: ['50%', '50%'],
+        radius: '90%',
+        center: ['50%', '55%'],
         data: data,
         label: {
-          position: 'outer',
-          alignTo: 'labelLine',
+          position: 'inside',
+          alignTo: 'none',
           bleedMargin: 5,
+          formatter: '{b}: {d}',
+          rotate: true,
         },
         left: '40%',
         right: '30%',
@@ -110,13 +124,15 @@
       },
       {
         type: 'pie',
-        radius: '25%',
-        center: ['50%', '50%'],
+        radius: '85%',
+        center: ['50%', '55%'],
         data: data,
         label: {
-          position: 'outer',
-          alignTo: 'edge',
-          margin: 20,
+          position: 'inside',
+          alignTo: 'none',
+          bleedMargin: 5,
+          formatter: '{b}: {d}',
+          rotate: true,
         },
         left: '70%',
         right: 0,

@@ -9,7 +9,7 @@
       </template>
       <template #default>
         <div class="w-full h-full flex flex-col">
-          <div class="pie-view w-full lg:w-992px xl:w-992px 2xl:w-992px my-0 mx-0-auto">
+          <div class="pie-view w-full my-0 mx-0-auto max-h-400px min-h-250px">
             <PieCharts />
           </div>
           <div class="">222</div>
