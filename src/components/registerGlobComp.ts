@@ -11,9 +11,12 @@ import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.less';
 
 // const compList = [AntButton.Group];
+import BinDatav from 'bin-datav';
+import 'bin-datav/lib/styles/index.css';
 
 export function registerGlobComp(app: App) {
   app.use(Antd);
+  app.use(BinDatav);
   // compList.forEach((comp) => {
   //   app.component(comp.name || comp.displayName, comp);
   // });

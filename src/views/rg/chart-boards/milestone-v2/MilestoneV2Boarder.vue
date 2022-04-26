@@ -10,9 +10,34 @@
       <template #default>
         <div class="w-full h-full flex flex-col">
           <div class="pie-view w-full my-0 mx-0-auto max-h-400px min-h-250px">
-            <PieCharts />
+            <bv-border-box name="border13" :background-color="getBackColorRef">
+              <div class="bv-content-wrapper">
+                <div class="bv-content">
+                  <PieCharts />
+                </div>
+              </div>
+            </bv-border-box>
           </div>
-          <div class="">222</div>
+          <div class="w-full h-auto flex-grow flex-shrink flex-row flex">
+            <div class="w-11/20 h-full">
+              <bv-border-box name="border13" :background-color="getBackColorRef">
+                <div class="bv-content-wrapper">
+                  <div class="bv-content">
+                    <MileStoneTableView />
+                  </div>
+                </div>
+              </bv-border-box>
+            </div>
+            <div class="w-9/20 h-full">
+              <bv-border-box name="border13" :background-color="getBackColorRef">
+                <div class="bv-content-wrapper">
+                  <div class="bv-content">
+                    <AssetDetailTableView />
+                  </div>
+                </div>
+              </bv-border-box>
+            </div>
+          </div>
         </div>
       </template>
     </Card>
@@ -23,12 +48,17 @@
   import { Button, Card } from 'ant-design-vue';
   import { ref } from 'vue';
   import PieCharts from './inner/PieCharts.vue';
+  import MileStoneTableView from './inner/MileStoneTableView.vue';
+  import AssetDetailTableView from './inner/AssetDetailTableView.vue';
 
   const cardBodyStyle = ref({
     height: 'calc( 100% - 10px - 49px )',
     // width: 'calc(100% - 10px)',
     padding: '5px',
+    'background-color': 'whitesmoke',
   });
+
+  const getBackColorRef = ref('white');
 </script>
 <script lang="ts">
   export default {
@@ -44,5 +74,17 @@
   }
   .table-view {
     background-color: yellow;
+  }
+
+  .bv-content-wrapper {
+    padding: 15px;
+    width: 100%;
+    height: 100%;
+  }
+  .bv-content {
+    width: 100%;
+    height: 100%;
+
+    //background-color: white;
   }
 </style>
