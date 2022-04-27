@@ -1,6 +1,11 @@
 <template>
   <div class="w-full h-full">
-    <Card class="w-full h-full" title="里程碑V2-看板" size="small" :bodyStyle="cardBodyStyle">
+    <Card
+      class="w-full h-full rg-antd-cart"
+      title="里程碑V2-看板"
+      size="small"
+      :bodyStyle="cardBodyStyle"
+    >
       <template #extra>
         <Button>个性化筛选</Button>
         <Button>个性化筛选</Button>
@@ -46,19 +51,21 @@
 
 <script lang="ts" setup>
   import { Button, Card } from 'ant-design-vue';
-  import { ref } from 'vue';
+  import { onMounted, ref } from 'vue';
   import PieCharts from './inner/PieCharts.vue';
   import MileStoneTableView from './inner/MileStoneTableView.vue';
   import AssetDetailTableView from './inner/AssetDetailTableView.vue';
 
   const cardBodyStyle = ref({
-    height: 'calc( 100% - 10px - 49px )',
-    // width: 'calc(100% - 10px)',
-    padding: '5px',
+    // height: 'calc( 100% - 10px - 49px )',
+    // // // width: 'calc(100% - 10px)',
+    // padding: '0px',
     'background-color': 'whitesmoke',
   });
 
   const getBackColorRef = ref('white');
+
+  onMounted(() => {});
 </script>
 <script lang="ts">
   export default {
@@ -80,6 +87,7 @@
     padding: 15px;
     width: 100%;
     height: 100%;
+    box-sizing: border-box;
   }
   .bv-content {
     width: 100%;

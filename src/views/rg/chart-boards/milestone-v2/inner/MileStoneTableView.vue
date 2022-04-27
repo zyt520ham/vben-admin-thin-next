@@ -29,18 +29,24 @@
 
 <script lang="ts" setup>
   import { BasicTable, useTable } from '/@/components/Table';
-  import {
-    getMileStoneColumnsCfg,
-    getTestTableData,
-  } from '/@/views/rg/chart-boards/milestone-v2/inner/milestone.data';
+  import { getMileStoneColumnsCfg } from '/@/views/rg/chart-boards/milestone-v2/inner/milestone.data';
+  import { getMileStones } from '/@/views/rg/chart-boards/milestone-v2/inner/MileStoneRequest';
 
   const loadMileStoneDatasApi = () => {
     return new Promise((resolve, reject) => {
-      resolve(getTestTableData);
+      getMileStones()
+        .then((resp) => {
+          console.log('getMileStones', resp);
+          resolve(resp);
+        })
+        .catch((err: Error) => {
+          console.error('getMileStones err', err);
+        });
     });
   };
   const [registerTableFn] = useTable({
     title: '里程碑详情',
+    inset: false,
     api: loadMileStoneDatasApi,
     showTableSetting: true,
     tableSetting: {

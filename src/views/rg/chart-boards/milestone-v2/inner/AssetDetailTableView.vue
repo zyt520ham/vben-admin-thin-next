@@ -13,6 +13,7 @@
   };
   const [tableRegister] = useTable({
     title: '里程碑详情',
+    inset: false,
     api: loadAssetDatasApi,
     showTableSetting: true,
     tableSetting: {

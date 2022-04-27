@@ -246,3 +246,14 @@ export const defHttp = createAxios();
 //     urlPrefix: 'xxx',
 //   },
 // });
+
+export const webpRestHttp = createAxios({
+  baseURL: '',
+  headers: {
+    'Content-Type': 'application/json;charset=utf-8',
+  },
+  requestOptions: {
+    joinPrefix: false,
+    apiUrl: '',
+  },
+});
