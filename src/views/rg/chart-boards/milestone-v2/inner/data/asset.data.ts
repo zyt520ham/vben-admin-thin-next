@@ -1,4 +1,5 @@
 import { BasicColumn } from '/@/components/Table';
+import { stringFormatRounder } from '/@/utils/stringUtils';
 
 export enum assetTableColumnsKey {
   kStartTime = 'startday',
@@ -45,9 +46,25 @@ export const getAssetsColumnsCfg: BasicColumn[] = [
   {
     title: '花费',
     dataIndex: assetTableColumnsKey.kCost,
+    align: 'right',
     width: '120px',
     sorter: (a, b) => {
-      return a[assetTableColumnsKey.kCost].localeCompare(b[assetTableColumnsKey.kCost]);
+      return b[assetTableColumnsKey.kCost] - a[assetTableColumnsKey.kCost];
+    },
+    format: (text) => {
+      return stringFormatRounder(text, 2);
+    },
+  },
+  {
+    title: '花费占比',
+    dataIndex: assetTableColumnsKey.KCostRatio,
+    align: 'right',
+    width: '120px',
+    sorter: (a, b) => {
+      return b[assetTableColumnsKey.kCost] - a[assetTableColumnsKey.kCost];
+    },
+    format: (text) => {
+      return stringFormatRounder(text, 2, true);
     },
   },
 ];

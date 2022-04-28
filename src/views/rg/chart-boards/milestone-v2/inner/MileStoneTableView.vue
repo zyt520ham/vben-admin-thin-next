@@ -45,7 +45,7 @@
     });
   };
   const [registerTableFn] = useTable({
-    title: '里程碑详情',
+    title: '里程碑V2版本',
     inset: false,
     api: loadMileStoneDatasApi,
     showTableSetting: true,

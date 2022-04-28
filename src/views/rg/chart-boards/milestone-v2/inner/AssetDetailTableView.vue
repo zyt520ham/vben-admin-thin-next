@@ -5,14 +5,22 @@
 <script lang="ts" setup>
   import { BasicTable, useTable } from '/@/components/Table';
   import { getAssetsColumnsCfg } from '/@/views/rg/chart-boards/milestone-v2/inner/data/asset.data';
+  import { getAssetsList } from '/@/views/rg/chart-boards/milestone-v2/inner/MileStoneRequest';
 
   const loadAssetDatasApi = () => {
     return new Promise((resolve, reject) => {
-      resolve([]);
+      getAssetsList()
+        .then((resp) => {
+          console.log(resp);
+          resolve(resp);
+        })
+        .catch((err: Error) => {
+          reject(null);
+        });
     });
   };
   const [tableRegister] = useTable({
-    title: '里程碑详情',
+    title: '素材详情表',
     inset: false,
     api: loadAssetDatasApi,
     showTableSetting: true,

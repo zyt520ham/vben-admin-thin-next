@@ -55,6 +55,7 @@
   import PieCharts from './inner/PieCharts.vue';
   import MileStoneTableView from './inner/MileStoneTableView.vue';
   import AssetDetailTableView from './inner/AssetDetailTableView.vue';
+  import { getAssetsList } from '/@/views/rg/chart-boards/milestone-v2/inner/MileStoneRequest';
 
   const cardBodyStyle = ref({
     // height: 'calc( 100% - 10px - 49px )',
@@ -66,15 +67,9 @@
   const getBackColorRef = ref('white');
 
   onMounted(() => {
-    // getAssetAllCost().then((resp) => {
-    //   console.log('getAssetAllCost', resp);
-    // });
-    // getAssetRatioData().then((resp) => {
-    //   console.log('getAssetRatioData', resp);
-    // });
-    // getIdeasRatioDate().then((resp) => {
-    //   console.log('getIdeasRatioDate', resp);
-    // });
+    getAssetsList().then((resp) => {
+      console.log(resp);
+    });
   });
 </script>
 <script lang="ts">
