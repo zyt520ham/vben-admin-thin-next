@@ -72,7 +72,6 @@
         },
         tooltip: {
           formatter: (params: any) => {
-            console.log(params);
             const showString = `
              <div style="color:${params.color}">
               <b >${params.name}</b>
@@ -121,7 +120,6 @@
         bottom: 0,
         tooltip: {
           formatter: (params: any) => {
-            console.log(params);
             const showString = `
              <div style="color:${params.color}">
               <b >${params.name}</b>
@@ -159,7 +157,6 @@
         bottom: 0,
         tooltip: {
           formatter: (params: any) => {
-            console.log(params);
             const showString = `
              <div style="color:${params.color}">
               <b >${params.name}</b>

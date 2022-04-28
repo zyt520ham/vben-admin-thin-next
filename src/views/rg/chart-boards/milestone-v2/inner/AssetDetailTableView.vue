@@ -11,7 +11,6 @@
     return new Promise((resolve, reject) => {
       getAssetsList()
         .then((resp) => {
-          console.log(resp);
           resolve(resp);
         })
         .catch((err: Error) => {

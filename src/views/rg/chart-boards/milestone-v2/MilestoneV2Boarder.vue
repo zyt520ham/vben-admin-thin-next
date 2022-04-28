@@ -7,10 +7,21 @@
       :bodyStyle="cardBodyStyle"
     >
       <template #extra>
-        <Button>个性化筛选</Button>
-        <Button>个性化筛选</Button>
-        <Button>个性化筛选</Button>
-        <Button>个性化筛选</Button>
+        <Space :size="5">
+          <Button>个性化筛选1</Button>
+          <Button>个性化筛选</Button>
+          <Button>个性化筛选</Button>
+          <Tooltip placement="top">
+            <template #title>
+              <span>条件筛选配置</span>
+            </template>
+            <Button @click="searchFilterBtnFn" shape="circle" type="primary">
+              <template #icon>
+                <Icon icon="carbon:filter-edit" />
+              </template>
+            </Button>
+          </Tooltip>
+        </Space>
       </template>
       <template #default>
         <div class="w-full h-full flex flex-col">
@@ -46,16 +57,21 @@
         </div>
       </template>
     </Card>
+    <MilestoneFilterDrawer @register="drawerRegister" />
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { Button, Card } from 'ant-design-vue';
+  import { Button, Card, Tooltip, Space } from 'ant-design-vue';
+
   import { onMounted, ref } from 'vue';
   import PieCharts from './inner/PieCharts.vue';
   import MileStoneTableView from './inner/MileStoneTableView.vue';
   import AssetDetailTableView from './inner/AssetDetailTableView.vue';
-  import { getAssetsList } from '/@/views/rg/chart-boards/milestone-v2/inner/MileStoneRequest';
+
+  import MilestoneFilterDrawer from '/@/views/rg/chart-boards/milestone-v2/inner/MilestoneFilterDrawer.vue';
+  import { useDrawer } from '/@/components/Drawer';
+  import Icon from '/@/components/Icon/src/Icon.vue';
 
   const cardBodyStyle = ref({
     // height: 'calc( 100% - 10px - 49px )',
@@ -66,11 +82,15 @@
 
   const getBackColorRef = ref('white');
 
-  onMounted(() => {
-    getAssetsList().then((resp) => {
-      console.log(resp);
-    });
-  });
+  onMounted(() => {});
+  //#region topbar  =================================
+  const searchFilterBtnFn = () => {
+    drawerMethods.openDrawer(true, {});
+  };
+  //#endregion  -------------------------------------
+  //#region drawer =================================
+  const [drawerRegister, drawerMethods] = useDrawer();
+  //#endregion  -------------------------------------
 </script>
 <script lang="ts">
   export default {

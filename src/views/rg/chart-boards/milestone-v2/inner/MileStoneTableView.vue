@@ -36,7 +36,6 @@
     return new Promise((resolve, reject) => {
       getMileStones()
         .then((resp) => {
-          console.log('getMileStones', resp);
           resolve(resp);
         })
         .catch((err: Error) => {
