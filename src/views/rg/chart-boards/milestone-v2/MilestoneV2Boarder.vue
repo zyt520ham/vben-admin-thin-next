@@ -59,13 +59,23 @@
   const cardBodyStyle = ref({
     // height: 'calc( 100% - 10px - 49px )',
     // // // width: 'calc(100% - 10px)',
-    // padding: '0px',
+    padding: '0px',
     'background-color': 'whitesmoke',
   });
 
   const getBackColorRef = ref('white');
 
-  onMounted(() => {});
+  onMounted(() => {
+    // getAssetAllCost().then((resp) => {
+    //   console.log('getAssetAllCost', resp);
+    // });
+    // getAssetRatioData().then((resp) => {
+    //   console.log('getAssetRatioData', resp);
+    // });
+    // getIdeasRatioDate().then((resp) => {
+    //   console.log('getIdeasRatioDate', resp);
+    // });
+  });
 </script>
 <script lang="ts">
   export default {

@@ -29,7 +29,7 @@
 
 <script lang="ts" setup>
   import { BasicTable, useTable } from '/@/components/Table';
-  import { getMileStoneColumnsCfg } from '/@/views/rg/chart-boards/milestone-v2/inner/milestone.data';
+  import { getMileStoneColumnsCfg } from '/@/views/rg/chart-boards/milestone-v2/inner/data/milestone.data';
   import { getMileStones } from '/@/views/rg/chart-boards/milestone-v2/inner/MileStoneRequest';
 
   const loadMileStoneDatasApi = () => {

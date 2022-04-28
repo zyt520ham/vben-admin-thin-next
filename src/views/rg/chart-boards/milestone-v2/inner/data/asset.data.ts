@@ -11,6 +11,7 @@ export enum assetTableColumnsKey {
   kMaker = 'maker',
   /** 花费 {DOUBLE} */
   kCost = 'cost',
+  KCostRatio = 'cost_ratio',
 }
 export const getAssetsColumnsCfg: BasicColumn[] = [
   {

@@ -79,7 +79,11 @@ export function useECharts(
   }
 
   function resize() {
-    chartInstance?.resize();
+    chartInstance?.resize({
+      animation: {
+        duration: 0.3,
+      },
+    });
   }
 
   watch(

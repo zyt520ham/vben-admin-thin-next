@@ -75,6 +75,8 @@ export interface IFieldItemV1 {
   function: 'sum' | 'avg' | 'max' | 'min' | 'median' | 'stddev' | 'variance' | 'unuse';
   /** 自定义字段value 值 */
   customFunc?: string;
+  /** 自定义字段扩展，可由外部实现传参*/
+  customFuncFormat?: (...args: any[]) => string;
   /** 无需嵌套 case end的自定义方法*/
   noCaseEndCustomFunc?: string;
   /** 使用别名替换的方式

@@ -4,7 +4,7 @@
 
 <script lang="ts" setup>
   import { BasicTable, useTable } from '/@/components/Table';
-  import { getAssetsColumnsCfg } from '/@/views/rg/chart-boards/milestone-v2/inner/asset.data';
+  import { getAssetsColumnsCfg } from '/@/views/rg/chart-boards/milestone-v2/inner/data/asset.data';
 
   const loadAssetDatasApi = () => {
     return new Promise((resolve, reject) => {
