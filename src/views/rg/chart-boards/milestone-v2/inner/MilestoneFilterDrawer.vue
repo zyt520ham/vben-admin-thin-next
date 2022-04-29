@@ -66,15 +66,17 @@
   import { ref } from 'vue';
   import { MilestoneColumnsKeyEnum } from '/@/views/rg/chart-boards/milestone-v2/inner/data/milestone.data';
   import { getColsValues } from '/@/views/rg/chart-boards/milestone-v2/inner/MileStoneRequest';
-  import { MileStoneFilterModel } from '/@/views/rg/chart-boards/milestone-v2/inner/model/filterModel';
+  import { useFilterModel } from '/@/views/rg/chart-boards/milestone-v2/inner/model/filterModel';
   import { Divider } from 'ant-design-vue';
+  import { deepMerge } from '/@/utils/index';
 
   // const { prefixCls } = useDesign('adduser-drawer-comp');
 
   //#region emit ========================================
-  // const emit = defineEmits<{
-  //   (e: 'register', value: any): any;
-  // }>();
+  const emits = defineEmits<{
+    (e: 'register', value: any): any;
+    (e: 'reloadData', value?: any): any;
+  }>();
   //#endregion ---------------------------------------------
   //#region select options =================================
   const allSelectOptionsRef = ref({});
@@ -103,8 +105,8 @@
     logNoTrace('useDrawerInner');
     drawInnerMethods.setDrawerProps({ loading: true });
     // getColsValues()
-    if (MileStoneFilterModel.getInstance().filterOptionsMap) {
-      allSelectOptionsRef.value = MileStoneFilterModel.getInstance().filterOptionsMap;
+    if (useFilterModel.filterOptionsMap) {
+      allSelectOptionsRef.value = useFilterModel.filterOptionsMap;
     } else {
       const fieldsValues = await getColsValues([
         MilestoneColumnsKeyEnum.kStartDay,
@@ -115,14 +117,17 @@
       ]);
       console.log('xxxxxxx', fieldsValues);
       allSelectOptionsRef.value = fieldsValues;
-      MileStoneFilterModel.getInstance().filterOptionsMap = fieldsValues;
+      useFilterModel.filterOptionsMap = fieldsValues;
     }
     getIsFilterLoadingFinish.value = true;
     drawInnerMethods.setDrawerProps({ loading: false });
   });
   const handleEnterFn = () => {
     const formData = formMethods.getFieldsValue();
-    logNoTrace('handleEnter', formData);
+    useFilterModel.filterMap = deepMerge(useFilterModel.filterMap, formData);
+    logNoTrace('handleEnter', formData, useFilterModel.filterMap);
+    emits('reloadData');
+    drawInnerMethods.closeDrawer();
   };
   //#endregion ---------------------------------------------
 </script>

@@ -5,16 +5,22 @@ import {
   assetTableFields,
   getMileStoneTableSqlField,
 } from '/@/views/rg/chart-boards/milestone-v2/inner/data/pRestTable.data';
+import { useFilterModel } from '/@/views/rg/chart-boards/milestone-v2/inner/model/filterModel';
 
+/** 获取里程碑列表 */
 export function getMileStones() {
   const tableName = 'ads_application_milestones_v2';
   const tmpFields: IFieldItemV1[] = [];
   for (const key in getMileStoneTableSqlField) {
     tmpFields.push(getMileStoneTableSqlField[key]);
   }
+
+  const wheres: IWhereItem[] = [...getGlobalWheres()];
+
   const params: ISearchRequestParams = {
     table: tableName,
     fields: tmpFields,
+    where: wheres,
   };
 
   return getCfgForMilestoneUploadedApi(params);
@@ -213,6 +219,34 @@ export async function getMakesRatioDate(vAllCost = 0) {
   };
   return getCfgForMilestoneUploadedApi(params);
 }
+
+function getGlobalWheres() {
+  const globalWheres: IWhereItem[] = [];
+  const modelIns = useFilterModel;
+  if (modelIns.filterKeys.length > 0) {
+    const keys = useFilterModel.filterKeys;
+    keys.forEach((ele) => {
+      const filterItem: {
+        /** 配置单选/多选*/
+        multType: 0 | 1;
+        /** 选中值/过滤值*/
+        useValueType: 0 | 1;
+        values: (string | number)[];
+      } = useFilterModel.filterMap[ele] as any;
+      if (filterItem.values.length > 0) {
+        const whereItem: IWhereItem = {
+          fieldName: ele,
+          name: ele,
+          op: filterItem.useValueType === 0 ? 'in' : 'not in',
+          value: filterItem.values.slice() as any,
+        };
+        globalWheres.push(whereItem);
+      }
+    });
+  }
+  return globalWheres;
+}
+
 //#region 获取列数据 =================================
 function getColValues(field: string) {
   const tableName = 'ads_application_milestones_v2';

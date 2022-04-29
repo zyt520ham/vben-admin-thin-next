@@ -43,7 +43,7 @@
         });
     });
   };
-  const [registerTableFn] = useTable({
+  const [registerTableFn, tableMethods] = useTable({
     title: '里程碑V2版本',
     inset: false,
     api: loadMileStoneDatasApi,
@@ -59,6 +59,12 @@
     canResize: true,
     pagination: false,
     showIndexColumn: false,
+  });
+  const reloadTableData = () => {
+    tableMethods.reload();
+  };
+  defineExpose({
+    reloadTableData,
   });
 </script>
 <script lang="ts">

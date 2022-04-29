@@ -21,6 +21,16 @@
               </template>
             </Button>
           </Tooltip>
+          <Tooltip placement="top">
+            <template #title>
+              <span>刷新数据</span>
+            </template>
+            <Button size="small" @click="refreshBtnFn" shape="circle" type="primary">
+              <template #icon>
+                <Icon icon="icons8:refresh" />
+              </template>
+            </Button>
+          </Tooltip>
         </Space>
       </template>
       <template #default>
@@ -29,7 +39,7 @@
             <bv-border-box name="border13" :background-color="getBackColorRef">
               <div class="bv-content-wrapper">
                 <div class="bv-content">
-                  <PieCharts />
+                  <PieCharts ref="pieChartRef" />
                 </div>
               </div>
             </bv-border-box>
@@ -39,7 +49,7 @@
               <bv-border-box name="border13" :background-color="getBackColorRef">
                 <div class="bv-content-wrapper">
                   <div class="bv-content">
-                    <MileStoneTableView />
+                    <MileStoneTableView ref="milestoneTableRef" />
                   </div>
                 </div>
               </bv-border-box>
@@ -48,7 +58,7 @@
               <bv-border-box name="border13" :background-color="getBackColorRef">
                 <div class="bv-content-wrapper">
                   <div class="bv-content">
-                    <AssetDetailTableView />
+                    <AssetDetailTableView ref="assetDetailTableRef" />
                   </div>
                 </div>
               </bv-border-box>
@@ -57,7 +67,7 @@
         </div>
       </template>
     </Card>
-    <MilestoneFilterDrawer @register="drawerRegister" />
+    <MilestoneFilterDrawer @register="drawerRegister" @reloadData="drawReloadEvent" />
   </div>
 </template>
 
@@ -83,13 +93,23 @@
   const getBackColorRef = ref('white');
 
   onMounted(() => {});
+
+  const pieChartRef = ref<any>(null);
+  const milestoneTableRef = ref<any>(null);
+  const assetDetailTableRef = ref<any>(null);
   //#region topbar  =================================
   const searchFilterBtnFn = () => {
     drawerMethods.openDrawer(true, {});
   };
+  const refreshBtnFn = () => {
+    milestoneTableRef.value.reloadTableData();
+  };
   //#endregion  -------------------------------------
   //#region drawer =================================
   const [drawerRegister, drawerMethods] = useDrawer();
+  const drawReloadEvent = () => {
+    refreshBtnFn();
+  };
   //#endregion  -------------------------------------
 </script>
 <script lang="ts">

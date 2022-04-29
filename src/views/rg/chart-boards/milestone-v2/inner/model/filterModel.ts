@@ -1,10 +1,11 @@
 import { IWhereItem } from '/@/api/model/biPrestModel';
 
-export class MileStoneFilterModel {
+class MileStoneFilterModel {
   constructor() {
     this.filterMap = {};
-    this.filterKeys = [];
+
     this.filterOptionsMap = undefined;
+    window['filtermodel'] = this;
   }
   private static instance: Nullable<MileStoneFilterModel>;
   public static getInstance() {
@@ -14,7 +15,9 @@ export class MileStoneFilterModel {
     return MileStoneFilterModel.instance;
   }
   public filterMap: { [key: string]: IWhereItem };
-  public filterKeys: string[];
+  public get filterKeys() {
+    return Object.keys(this.filterMap);
+  }
 
   public filterOptionsMap: any;
   public getSelectedIsEmpty() {
@@ -23,3 +26,4 @@ export class MileStoneFilterModel {
     }
   }
 }
+export const useFilterModel = MileStoneFilterModel.getInstance();
