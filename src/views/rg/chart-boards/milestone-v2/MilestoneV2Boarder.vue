@@ -15,7 +15,7 @@
             <template #title>
               <span>条件筛选配置</span>
             </template>
-            <Button @click="searchFilterBtnFn" shape="circle" type="primary">
+            <Button size="small" @click="searchFilterBtnFn" shape="circle" type="primary">
               <template #icon>
                 <Icon icon="carbon:filter-edit" />
               </template>

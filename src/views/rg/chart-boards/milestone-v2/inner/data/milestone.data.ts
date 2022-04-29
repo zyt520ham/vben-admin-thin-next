@@ -1,5 +1,4 @@
 import { BasicColumn } from '/@/components/Table';
-import { IFieldItemV1 } from '/@/api/model/biPrestModel';
 
 export enum MilestoneColumnsKeyEnum {
   kStartDay = 'startday',
@@ -122,41 +121,3 @@ export const getTestTableData: ITableDataItem[] = [
     [MilestoneColumnsKeyEnum.kTargetUsd]: 8000,
   },
 ];
-
-export const getMileStoneTableSqlField: { [key: string]: IFieldItemV1 } = {
-  [MilestoneColumnsKeyEnum.kStartDay]: {
-    sqlName: MilestoneColumnsKeyEnum.kStartDay,
-    showName: MilestoneColumnsKeyEnum.kStartDay,
-    function: 'unuse',
-  },
-  [MilestoneColumnsKeyEnum.kEndDay]: {
-    sqlName: MilestoneColumnsKeyEnum.kEndDay,
-    showName: MilestoneColumnsKeyEnum.kEndDay,
-    function: 'unuse',
-  },
-  [MilestoneColumnsKeyEnum.kStepDay]: {
-    sqlName: MilestoneColumnsKeyEnum.kStepDay,
-    showName: MilestoneColumnsKeyEnum.kStepDay,
-    function: 'unuse',
-  },
-  [MilestoneColumnsKeyEnum.kStepEndDay]: {
-    sqlName: MilestoneColumnsKeyEnum.kStepEndDay,
-    showName: MilestoneColumnsKeyEnum.kStepEndDay,
-    function: 'unuse',
-  },
-  [MilestoneColumnsKeyEnum.kAppPackageGroup]: {
-    sqlName: MilestoneColumnsKeyEnum.kAppPackageGroup,
-    showName: MilestoneColumnsKeyEnum.kAppPackageGroup,
-    function: 'unuse',
-  },
-  [MilestoneColumnsKeyEnum.kTargetUsd]: {
-    sqlName: MilestoneColumnsKeyEnum.kTargetUsd,
-    showName: MilestoneColumnsKeyEnum.kTargetUsd,
-    function: 'sum',
-  },
-  [MilestoneColumnsKeyEnum.kTargetCost]: {
-    sqlName: MilestoneColumnsKeyEnum.kTargetCost,
-    showName: MilestoneColumnsKeyEnum.kTargetCost,
-    function: 'sum',
-  },
-};

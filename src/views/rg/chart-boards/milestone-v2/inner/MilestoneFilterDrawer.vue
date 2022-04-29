@@ -9,36 +9,42 @@
     width="500px"
     @ok="handleEnterFn"
   >
-    <BasicForm @register="registerForm">
-      <template #fieldAppPackageSys="{ model, field }">
-        <div class="divider-custom-warper">
-          <Checkbox @change="onCheckAllChange($event, field)">全选</Checkbox>
-          <span class="float-right">
-            <Space :size="7">
-              <RadioGroup
-                disabled
-                button-style="solid"
-                size="small"
-                v-model:value="model[field]['multType']"
-              >
-                <RadioButton :value="0">单选</RadioButton>
-                <RadioButton :value="1">多选</RadioButton>
-              </RadioGroup>
-              <RadioGroup
-                button-style="solid"
-                size="small"
-                v-model:value="model[field]['useValueType']"
-              >
-                <RadioButton :value="0">包括值</RadioButton>
-                <RadioButton :value="1">排除值</RadioButton>
-              </RadioGroup>
-            </Space>
-          </span>
-        </div>
-
-        <CheckboxGroup :options="getAppPfOptionsComputed" v-model:value="model[field]['values']" />
-      </template>
-    </BasicForm>
+    <div v-if="getIsFilterLoadingFinish">
+      <span>说明:全不选某字段，会被认作无需过滤该字段~~</span>
+      <Divider />
+      <BasicForm @register="registerForm">
+        <template #fieldStartDay="{ model, field }">
+          <MilestoneFilterItem
+            v-model:filterData="model[field]"
+            :selectOptions="getFieldOptions(field)"
+          />
+        </template>
+        <template #fieldAppPackageSys="{ model, field }">
+          <MilestoneFilterItem
+            v-model:filterData="model[field]"
+            :selectOptions="getFieldOptions(field)"
+          />
+        </template>
+        <template #fieldAppPackageGroup="{ model, field }">
+          <MilestoneFilterItem
+            v-model:filterData="model[field]"
+            :selectOptions="getFieldOptions(field)"
+          />
+        </template>
+        <template #fieldCountryGroup="{ model, field }">
+          <MilestoneFilterItem
+            v-model:filterData="model[field]"
+            :selectOptions="getFieldOptions(field)"
+          />
+        </template>
+        <template #fieldMediaSourceGroup="{ model, field }">
+          <MilestoneFilterItem
+            v-model:filterData="model[field]"
+            :selectOptions="getFieldOptions(field)"
+          />
+        </template>
+      </BasicForm>
+    </div>
   </BasicDrawer>
 </template>
 
@@ -54,10 +60,15 @@
   import BasicForm from '/@/components/Form/src/BasicForm.vue';
   import { useForm } from '/@/components/Form';
 
-  import { Checkbox, CheckboxGroup, RadioButton, RadioGroup, Space } from 'ant-design-vue';
+  import MilestoneFilterItem from '/@/views/rg/chart-boards/milestone-v2/inner/MilestoneFilterItem.vue';
 
   import { getSeachFilterFormCfg } from '/@/views/rg/chart-boards/milestone-v2/inner/data/drawer.data';
-  import { computed } from 'vue';
+  import { ref } from 'vue';
+  import { MilestoneColumnsKeyEnum } from '/@/views/rg/chart-boards/milestone-v2/inner/data/milestone.data';
+  import { getColsValues } from '/@/views/rg/chart-boards/milestone-v2/inner/MileStoneRequest';
+  import { MileStoneFilterModel } from '/@/views/rg/chart-boards/milestone-v2/inner/model/filterModel';
+  import { Divider } from 'ant-design-vue';
+
   // const { prefixCls } = useDesign('adduser-drawer-comp');
 
   //#region emit ========================================
@@ -65,36 +76,15 @@
   //   (e: 'register', value: any): any;
   // }>();
   //#endregion ---------------------------------------------
+  //#region select options =================================
+  const allSelectOptionsRef = ref({});
+  const getIsFilterLoadingFinish = ref<boolean>(false);
+  //#endregion  -------------------------------------
 
-  const getAppPfOptionsComputed = computed(() => {
-    return [
-      {
-        label: '安卓',
-        value: 'AOS',
-      },
-      {
-        label: '苹果',
-        value: 'IOS',
-      },
-      {
-        label: 'web',
-        value: 'WEBGLOBAL',
-      },
-    ];
-  });
-  const onCheckAllChange = (e: any, field: string) => {
-    if (e.target.checked) {
-      const formData = formMethods.getFieldsValue();
-      formData[field]['values'] = getAppPfOptionsComputed.value.map((ele) => {
-        return ele.value;
-      });
-      formMethods.setFieldsValue(formData);
-    } else {
-      const formData = formMethods.getFieldsValue();
-      formData[field]['values'] = [];
-      formMethods.setFieldsValue(formData);
-    }
-  };
+  function getFieldOptions(field: string) {
+    return allSelectOptionsRef.value[field];
+  }
+
   //#region form ========================================
   const [registerForm, formMethods] = useForm({
     // labelWidth: '120px',
@@ -111,7 +101,24 @@
   //#region  drawer ========================================
   const [registerDrawer, drawInnerMethods] = useDrawerInner(async (propData) => {
     logNoTrace('useDrawerInner');
-    drawInnerMethods.setDrawerProps({ confirmLoading: false });
+    drawInnerMethods.setDrawerProps({ loading: true });
+    // getColsValues()
+    if (MileStoneFilterModel.getInstance().filterOptionsMap) {
+      allSelectOptionsRef.value = MileStoneFilterModel.getInstance().filterOptionsMap;
+    } else {
+      const fieldsValues = await getColsValues([
+        MilestoneColumnsKeyEnum.kStartDay,
+        MilestoneColumnsKeyEnum.kMediaSourceGroup,
+        MilestoneColumnsKeyEnum.kCountryGroup,
+        MilestoneColumnsKeyEnum.kAppPackageGroup,
+        MilestoneColumnsKeyEnum.kAppPackageSys,
+      ]);
+      console.log('xxxxxxx', fieldsValues);
+      allSelectOptionsRef.value = fieldsValues;
+      MileStoneFilterModel.getInstance().filterOptionsMap = fieldsValues;
+    }
+    getIsFilterLoadingFinish.value = true;
+    drawInnerMethods.setDrawerProps({ loading: false });
   });
   const handleEnterFn = () => {
     const formData = formMethods.getFieldsValue();
@@ -125,9 +132,4 @@
   //@ns-prefix: ~'@{namespace}';
   //.@{prefix-cls} {
   //}
-  .divider-custom-warper {
-    border-bottom: 1px solid #e9e9e9;
-    padding-bottom: 5px;
-    margin-bottom: 5px;
-  }
 </style>

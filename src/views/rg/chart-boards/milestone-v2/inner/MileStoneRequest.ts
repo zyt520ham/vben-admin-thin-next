@@ -1,8 +1,10 @@
-import { getMileStoneTableSqlField } from '/@/views/rg/chart-boards/milestone-v2/inner/data/milestone.data';
 import { IFieldItemV1, ISearchRequestParams, IWhereItem } from '/@/api/model/biPrestModel';
 import { getCfgForMilestoneUploadedApi } from '/@/api/sys/RGBIDataApi';
 import { assetTableColumnsKey } from '/@/views/rg/chart-boards/milestone-v2/inner/data/asset.data';
-import { assetTableFields } from '/@/views/rg/chart-boards/milestone-v2/inner/data/pRestTable.data';
+import {
+  assetTableFields,
+  getMileStoneTableSqlField,
+} from '/@/views/rg/chart-boards/milestone-v2/inner/data/pRestTable.data';
 
 export function getMileStones() {
   const tableName = 'ads_application_milestones_v2';
@@ -211,3 +213,42 @@ export async function getMakesRatioDate(vAllCost = 0) {
   };
   return getCfgForMilestoneUploadedApi(params);
 }
+//#region 获取列数据 =================================
+function getColValues(field: string) {
+  const tableName = 'ads_application_milestones_v2';
+  const tmpFields: IFieldItemV1[] = [getMileStoneTableSqlField[field]];
+  const tmpWheres: IWhereItem[] = [];
+  const params: ISearchRequestParams = {
+    table: tableName,
+    fields: tmpFields,
+    where: tmpWheres,
+  };
+  return getCfgForMilestoneUploadedApi(params);
+}
+
+export function getColsValues(fields: string[]) {
+  return new Promise<any>(async (resolve, reject) => {
+    const promisList: Promise<any>[] = [];
+    fields.forEach((ele) => {
+      const p = getColValues(ele);
+      promisList.push(p);
+    });
+    let allValues: any[] = [];
+    try {
+      allValues = await Promise.all(promisList);
+    } catch (e) {
+      reject('load values err');
+    }
+    const valueMap: any = {};
+    allValues.forEach((ele: any[], index: number) => {
+      const pValueList: any[] = [];
+      ele.map((eleItem) => {
+        pValueList.push(eleItem[fields[index]]);
+      });
+      valueMap[fields[index]] = pValueList;
+    });
+    resolve(valueMap);
+  });
+}
+
+//#endregion  -------------------------------------
