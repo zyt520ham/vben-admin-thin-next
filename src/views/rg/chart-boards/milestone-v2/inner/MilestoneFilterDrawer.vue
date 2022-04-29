@@ -115,11 +115,18 @@
         MilestoneColumnsKeyEnum.kAppPackageGroup,
         MilestoneColumnsKeyEnum.kAppPackageSys,
       ]);
-      console.log('xxxxxxx', fieldsValues);
       allSelectOptionsRef.value = fieldsValues;
       useFilterModel.filterOptionsMap = fieldsValues;
     }
     getIsFilterLoadingFinish.value = true;
+    if (useFilterModel.filterKeys.length > 0) {
+      const formData = formMethods.getFieldsValue();
+      useFilterModel.filterKeys.forEach((ele) => {
+        formData[ele] = useFilterModel.filterMap[ele];
+      });
+      await formMethods.setFieldsValue(formData);
+    }
+
     drawInnerMethods.setDrawerProps({ loading: false });
   });
   const handleEnterFn = () => {
