@@ -98,15 +98,8 @@ export const getMileStoneColumnsCfg: BasicColumn[] = [
     title: '达标花费',
     dataIndex: MilestoneColumnsKeyEnum.kTargetCost,
     width: '100px',
-    format: (text: string, record: Recordable) => {
-      if (
-        record[MilestoneColumnsKeyEnum.kTargetCost] * 1 >=
-        record[MilestoneColumnsKeyEnum.kTargetUsd]
-      ) {
-        return stringFormatRounder(text, 2);
-      } else {
-        return 0;
-      }
+    format: (text: string) => {
+      return stringFormatRounder(text, 2);
     },
   },
 ];
