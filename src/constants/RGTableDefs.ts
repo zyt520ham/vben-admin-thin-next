@@ -71,9 +71,9 @@ namespace RGTableDefs {
       kCountryGroup = 'country_group',
       /** 渠道分组 {STRING} */
       kMediaSourceGroup = 'mediasource_group',
-      /** 目标花费($) {DOUBLE} */
-      kTargetCost = 'target_cost',
       /** 当前花费($) {DOUBLE} */
+      kTargetCost = 'target_cost',
+      /** 目标花费($) {DOUBLE} */
       kTargetUsd = 'target_usd',
     }
   }
