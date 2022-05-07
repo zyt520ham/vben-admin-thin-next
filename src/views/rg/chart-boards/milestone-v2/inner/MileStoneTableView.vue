@@ -1,11 +1,11 @@
 <template>
   <div>
     <BasicTable @register="registerTableFn">
-      <template #tableTitle>
-        <span class="flex space-x-3">
-          <span class="font-bold">用户列表</span>
-        </span>
-      </template>
+      <!--      <template #tableTitle>-->
+      <!--        <span class="flex space-x-3">-->
+      <!--          <span class="font-bold">里程碑V2版本</span>-->
+      <!--        </span>-->
+      <!--      </template>-->
       <template #toolbar>
         <!--        <GzShowSearchFormBtn-->
         <!--          :prop-show-state="useSearchState"-->

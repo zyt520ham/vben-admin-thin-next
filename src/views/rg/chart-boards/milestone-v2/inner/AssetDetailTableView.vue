@@ -1,5 +1,7 @@
 <template>
-  <div> <BasicTable @register="tableRegister" /> </div>
+  <div>
+    <BasicTable @register="tableRegister" />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -18,7 +20,7 @@
         });
     });
   };
-  const [tableRegister] = useTable({
+  const [tableRegister, tableMethods] = useTable({
     title: '素材详情表',
     inset: false,
     api: loadAssetDatasApi,
@@ -34,6 +36,13 @@
     canResize: true,
     pagination: false,
     showIndexColumn: false,
+  });
+
+  const reloadTableData = () => {
+    tableMethods.reload();
+  };
+  defineExpose({
+    reloadTableData,
   });
 </script>
 <script lang="ts">

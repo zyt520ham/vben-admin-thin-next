@@ -180,16 +180,18 @@
   };
 
   onMounted(async () => {
+    await doLoadViewData();
+  });
+  const doLoadViewData = async () => {
     getInstance()!.showLoading();
-    const searchData: any = await loadChartsDataFn();
+    const searchData: any = await loadChartsDataFromServerFn();
     eChartsOptionObj.series![0].data = searchData.asset;
     eChartsOptionObj.series![1].data = searchData.idea;
     eChartsOptionObj.series![2].data = searchData.make;
     setOptions(eChartsOptionObj);
     getInstance()!.hideLoading();
-  });
-
-  const loadChartsDataFn = async () => {
+  };
+  const loadChartsDataFromServerFn = async () => {
     const cost = await getAllCost();
     if (cost === 0) {
       message.error('获取总花费失败,请刷新页面重试');
@@ -251,6 +253,13 @@
       make: [],
     };
   };
+
+  const reloadTableData = async () => {
+    await doLoadViewData();
+  };
+  defineExpose({
+    reloadTableData,
+  });
 </script>
 <script lang="ts">
   export default {

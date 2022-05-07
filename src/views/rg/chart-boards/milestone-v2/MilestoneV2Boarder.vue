@@ -103,6 +103,8 @@
   };
   const refreshBtnFn = () => {
     milestoneTableRef.value.reloadTableData();
+    pieChartRef.value.reloadTableData();
+    assetDetailTableRef.value.reloadTableData();
   };
   //#endregion  -------------------------------------
   //#region drawer =================================
