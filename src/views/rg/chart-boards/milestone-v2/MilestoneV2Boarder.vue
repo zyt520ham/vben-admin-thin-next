@@ -8,9 +8,6 @@
     >
       <template #extra>
         <Space :size="5">
-          <Button>个性化筛选1</Button>
-          <Button>个性化筛选</Button>
-          <Button>个性化筛选</Button>
           <Tooltip placement="top">
             <template #title>
               <span>条件筛选配置</span>
@@ -21,7 +18,7 @@
               </template>
             </Button>
           </Tooltip>
-          <Tooltip placement="top">
+          <Tooltip placement="topRight">
             <template #title>
               <span>刷新数据</span>
             </template>

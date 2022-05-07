@@ -279,6 +279,7 @@ export function getColsValues(fields: string[]) {
       ele.map((eleItem) => {
         pValueList.push(eleItem[fields[index]]);
       });
+      pValueList.sort((a, b) => b.localeCompare(a));
       valueMap[fields[index]] = pValueList;
     });
     resolve(valueMap);

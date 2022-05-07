@@ -1,4 +1,5 @@
 import { BasicColumn } from '/@/components/Table';
+import { stringFormatRounder } from '/@/utils/stringUtils';
 
 export enum MilestoneColumnsKeyEnum {
   kStartDay = 'startday',
@@ -21,13 +22,11 @@ export interface ITableDataItem {
 
 export const getMileStoneColumnsCfg: BasicColumn[] = [
   {
-    title: '里程碑开始日期',
+    title: '里程碑起始',
     dataIndex: MilestoneColumnsKeyEnum.kStartDay,
-    width: '70px',
+    width: '100px',
+    fixed: 'left',
     // slots: { customRender: 'colUserId' },
-    format: (text) => {
-      return text;
-    },
     sorter: (a, b) => {
       return a[MilestoneColumnsKeyEnum.kStartDay].localeCompare(
         b[MilestoneColumnsKeyEnum.kStartDay],
@@ -35,17 +34,17 @@ export const getMileStoneColumnsCfg: BasicColumn[] = [
     },
   },
   {
-    title: '阶段开始日期',
+    title: '阶段开始',
     dataIndex: MilestoneColumnsKeyEnum.kStepDay,
-    width: '70px',
+    width: '90px',
     sorter: (a, b) => {
       return a[MilestoneColumnsKeyEnum.kStepDay].localeCompare(b[MilestoneColumnsKeyEnum.kStepDay]);
     },
   },
   {
-    title: '阶段结束日期',
+    title: '阶段结束',
     dataIndex: MilestoneColumnsKeyEnum.kStepEndDay,
-    width: '70px',
+    width: '90px',
     sorter: (a, b) => {
       return a[MilestoneColumnsKeyEnum.kStepEndDay].localeCompare(
         b[MilestoneColumnsKeyEnum.kStepEndDay],
@@ -55,7 +54,8 @@ export const getMileStoneColumnsCfg: BasicColumn[] = [
   {
     title: '包分组',
     dataIndex: MilestoneColumnsKeyEnum.kAppPackageGroup,
-    width: '70px',
+    width: '90px',
+    ifShow: true,
     sorter: (a, b) => {
       return a[MilestoneColumnsKeyEnum.kAppPackageGroup].localeCompare(
         b[MilestoneColumnsKeyEnum.kAppPackageGroup],
@@ -64,8 +64,12 @@ export const getMileStoneColumnsCfg: BasicColumn[] = [
   },
   {
     title: '目标美元',
-    dataIndex: MilestoneColumnsKeyEnum.kTargetCost,
-    width: '70px',
+    dataIndex: MilestoneColumnsKeyEnum.kTargetUsd,
+    width: '100px',
+    align: 'right',
+    format: (text) => {
+      return stringFormatRounder(text, 2);
+    },
     sorter: (a, b) => {
       return (
         a[MilestoneColumnsKeyEnum.kTargetCost] * 1 - b[MilestoneColumnsKeyEnum.kTargetCost] * 1
@@ -76,21 +80,34 @@ export const getMileStoneColumnsCfg: BasicColumn[] = [
     title: '系统',
     dataIndex: MilestoneColumnsKeyEnum.kAppPackagePf,
     width: '70px',
+    defaultHidden: false,
   },
   {
     title: '国家分组',
     dataIndex: MilestoneColumnsKeyEnum.kCountryGroup,
     width: '70px',
+    defaultHidden: false,
   },
   {
     title: '媒体分组',
     dataIndex: MilestoneColumnsKeyEnum.kMediaSourceGroup,
     width: '70px',
+    defaultHidden: true,
   },
   {
     title: '达标花费',
-    dataIndex: MilestoneColumnsKeyEnum.kTargetUsd,
-    width: '70px',
+    dataIndex: MilestoneColumnsKeyEnum.kTargetCost,
+    width: '100px',
+    format: (text: string, record: Recordable) => {
+      if (
+        record[MilestoneColumnsKeyEnum.kTargetCost] * 1 >=
+        record[MilestoneColumnsKeyEnum.kTargetUsd]
+      ) {
+        return stringFormatRounder(text, 2);
+      } else {
+        return 0;
+      }
+    },
   },
 ];
 export const getTestTableData: ITableDataItem[] = [
