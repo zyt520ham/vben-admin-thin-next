@@ -72,7 +72,7 @@ function getAssetAllCostApi() {
   useKeyList.map((ele) => {
     tmpFields.push(assetTableFields[ele]);
   });
-  const tmpWheres: IWhereItem[] = [];
+  const tmpWheres: IWhereItem[] = getGlobalWheres();
   const params: ISearchRequestParams = {
     table: tableName,
     fields: tmpFields,
@@ -131,6 +131,7 @@ export async function getAssetRatioData(vAllCost = 0) {
       op: '>=',
       value: allCostValue * 0.003 + '',
     },
+    ...getGlobalWheres(),
   ];
   const params: ISearchRequestParams = {
     table: tableName,
@@ -171,7 +172,7 @@ export async function getIdeasRatioDate(vAllCost = 0) {
       }
     }
   });
-  const tmpWheres: IWhereItem[] = [];
+  const tmpWheres: IWhereItem[] = getGlobalWheres();
   const params: ISearchRequestParams = {
     table: tableName,
     fields: tmpFields,
@@ -211,7 +212,7 @@ export async function getMakesRatioDate(vAllCost = 0) {
       }
     }
   });
-  const tmpWheres: IWhereItem[] = [];
+  const tmpWheres: IWhereItem[] = getGlobalWheres();
   const params: ISearchRequestParams = {
     table: tableName,
     fields: tmpFields,

@@ -29,8 +29,12 @@
 
 <script lang="ts" setup>
   import { BasicTable, useTable } from '/@/components/Table';
-  import { getMileStoneColumnsCfg } from '/@/views/rg/chart-boards/milestone-v2/inner/data/milestone.data';
+  import {
+    getMileStoneColumnsCfg,
+    MilestoneColumnsKeyEnum,
+  } from '/@/views/rg/chart-boards/milestone-v2/inner/data/milestone.data';
   import { getMileStones } from '/@/views/rg/chart-boards/milestone-v2/inner/MileStoneRequest';
+  import { stringFormatRounder } from '/@/utils/stringUtils';
 
   const loadMileStoneDatasApi = () => {
     return new Promise((resolve, reject) => {
@@ -42,6 +46,30 @@
           console.error('getMileStones err', err);
         });
     });
+  };
+  const handleSummaryFn = (tableData: Recordable[]): any[] => {
+    const totalCost = tableData.reduce((prev, next) => {
+      prev += next[MilestoneColumnsKeyEnum.kTargetCost];
+      return prev;
+    }, 0);
+    console.log('合计达标花费', totalCost);
+    return [
+      {
+        _row: '合计',
+        // _index: '达标花费',
+        [MilestoneColumnsKeyEnum.kTargetUsd]: stringFormatRounder(totalCost + '', 2),
+        [MilestoneColumnsKeyEnum.kStartDay]: '达标花费合计',
+        // [MilestoneColumnsKeyEnum.kEndDay]: '',
+        // [MilestoneColumnsKeyEnum.kStepDay]: '',
+        // [MilestoneColumnsKeyEnum.kStepEndDay]: '',
+        // [MilestoneColumnsKeyEnum.kAppPackageGroup]: '',
+        // [MilestoneColumnsKeyEnum.kAppPackagePf]: '',
+        // [MilestoneColumnsKeyEnum.kAppPackageSys]: '',
+        // [MilestoneColumnsKeyEnum.kCountryGroup]: '',
+        // [MilestoneColumnsKeyEnum.kMediaSourceGroup]: '',
+        // [MilestoneColumnsKeyEnum.kTargetCost]: '',
+      },
+    ];
   };
   const [registerTableFn, tableMethods] = useTable({
     title: '里程碑V2版本',
@@ -59,7 +87,11 @@
     canResize: true,
     pagination: false,
     showIndexColumn: false,
+    showSummary: true,
+    resizeHeightOffset: 50,
+    summaryFunc: handleSummaryFn,
   });
+
   const reloadTableData = () => {
     tableMethods.reload();
   };

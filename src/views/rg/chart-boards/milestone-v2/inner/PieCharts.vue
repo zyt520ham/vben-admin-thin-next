@@ -60,6 +60,7 @@
         type: 'pie',
         radius: '90%',
         center: ['50%', '55%'],
+        minShowLabelAngle: 8,
         // dimensions: Object.keys(data),
         roseType: undefined,
         data: [],
@@ -69,6 +70,9 @@
           bleedMargin: 5,
           formatter: '{b}: {d}%',
           rotate: true,
+        },
+        labelLayout: {
+          hideOverlap: true,
         },
         tooltip: {
           formatter: (params: any) => {
@@ -107,12 +111,16 @@
         radius: '90%',
         center: ['50%', '55%'],
         data: [],
+        minShowLabelAngle: 8,
         label: {
           position: 'inside',
           alignTo: 'none',
           bleedMargin: 5,
           formatter: '{b}: {d}%',
           rotate: true,
+        },
+        labelLayout: {
+          hideOverlap: true,
         },
         left: '40%',
         right: '30%',
@@ -144,12 +152,16 @@
         radius: '85%',
         center: ['50%', '55%'],
         data: [],
+        minShowLabelAngle: 8,
         label: {
           position: 'inside',
           alignTo: 'none',
           bleedMargin: 5,
           formatter: '{b}: {d}%',
           rotate: true,
+        },
+        labelLayout: {
+          hideOverlap: true,
         },
         left: '70%',
         right: 0,

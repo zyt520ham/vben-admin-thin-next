@@ -1,35 +1,35 @@
 <template>
-  <div>
+  <div class="milestone-filter-item">
     <div class="divider-custom-warper">
-      <Checkbox
+      <a-checkbox
         v-model:checked="getIsCheckAll"
         :indeterminate="getIsIndeterminate"
         @change="onCheckAllChange($event)"
-        >全选</Checkbox
+        >全选</a-checkbox
       >
       <span class="float-right">
-        <Space :size="7">
-          <RadioGroup
+        <a-space :size="7">
+          <a-radio-group
             disabled
             button-style="solid"
             size="small"
             v-model:value="getModelValueComputed['multType']"
           >
-            <RadioButton :value="0">单选</RadioButton>
-            <RadioButton :value="1">多选</RadioButton>
-          </RadioGroup>
-          <RadioGroup
+            <a-radio-button :value="0">单选</a-radio-button>
+            <a-radio-button :value="1">多选</a-radio-button>
+          </a-radio-group>
+          <a-radio-group
             button-style="solid"
             size="small"
             v-model:value="getModelValueComputed['useValueType']"
           >
-            <RadioButton :value="0">包括值</RadioButton>
-            <RadioButton :value="1">排除值</RadioButton>
-          </RadioGroup>
-        </Space>
+            <a-radio-button :value="0">包括值</a-radio-button>
+            <a-radio-button :value="1">排除值</a-radio-button>
+          </a-radio-group>
+        </a-space>
       </span>
     </div>
-    <CheckboxGroup
+    <a-checkbox-group
       :options="getSelectOptionsComputed"
       v-model:value="getModelValueComputed['values']"
     />
@@ -38,7 +38,7 @@
 
 <script lang="ts" setup>
   import { computed, ref, watch } from 'vue';
-  import { Checkbox, CheckboxGroup, RadioButton, RadioGroup, Space } from 'ant-design-vue';
+  // import { Checkbox, CheckboxGroup, RadioButton, RadioGroup, Space } from 'ant-design-vue';
   interface IFilterItem {
     /** 配置单选/多选*/
     multType: 0 | 1;
@@ -68,7 +68,7 @@
   const getIsCheckAll = ref<Boolean>(false);
   /** 非全选状态，只控制显示样式*/
   const getIsIndeterminate = ref<Boolean>(false);
-  const getSelectOptionsComputed = computed(() => {
+  const getSelectOptionsComputed = computed<any>(() => {
     return props.selectOptions;
   });
   const getModelValueComputed = computed({
@@ -112,10 +112,12 @@
   };
 </script>
 
-<style scoped>
-  .divider-custom-warper {
-    border-bottom: 1px solid #e9e9e9;
-    padding-bottom: 5px;
-    margin-bottom: 5px;
+<style lang="less" scoped>
+  .milestone-filter-item {
+    .divider-custom-warper {
+      border-bottom: 1px solid #e9e9e9;
+      padding-bottom: 5px;
+      margin-bottom: 5px;
+    }
   }
 </style>
