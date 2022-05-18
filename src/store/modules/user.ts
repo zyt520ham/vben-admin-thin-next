@@ -27,6 +27,7 @@ import { log } from '/@/utils/log';
 import { iframeRoutesReset, routesListChanged } from '/@/layouts/iframe/useFrameKeepAlive';
 import { usePermission } from '/@/hooks/web/usePermission';
 import { useAppStoreWithOut } from '/@/store/modules/app';
+import { useTATA } from '/@/hooks/web/useTATA';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
@@ -172,6 +173,7 @@ export const useUserStore = defineStore({
     async afterLoginAction(goHome?: boolean): Promise<IUserInfo | null> {
       console.log('-------------afterLoginAction');
       if (!this.getToken || !this.getLoginInfo) return null;
+      useTATA().doEventLogin(this.getUserId + '');
       useAppStoreWithOut().loadLoginUserProjCfg();
       // get user info
       const userInfo = await this.getUserInfoAction();
@@ -225,6 +227,7 @@ export const useUserStore = defineStore({
       console.log('注销登录');
       try {
         await doLogout();
+        useTATA().doEventLogout();
       } catch {
         console.log('注销Token失败');
       }

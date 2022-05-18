@@ -9,7 +9,7 @@ import type { App } from 'vue';
 
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.less';
-
+import '/@/utils/lib/thinkdata';
 // const compList = [AntButton.Group];
 import BinDatav from 'bin-datav';
 import 'bin-datav/lib/styles/index.css';

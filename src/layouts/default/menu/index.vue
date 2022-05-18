@@ -19,6 +19,7 @@
   import { useRootSetting } from '/@/hooks/setting/useRootSetting';
   import { useAppInject } from '/@/hooks/web/useAppInject';
   import { useDesign } from '/@/hooks/web/useDesign';
+  import { useTATA } from '/@/hooks/web/useTATA';
 
   export default defineComponent({
     name: 'LayoutMenu',
@@ -111,6 +112,10 @@
        */
 
       function handleMenuClick(path: string) {
+        console.log('menu path', path);
+        useTATA().doEventFn('menu_path', {
+          prop_menu: path,
+        });
         go(path);
       }
 
