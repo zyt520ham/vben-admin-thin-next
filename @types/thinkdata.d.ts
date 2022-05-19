@@ -28,4 +28,8 @@ export interface ITaInstance {
    * @param {ITaEvent} properties 跳过本地属性检查
    */
   track: (eventName: string, properties?: InstanceType<typeof Object>) => void;
+
+  setSuperProperties: (properties: InstanceType<typeof Object>) => void;
+  getSuperProperties: () => InstanceType<typeof Object>;
+  clearSuperProperties: () => void;
 }

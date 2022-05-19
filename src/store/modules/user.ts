@@ -177,6 +177,11 @@ export const useUserStore = defineStore({
       useAppStoreWithOut().loadLoginUserProjCfg();
       // get user info
       const userInfo = await this.getUserInfoAction();
+      if (userInfo) {
+        useTATA().doSetSuperProperties({
+          prop_gl_user_name: userInfo!.nickname,
+        });
+      }
 
       const sessionTimeout = this.sessionTimeout;
 
@@ -228,6 +233,7 @@ export const useUserStore = defineStore({
       try {
         await doLogout();
         useTATA().doEventLogout();
+        useTATA().doClearSuperProperties();
       } catch {
         console.log('注销Token失败');
       }

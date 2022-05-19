@@ -1,17 +1,15 @@
 import taIns from '/@/utils/lib/thinkdata';
 
-import { useUserStoreWithOut } from '/@/store/modules/user';
-import { ITaEvent, ITaEventName } from 'thinkingdata-node';
+import { ITaEventName } from 'thinkingdata-node';
 
 export function useTATA() {
   const doEventFn = (vEventName: ITaEventName, vProperties: Nullable<Record<string, any>>) => {
-    const eventData: ITaEvent = {
-      accountId: useUserStoreWithOut().getUserId + '',
-      event: vEventName,
-    };
     if (vProperties) {
-      eventData.properties = vProperties;
-      taIns.track(vEventName, vProperties);
+      const eventValue: Record<string, any> = {
+        ...vProperties,
+        ...taIns.getSuperProperties(),
+      };
+      taIns.track(vEventName, eventValue);
     } else {
       taIns.track(vEventName);
     }
@@ -19,11 +17,17 @@ export function useTATA() {
     //web端，采用实时上报
     // taIns.flush();
   };
+  const doSetSuperProperties = (vSuperProperties: Record<string, any>) => {
+    taIns.setSuperProperties(vSuperProperties);
+  };
+  const doClearSuperProperties = () => {
+    taIns.clearSuperProperties();
+  };
   const doEventLogin = (vAccountId: string) => {
     taIns.login(vAccountId);
   };
   const doEventLogout = () => {
     taIns.logout();
   };
-  return { doEventFn, doEventLogin, doEventLogout };
+  return { doEventFn, doEventLogin, doEventLogout, doSetSuperProperties, doClearSuperProperties };
 }
