@@ -27,7 +27,14 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
   // The boolean type read by loadEnv is a string. This function can be converted to boolean type
   const viteEnv = wrapperEnv(env);
 
-  const { VITE_PORT, VITE_PUBLIC_PATH, VITE_PROXY, VITE_DROP_CONSOLE } = viteEnv;
+  const {
+    VITE_PORT,
+    VITE_PUBLIC_PATH,
+    VITE_PROXY,
+    VITE_DROP_CONSOLE,
+    VITE_DROP_DEBUGGER,
+    VITE_USE_SOURCEMAP,
+  } = viteEnv;
 
   const isBuild = command === 'build';
 
@@ -62,11 +69,14 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     build: {
       target: 'es2015',
       outDir: OUTPUT_DIR,
+      minify: 'terser',
+      sourcemap: VITE_USE_SOURCEMAP,
       terserOptions: {
         compress: {
           keep_infinity: true,
           // Used to delete console in production environment
           drop_console: VITE_DROP_CONSOLE,
+          drop_debugger: VITE_DROP_DEBUGGER,
         },
       },
       // Turning off brotliSize display can slightly reduce packaging time

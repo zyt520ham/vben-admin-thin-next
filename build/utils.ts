@@ -42,6 +42,7 @@ export function wrapperEnv(envConf: Recordable): ViteEnv {
       process.env[envName] = JSON.stringify(realName);
     }
   }
+  console.log('wrapperEnv', ret);
   return ret;
 }
 
