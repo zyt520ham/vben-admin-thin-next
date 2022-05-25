@@ -278,9 +278,11 @@ export function getColsValues(fields: string[]) {
     allValues.forEach((ele: any[], index: number) => {
       const pValueList: any[] = [];
       ele.map((eleItem) => {
-        pValueList.push(eleItem[fields[index]]);
+        if (eleItem[fields[index]]) {
+          pValueList.push(eleItem[fields[index]]);
+        }
       });
-      pValueList.sort((a, b) => b.localeCompare(a));
+      pValueList.sort((a, b) => (b || '').localeCompare(a || ''));
       valueMap[fields[index]] = pValueList;
     });
     resolve(valueMap);
